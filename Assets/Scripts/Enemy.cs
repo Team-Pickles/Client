@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private bool _isDead = false;
     enum EnemyState
     {
         Normal, Captive
@@ -12,17 +12,23 @@ public class Enemy : MonoBehaviour
     private EnemyState state = EnemyState.Normal;
     public void OnCaptive()
     {
+        Debug.Log("Enemy::Captive");
         state = EnemyState.Captive;
     }
     public void OnReleased()
     {
+        Debug.Log("Enemy::Released");
         state = EnemyState.Normal;
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (state == EnemyState.Captive)// && collision.transform.CompareTag("player"))
+        if (state == EnemyState.Captive && collision.transform.name == "Player" && _isDead == false)
         {
-            Debug.Log("123");
+            _isDead = true;
+            Debug.Log(collision.transform.name + "¿¡°Ô ¸ÔÇûÀ½");
+
+            collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet();
+            Destroy(gameObject);
         }
     }
     void Start()

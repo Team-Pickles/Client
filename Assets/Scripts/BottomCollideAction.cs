@@ -6,11 +6,11 @@ public class BottomCollideAction : MonoBehaviour
 {
     private void OnCollisionStay2D(Collision2D collision)
     {
-        transform.parent.GetComponent<PlayerMove>().onGround = true;
+        transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        transform.parent.GetComponent<PlayerMove>().onGround = false;
+        transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
     }
     // Start is called before the first frame update
     void Start()
