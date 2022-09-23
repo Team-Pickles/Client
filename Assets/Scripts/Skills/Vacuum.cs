@@ -5,6 +5,12 @@ public class Vacuum : Skill
 {
     GameObject _player;
     GameObject _oldEnemy, _curEnemy;
+
+    public override void OnChange()
+    {
+        _player = GameObject.Find("Player");
+        Debug.Log("Vacuum::Start");
+    }
     public override void OnStart()
     {
         _player = GameObject.Find("Player");

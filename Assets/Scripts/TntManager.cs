@@ -13,6 +13,7 @@ public class TntManager : MonoBehaviour
             {
                 Vector2 value = (_player.transform.position - transform.position).normalized * 5.0f;
                 _player.GetComponent<PlayerMoveManager>().OnExplosionAction(value.x, value.y);
+                Destroy(this.gameObject);
                 break;
             }
         }

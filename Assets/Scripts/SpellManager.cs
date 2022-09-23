@@ -8,6 +8,7 @@ public class SpellManager : MonoBehaviour
     public void ChangeSkill(Skill newSkill)
     {
         currentSkill = newSkill;
+        currentSkill.OnChange();
     }
     void Start()
     {
