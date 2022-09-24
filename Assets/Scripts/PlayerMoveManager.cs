@@ -9,6 +9,7 @@ public enum PlayerStateFlags
 
 public class PlayerMoveManager : MonoBehaviour
 {
+    private int _hp = 3;
     private bool _onGround = false;
     private float _xAxisDrag = 0.005f;
     private float _hPoint = 0, _vPoint = 0;
@@ -19,7 +20,7 @@ public class PlayerMoveManager : MonoBehaviour
     private int _bulletCount;
 
     public GameObject bulletPrefab;
-
+    
     public bool OnGround
     {
         get { return _onGround; }
@@ -50,6 +51,10 @@ public class PlayerMoveManager : MonoBehaviour
     public void DecreaseBullet()
     {
         _bulletCount--;
+    }
+    public void Damaged()
+    {
+        _hp--;
     }
     private IEnumerator Explosion(float hValue, float vValue)
     {

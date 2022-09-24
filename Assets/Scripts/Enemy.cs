@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    private int _hitpoint = 1;
     private bool _isDead = false;
     enum EnemyState
     {
@@ -22,6 +23,11 @@ public class Enemy : MonoBehaviour
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
+        if (state == EnemyState.Normal && collision.transform.name == "Player" && _isDead == false)
+        {
+            collision.transform.GetComponent<PlayerMoveManager>().Damaged();
+            //state change..
+        }
         if (state == EnemyState.Captive && collision.transform.name == "Player" && _isDead == false)
         {
             _isDead = true;
@@ -29,6 +35,17 @@ public class Enemy : MonoBehaviour
 
             collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet();
             Destroy(gameObject);
+        }
+        if (collision.transform.name == "Bullet(Clone)" && _isDead == false)
+        {
+            Debug.Log(collision.transform.name + "À» ¸ÂÀ½");
+            Destroy(collision.transform.gameObject);
+            _hitpoint -= 1;
+            if(_hitpoint <= 0)
+            {
+                _isDead = true;
+                Destroy(gameObject);
+            } 
         }
     }
     void Start()

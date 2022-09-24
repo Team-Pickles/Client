@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 703785543101880961}
   - component: {fileID: -3939078336108843880}
   - component: {fileID: 3772783222669365805}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8324424231299544829}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 6200000, guid: c5742ed8088363144862759735412998, type: 2}
   m_IsTrigger: 1
@@ -255,4 +255,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.7

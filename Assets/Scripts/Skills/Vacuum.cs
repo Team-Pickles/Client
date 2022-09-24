@@ -54,6 +54,8 @@ public class Vacuum : Skill
             pmm.DecreaseBullet();
             GameObject bullet = Object.Instantiate(pmm.bulletPrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
 
+            //isTrigger = true로 하면 통과해서 false로
+            bullet.transform.GetComponent<CircleCollider2D>().isTrigger = false;
             bullet.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(500.0f, 0.0f));
             bullet.transform.GetComponent<Rigidbody2D>().angularVelocity = 500.0f;
             yield return new WaitForSeconds(2.0f);
