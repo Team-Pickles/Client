@@ -4,7 +4,8 @@ using UnityEngine;
 public enum PlayerStateFlags
 {
     Normal = 1 << 0,
-    Stun = 1 << 1
+    Stun = 1 << 1,
+    Damaged = 1 << 2
 }
 
 public class PlayerMoveManager : MonoBehaviour
@@ -52,9 +53,17 @@ public class PlayerMoveManager : MonoBehaviour
     {
         _bulletCount--;
     }
-    public void Damaged()
+    private IEnumerator Damaged()
     {
-        _hp--;
+        if((_state & PlayerStateFlags.Damaged) == 0)
+        {
+            _hp--;
+            SetPlayerStateFlags(PlayerStateFlags.Damaged);
+            Debug.Log(_hp + " 남았습니다");
+            yield return new WaitForSeconds(5);
+            ResetPlayerStateFlags(PlayerStateFlags.Damaged);
+            yield break;
+        }
     }
     private IEnumerator Explosion(float hValue, float vValue)
     {
@@ -68,6 +77,11 @@ public class PlayerMoveManager : MonoBehaviour
     public void OnExplosionAction(float hValue, float vValue)
     {
         StartCoroutine(Explosion(hValue, vValue));
+    }
+
+    public void OnDamagedAction()
+    {
+        StartCoroutine(Damaged());
     }
 
     private bool CanControl()
@@ -93,21 +107,9 @@ public class PlayerMoveManager : MonoBehaviour
         // 좌우
         _leftPressed = Input.GetKey(KeyCode.LeftArrow);
         _rightPressed = Input.GetKey(KeyCode.RightArrow);
+        if(CanControl())
+            _hPoint = (_leftPressed == true ? -1 : 0) + (_rightPressed == true ? 1 : 0);
 
-        switch (_state)
-        {
-            case PlayerStateFlags.Normal:
-            {
-                //Debug.Log("Normal");
-                _hPoint = (_leftPressed == true ? -1 : 0) + (_rightPressed == true ? 1 : 0);
-                break;
-            }
-            case PlayerStateFlags.Stun:
-            {
-                //Debug.Log("Stun..");
-                break;
-            }
-        }
         _hPoint = _hPoint / (_xAxisDrag + 1.0f);
     }
 }

@@ -25,8 +25,7 @@ public class Enemy : MonoBehaviour
     {
         if (state == EnemyState.Normal && collision.transform.name == "Player" && _isDead == false)
         {
-            collision.transform.GetComponent<PlayerMoveManager>().Damaged();
-            //state change..
+            collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
         }
         if (state == EnemyState.Captive && collision.transform.name == "Player" && _isDead == false)
         {
