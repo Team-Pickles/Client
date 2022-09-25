@@ -22,6 +22,10 @@ public class PlayerMoveManager : MonoBehaviour
 
     public GameObject bulletPrefab;
     
+    public int Hp
+    {
+        get { return _hp; }
+    }
     public bool OnGround
     {
         get { return _onGround; }
