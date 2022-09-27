@@ -21,6 +21,20 @@ public class Enemy : MonoBehaviour
         Debug.Log("Enemy::Released");
         state = EnemyState.Normal;
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.name == "Bullet(Clone)" && _isDead == false)
+        {
+            Debug.Log(collision.transform.name + "을 맞음");
+            Destroy(collision.transform.gameObject);
+            _hitpoint -= 1;
+            if (_hitpoint <= 0)
+            {
+                _isDead = true;
+                Destroy(gameObject);
+            }
+        }
+    }
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (state == EnemyState.Normal && collision.transform.name == "Player" && _isDead == false)
@@ -35,17 +49,7 @@ public class Enemy : MonoBehaviour
             collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet();
             Destroy(gameObject);
         }
-        if (collision.transform.name == "Bullet(Clone)" && _isDead == false)
-        {
-            Debug.Log(collision.transform.name + "을 맞음");
-            Destroy(collision.transform.gameObject);
-            _hitpoint -= 1;
-            if(_hitpoint <= 0)
-            {
-                _isDead = true;
-                Destroy(gameObject);
-            } 
-        }
+        
     }
     void Start()
     {

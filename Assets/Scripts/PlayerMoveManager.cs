@@ -64,7 +64,7 @@ public class PlayerMoveManager : MonoBehaviour
             _hp--;
             SetPlayerStateFlags(PlayerStateFlags.Damaged);
             Debug.Log(_hp + " 남았습니다");
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(3);
             ResetPlayerStateFlags(PlayerStateFlags.Damaged);
             yield break;
         }
