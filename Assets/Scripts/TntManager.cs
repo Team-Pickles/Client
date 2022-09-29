@@ -5,6 +5,7 @@ using UnityEngine;
 public class TntManager : MonoBehaviour
 {
     private GameObject _player;
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         switch (collision.transform.tag)

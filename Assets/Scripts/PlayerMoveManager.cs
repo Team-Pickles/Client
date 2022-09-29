@@ -14,11 +14,13 @@ public class PlayerMoveManager : MonoBehaviour
     private float _hPoint = 0, _vPoint = 0;
     private const float _hSpeed = 4.0f, _vSpeed = 5.0f;
     private bool _leftPressed = false, _rightPressed = false;
-
+    private bool _runState = false;
     public PlayerStateFlags _state = PlayerStateFlags.Normal;
     private int _bulletCount;
 
     public GameObject bulletPrefab;
+    public GameObject grenadePrefab;
+    public GameObject glassbottlePrefab;
 
     public bool OnGround
     {
@@ -45,7 +47,6 @@ public class PlayerMoveManager : MonoBehaviour
     public void IncreaseBullet()
     {
         _bulletCount++;
-        //Debug.Log("DataStorage::BulletCount Increased");
     }
     public void DecreaseBullet()
     {
@@ -88,18 +89,18 @@ public class PlayerMoveManager : MonoBehaviour
         // аб©Л
         _leftPressed = Input.GetKey(KeyCode.LeftArrow);
         _rightPressed = Input.GetKey(KeyCode.RightArrow);
-
+        _runState = Input.GetKey(KeyCode.X);
         switch (_state)
         {
             case PlayerStateFlags.Normal:
             {
-                //Debug.Log("Normal");
-                _hPoint = (_leftPressed == true ? -1 : 0) + (_rightPressed == true ? 1 : 0);
+                float speed = 1.0f;
+                speed += _runState == true ? 1 : 0;
+                _hPoint = (_leftPressed == true ? -speed : 0) + (_rightPressed == true ? speed : 0);
                 break;
             }
             case PlayerStateFlags.Stun:
             {
-                //Debug.Log("Stun..");
                 break;
             }
         }
