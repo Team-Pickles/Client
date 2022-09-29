@@ -4,7 +4,8 @@ using UnityEngine;
 public enum PlayerStateFlags
 {
     Normal = 1 << 0,
-    Stun = 1 << 1
+    Stun = 1 << 1,
+    Damaged = 1 << 2
 }
 
 public class PlayerMoveManager : MonoBehaviour
@@ -16,7 +17,8 @@ public class PlayerMoveManager : MonoBehaviour
     private bool _leftPressed = false, _rightPressed = false;
     private bool _runState = false;
     public PlayerStateFlags _state = PlayerStateFlags.Normal;
-    private int _bulletCount;
+    private int _hp = 3;
+    private int _bulletCount = 0;
 
     public GameObject bulletPrefab;
     public GameObject grenadePrefab;
@@ -30,6 +32,10 @@ public class PlayerMoveManager : MonoBehaviour
     public int BulletCount
     {
         get { return _bulletCount; }
+    }
+    public int Hp
+    {
+        get { return _hp; }
     }
     public void OnJumpAction()
     {
@@ -52,6 +58,18 @@ public class PlayerMoveManager : MonoBehaviour
     {
         _bulletCount--;
     }
+    private IEnumerator Damaged()
+    {
+        if ((_state & PlayerStateFlags.Damaged) == 0)
+        {
+            _hp--;
+            SetPlayerStateFlags(PlayerStateFlags.Damaged);
+            Debug.Log(_hp + " 남았습니다");
+            yield return new WaitForSeconds(3);
+            ResetPlayerStateFlags(PlayerStateFlags.Damaged);
+            yield break;
+        }
+    }
     private IEnumerator Explosion(float hValue, float vValue)
     {
         SetPlayerStateFlags(PlayerStateFlags.Stun);
@@ -60,6 +78,10 @@ public class PlayerMoveManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         ResetPlayerStateFlags(PlayerStateFlags.Stun);
         yield break;
+    }
+    public void OnDamagedAction()
+    {
+        StartCoroutine(Damaged());
     }
     public void OnExplosionAction(float hValue, float vValue)
     {
@@ -90,6 +112,13 @@ public class PlayerMoveManager : MonoBehaviour
         _leftPressed = Input.GetKey(KeyCode.LeftArrow);
         _rightPressed = Input.GetKey(KeyCode.RightArrow);
         _runState = Input.GetKey(KeyCode.X);
+        float speed = 1.0f;
+        if (CanControl())
+        {
+            speed += _runState == true ? 1 : 0;
+            _hPoint = (_leftPressed == true ? -speed : 0) + (_rightPressed == true ? speed : 0);
+        }
+        /*
         switch (_state)
         {
             case PlayerStateFlags.Normal:
@@ -104,6 +133,7 @@ public class PlayerMoveManager : MonoBehaviour
                 break;
             }
         }
+        */
         _hPoint = _hPoint / (_xAxisDrag + 1.0f);
     }
 }
