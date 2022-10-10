@@ -16,6 +16,7 @@ public class PlayerMoveManager : MonoBehaviour
     private const float _hSpeed = 4.0f, _vSpeed = 5.0f;
     private bool _leftPressed = false, _rightPressed = false;
     private bool _runState = false;
+    private bool _flip = false;
     public PlayerStateFlags _state = PlayerStateFlags.Normal;
     private int _hp = 3;
     private int _bulletCount = 0;
@@ -101,6 +102,7 @@ public class PlayerMoveManager : MonoBehaviour
     {
         GetComponent<Rigidbody2D>().velocity = new Vector2(_hPoint * _hSpeed, GetComponent<Rigidbody2D>().velocity.y + _vPoint * _vSpeed);
         _vPoint = 0.0f;
+        GetComponent<SpriteRenderer>().flipX = _flip;
     }
     void Update()
     {
@@ -117,6 +119,10 @@ public class PlayerMoveManager : MonoBehaviour
         {
             speed += _runState == true ? 1 : 0;
             _hPoint = (_leftPressed == true ? -speed : 0) + (_rightPressed == true ? speed : 0);
+            if (_hPoint > 0)
+                 _flip= false;
+            else if (_hPoint < 0)
+                _flip = true;
         }
         /*
         switch (_state)

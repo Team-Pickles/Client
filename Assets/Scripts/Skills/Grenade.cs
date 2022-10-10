@@ -25,13 +25,24 @@ public class Grenade : Skill
     public override IEnumerator OnFire()
     {
         PlayerMoveManager pmm = _player.GetComponent<PlayerMoveManager>();
+        bool flip = _player.GetComponent<SpriteRenderer>().flipX;
         //if (pmm.BulletCount > 0)
         {
             //pmm.DecreaseBullet();
-            GameObject grenade = Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
+            GameObject grenade;
+            if(!flip)
+            {
+                grenade = Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
+                grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(100.0f, 500.0f));
+                grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
+            }
+            else
+            {
+                grenade = Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
+                grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100.0f, 500.0f));
+                grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
+            }
 
-            grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(100.0f, 500.0f));
-            grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
             yield return new WaitForSeconds(5.0f);
 
             for (int i=-3;i<=3;i++)

@@ -23,17 +23,35 @@ public class GlassBottle : Skill
     public override IEnumerator OnFire()
     {
         PlayerMoveManager pmm = _player.GetComponent<PlayerMoveManager>();
+        bool flip = _player.GetComponent<SpriteRenderer>().flipX;
         //if (pmm.BulletCount > 0)
         {
             //pmm.DecreaseBullet();
-            Vector3 position = new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f, _player.transform.position.y + _player.transform.localScale.y / 2.0f * 1.5f, 0);
-            GameObject glassbottle = Object.Instantiate(pmm.glassbottlePrefab, position, new Quaternion());
-
-            for (int i=0;i<9;i++)
+            Vector3 position;
+            GameObject glassbottle;
+            if(!flip)
             {
-                glassbottle.transform.GetChild(i).GetComponent<Rigidbody2D>().AddForce(new Vector2(400.0f, 300.0f));
-                glassbottle.transform.GetChild(i).GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
+                position = new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f, _player.transform.position.y + _player.transform.localScale.y / 2.0f * 1.5f, 0);
+                glassbottle = Object.Instantiate(pmm.glassbottlePrefab, position, new Quaternion());
+
+                for (int i = 0; i < 9; i++)
+                {
+                    glassbottle.transform.GetChild(i).GetComponent<Rigidbody2D>().AddForce(new Vector2(400.0f, 300.0f));
+                    glassbottle.transform.GetChild(i).GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
+                }
             }
+            else
+            {
+                position = new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f, _player.transform.position.y + _player.transform.localScale.y / 2.0f * 1.5f, 0);
+                glassbottle = Object.Instantiate(pmm.glassbottlePrefab, position, new Quaternion());
+
+                for (int i = 0; i < 9; i++)
+                {
+                    glassbottle.transform.GetChild(i).GetComponent<Rigidbody2D>().AddForce(new Vector2(-400.0f, 300.0f));
+                    glassbottle.transform.GetChild(i).GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
+                }
+            }
+            
             //yield return new WaitForSeconds(5.0f);
 
             //Object.Destroy(bullet);
