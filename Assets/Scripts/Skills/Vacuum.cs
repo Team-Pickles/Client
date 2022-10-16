@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Vacuum : Skill
 {
+    public bool flip;
     GameObject _player;
     GameObject _oldEnemy, _curEnemy;
 
@@ -18,8 +19,20 @@ public class Vacuum : Skill
     }
     public override void OnSkill()
     {
-        Vector2 ro = new Vector2(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y);
-        float length = 8.0f;
+        flip = _player.GetComponent<SpriteRenderer>().flipX;
+        Vector2 ro;
+        float length;
+        if(!flip)
+        {
+            ro = new Vector2(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y);
+            length = 8.0f;
+        }
+        else
+        {
+            ro = new Vector2(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y);
+            length = -8.0f;
+        }
+        
 
         _curEnemy = null;
         for (int i = -5; i <= 5; i++)
@@ -49,7 +62,7 @@ public class Vacuum : Skill
     {
         //PlayerDataStorage ds = PlayerDataStorage.Instance;
         PlayerMoveManager pmm = _player.GetComponent<PlayerMoveManager>();
-        bool flip = _player.GetComponent<SpriteRenderer>().flipX;
+        flip = _player.GetComponent<SpriteRenderer>().flipX;
         if (pmm.BulletCount > 0)
         {
             pmm.DecreaseBullet();
