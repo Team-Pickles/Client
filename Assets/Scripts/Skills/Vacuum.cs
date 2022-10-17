@@ -22,7 +22,7 @@ public class Vacuum : Skill
         flip = _player.GetComponent<SpriteRenderer>().flipX;
         Vector2 ro;
         float length;
-        if(!flip)
+        if (!flip)
         {
             ro = new Vector2(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y);
             length = 8.0f;
@@ -32,7 +32,7 @@ public class Vacuum : Skill
             ro = new Vector2(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y);
             length = -8.0f;
         }
-        
+
 
         _curEnemy = null;
         for (int i = -5; i <= 5; i++)
@@ -51,12 +51,12 @@ public class Vacuum : Skill
                         _curEnemy.GetComponent<Enemy>().OnCaptive();
                 }
             }
-        } //빨아들이는 건 어떻게 바꿔야 할 지 잘 모르겠음, 높이도 너무 높아진 듯
-        if (_oldEnemy != null && _curEnemy == null)
-        {
-            _oldEnemy.GetComponent<Enemy>().OnReleased();
+            if (_oldEnemy != null && _curEnemy == null)
+            {
+                _oldEnemy.GetComponent<Enemy>().OnReleased();
+            }
+            _oldEnemy = _curEnemy;
         }
-        _oldEnemy = _curEnemy;
     }
     public override IEnumerator OnFire()
     {
