@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 393338829920105715}
   - component: {fileID: 393338829920105714}
   m_Layer: 10
-  m_Name: Trash (Red)
+  m_Name: TrashRed
   m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
