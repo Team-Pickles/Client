@@ -24,12 +24,12 @@ public class Vacuum : Skill
         float length;
         if (!flip)
         {
-            ro = new Vector2(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y);
+            ro = new Vector2(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y - _player.transform.localScale.y / 2.0f * 0.7f);
             length = 8.0f;
         }
         else
         {
-            ro = new Vector2(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y);
+            ro = new Vector2(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y - _player.transform.localScale.y / 2.0f * 0.7f);
             length = -8.0f;
         }
 

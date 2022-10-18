@@ -9,6 +9,8 @@ public class TrashRed : MonoBehaviour
         Normal, Captive
     }
     private TrashState state = TrashState.Normal;
+    private Vector3 _position;
+    public GameObject TrashEnemyPrefab;
     public void OnCaptive()
     {
         Debug.Log("Enemy::Captive");
@@ -21,6 +23,12 @@ public class TrashRed : MonoBehaviour
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
+        if(state == TrashState.Normal && collision.transform.tag == "floor")
+        {
+            _position = new Vector3(transform.position.x, transform.position.y + (transform.localScale.y / 2.0f) * 3.0f, 0);
+            Destroy(gameObject);
+            GameObject TrashEnemy = Object.Instantiate(TrashEnemyPrefab, _position, new Quaternion());
+        }
         if (state == TrashState.Captive && collision.transform.name == "Player")
         {
             Debug.Log(collision.transform.name + "¿¡°Ô ¸ÔÇûÀ½");
@@ -31,7 +39,7 @@ public class TrashRed : MonoBehaviour
     }
     void Start()
     {
-
+        TrashEnemyPrefab = (GameObject)Resources.Load("Prefabs/Enemies/TrashEnemy", typeof(GameObject));
     }
 
     // Update is called once per frame
