@@ -25,7 +25,7 @@ public class TrashRed : MonoBehaviour
     {
         if(state == TrashState.Normal && collision.transform.tag == "floor")
         {
-            _position = new Vector3(transform.position.x, transform.position.y + (transform.localScale.y / 2.0f) * 3.0f, 0);
+            _position = new Vector3(transform.position.x, transform.position.y - transform.localScale.y / 2.0f + TrashEnemyPrefab.transform.localScale.y / 2.0f, 0);
             Destroy(gameObject);
             GameObject TrashEnemy = Object.Instantiate(TrashEnemyPrefab, _position, new Quaternion());
         }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyMoveManager : MonoBehaviour
 {
     public MapManager mm;
+    public GameObject grid;
 
     private Vector3Int _enemyPosition;
     private const float _threshold = 1.0f;
@@ -18,6 +19,8 @@ public class EnemyMoveManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        grid = GameObject.Find("Grid");
+        mm = grid.GetComponent<MapManager>();
         _enemyPosition = mm.GetTopLeftBasePosition(transform.position);
     }
     
