@@ -124,7 +124,12 @@ public class PlayerMoveManager : MonoBehaviour
             else if (_hPoint < 0)
                 _flip = true;
         }
-        /*
+        _hPoint = _hPoint / (_xAxisDrag + 1.0f);
+    }
+}
+
+
+/*
         switch (_state)
         {
             case PlayerStateFlags.Normal:
@@ -140,6 +145,3 @@ public class PlayerMoveManager : MonoBehaviour
             }
         }
         */
-        _hPoint = _hPoint / (_xAxisDrag + 1.0f);
-    }
-}

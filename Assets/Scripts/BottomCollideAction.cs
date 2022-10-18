@@ -4,11 +4,20 @@ using UnityEngine;
 
 public class BottomCollideAction : MonoBehaviour
 {
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
+        Debug.Log("asd");
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
+    }
+    private void OnTriggerStay2D(Collider2D collision)
     {
         transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
     }

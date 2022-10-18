@@ -18,22 +18,22 @@ public class Vacuum : Skill
     }
     public override void OnSkill()
     {
-        Vector2 ro = new Vector2(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y);
+        Vector2 rayOrigin = new Vector2(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.01f, _player.transform.position.y - _player.transform.localScale.y/4);
         float length = 8.0f;
 
         _curEnemy = null;
         for (int i = -5; i <= 5; i++)
         {
             Vector2 rd = new Vector2(Mathf.Cos(i * Mathf.Deg2Rad), Mathf.Sin(i * Mathf.Deg2Rad));
-            RaycastHit2D hit = Physics2D.Raycast(ro, rd, length);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rd, length);
 
             if (hit.collider != null)
             {
-                Debug.DrawLine(ro, hit.point, Color.green);
+                Debug.DrawLine(rayOrigin, hit.point, Color.green);
                 if (hit.transform.CompareTag("enemy")) // 바꿀 수도 있음
                 {
                     _curEnemy = hit.transform.gameObject;
-                    _curEnemy.GetComponent<Rigidbody2D>().AddForce((hit.point - ro).normalized * -0.3f);
+                    _curEnemy.GetComponent<Rigidbody2D>().AddForce((hit.point - rayOrigin).normalized * -0.3f);
                     if (_oldEnemy == null)
                         _curEnemy.GetComponent<Enemy>().OnCaptive();
                 }
