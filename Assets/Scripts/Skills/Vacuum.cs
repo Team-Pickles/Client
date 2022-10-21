@@ -38,7 +38,7 @@ public class Vacuum : Skill
                         _curEnemy.GetComponent<Enemy>().OnCaptive();
                 }
             }
-        } //빨아들이는 건 어떻게 바꿔야 할 지 잘 모르겠음, 높이도 너무 높아진 듯
+        }
         if (_oldEnemy != null && _curEnemy == null)
         {
             _oldEnemy.GetComponent<Enemy>().OnReleased();
