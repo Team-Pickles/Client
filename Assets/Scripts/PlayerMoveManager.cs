@@ -25,6 +25,21 @@ public class PlayerMoveManager : MonoBehaviour
     public GameObject grenadePrefab;
     public GameObject glassbottlePrefab;
 
+    public void ResetVariable()
+    {
+        _onGround = false;
+        _hPoint = 0;
+        _vPoint = 0;
+        _leftPressed = false;
+        _rightPressed = false;
+        _runState = false;
+        _flip = false;
+        _state = PlayerStateFlags.Normal;
+        _hp = 3;
+        _bulletCount = 0;
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+    }
+
     public bool OnGround
     {
         get { return _onGround; }
@@ -37,6 +52,7 @@ public class PlayerMoveManager : MonoBehaviour
     public int Hp
     {
         get { return _hp; }
+        set { _hp = value; }
     }
     public void OnJumpAction()
     {
@@ -65,9 +81,42 @@ public class PlayerMoveManager : MonoBehaviour
         {
             _hp--;
             SetPlayerStateFlags(PlayerStateFlags.Damaged);
+            SetPlayerStateFlags(PlayerStateFlags.Stun);
+            _hPoint = -0.7f * (_flip==false ? 1 : -1);
+            _vPoint = 0.5f;
+            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
             Debug.Log(_hp + " 남았습니다");
-            yield return new WaitForSeconds(3);
-            ResetPlayerStateFlags(PlayerStateFlags.Damaged);
+            for (int i=0;i<6;i++)
+            {
+                Color color = GetComponent<SpriteRenderer>().color;
+                color.a = 0.7f;
+                if (color == new Color(1.0f, 1.0f, 1.0f, 0.7f))
+                {
+                    color.g = 0.3f;
+                    color.b = 0.3f;
+                }
+                else
+                {
+                    color.g = 1.0f;
+                    color.b = 1.0f;
+                }
+                GetComponent<SpriteRenderer>().color = color;
+                yield return new WaitForSeconds(0.1f);
+            }
+            _hPoint = 0.0f;
+            // immortal state
+            {
+                ResetPlayerStateFlags(PlayerStateFlags.Stun);
+                Color color = GetComponent<SpriteRenderer>().color;
+                color.a = 0.7f;
+                GetComponent<SpriteRenderer>().color = color;
+
+                yield return new WaitForSeconds(0.7f);
+
+                color.a = 1.0f;
+                GetComponent<SpriteRenderer>().color = color;
+                ResetPlayerStateFlags(PlayerStateFlags.Damaged);
+            }
             yield break;
         }
     }
