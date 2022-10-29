@@ -9,7 +9,6 @@ public class BulletCount : MonoBehaviour
     private int _maxBullet = 0;
     private GameObject _player;
 
-    //private로 돌리고 싶은데 생각대로는 안 되네...
     public Image[] bullets;
     public Sprite fullBullet;
     public Sprite emptyBullet;

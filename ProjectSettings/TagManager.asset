@@ -9,6 +9,7 @@ TagManager:
   - player
   - floor
   - bullet
+  - trash
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - PlayerDamaged
   - Enemy
   - Platform
-  - 
+  - Trash
   - 
   - 
   - 

@@ -41,6 +41,7 @@ public class Enemy : MonoBehaviour
         {
             collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
         }
+        /*
         if (state == EnemyState.Captive && collision.transform.name == "Player" && _isDead == false)
         {
             _isDead = true;
@@ -49,6 +50,7 @@ public class Enemy : MonoBehaviour
             collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet();
             Destroy(gameObject);
         }
+        */
     }
     void Start()
     {
