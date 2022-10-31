@@ -5,6 +5,7 @@ public class Vacuum : Skill
 {
     GameObject _player;
     GameObject _oldEnemy, _curEnemy;
+    GameObject _trash;
 
     bool _playerFlip;
     public override void OnChange()
@@ -30,10 +31,11 @@ public class Vacuum : Skill
             if (hit.collider != null)
             {
                 Debug.DrawLine(rayOrigin, hit.point, Color.green);
-                if (hit.transform.CompareTag("trash"))
+                _trash = hit.transform.gameObject;
+                if (_trash.CompareTag("trash"))
                 {
                     //_curEnemy = hit.transform.gameObject;
-                    hit.transform.gameObject.GetComponent<Rigidbody2D>().AddForce((hit.point - rayOrigin).normalized * -0.3f);
+                    _trash.GetComponent<Rigidbody2D>().AddForce((hit.point - rayOrigin).normalized * -0.3f);
                     if (_oldEnemy == null)
                     {
                         //_curEnemy.GetComponent<Enemy>().OnCaptive();
