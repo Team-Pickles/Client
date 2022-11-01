@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Boss1Rain : Boss1State
 {
-    int attackCount = 20;
+    const int attackCount = 20;
     public Boss1Rain(Boss1 boss) : base(boss)
     {
     }
@@ -43,13 +43,16 @@ public class Boss1Rain : Boss1State
             obj.GetComponent<Rigidbody2D>().angularVelocity = 3.0f;
             if (_boss.hp == 0)
             {
+
+                yield return End();
                 break;
             }
 
             cnt++;
             yield return new WaitForSeconds(0.5f);
         }
-        _boss.SetState(new Boss1Barrior(_boss));
+        if (_boss.hp > 0)
+            _boss.SetState(new Boss1Barrior(_boss));
         //_boss.SetState(new Boss1Idle(_boss));
         //yield break;
     }

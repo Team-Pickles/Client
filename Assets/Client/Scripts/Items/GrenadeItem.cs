@@ -34,7 +34,6 @@ public class GrenadeItem : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-
                 sm.ChangeSkill(new Grenade());
                 Destroy(gameObject);
             }

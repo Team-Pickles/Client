@@ -30,14 +30,18 @@ public class SpellManager : MonoBehaviour
             {
                 currentSkill.OnSkill();
             }
+            
         }
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if ((GameObject.Find("Player").GetComponent<PlayerMoveManager>()._state & PlayerStateFlags.Stun) == 0)
         {
-            StartCoroutine(currentSkill.OnFire());
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                StartCoroutine(currentSkill.OnFire());
+            }
         }
     }
 }

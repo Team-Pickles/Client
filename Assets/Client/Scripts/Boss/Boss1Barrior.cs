@@ -28,7 +28,7 @@ public class Boss1Barrior : Boss1State
             
             yield return new WaitForSeconds(2.0f / barriorCount);
         }
-        
+        _boss.SetState(new Boss1Rain(_boss));
         yield break;
     }
     public override IEnumerator End()
