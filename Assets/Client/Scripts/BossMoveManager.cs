@@ -138,7 +138,7 @@ public class BossMoveManager : MonoBehaviour
             yield return null;
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
 
         switch (collision.transform.tag)
