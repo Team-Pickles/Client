@@ -33,7 +33,7 @@ public class Vacuum : Skill
                 if (hit.transform.CompareTag("trash"))
                 {
                     //_curEnemy = hit.transform.gameObject;
-                    hit.transform.gameObject.GetComponent<Rigidbody2D>().AddForce((hit.point - rayOrigin).normalized * -0.3f);
+                    hit.transform.gameObject.GetComponent<Rigidbody2D>().AddForce((hit.point - rayOrigin).normalized * -3.0f);
                     if (_oldEnemy == null)
                     {
                         //_curEnemy.GetComponent<Enemy>().OnCaptive();
