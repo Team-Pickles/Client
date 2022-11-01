@@ -35,6 +35,20 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.name == "Bullet(Clone)" && _isDead == false)
+        {
+            Debug.Log(collision.transform.name + "À» ¸ÂÀ½");
+            Destroy(collision.transform.gameObject);
+            _hitPoint -= 1;
+            if (_hitPoint <= 0)
+            {
+                _isDead = true;
+                Destroy(gameObject);
+            }
+        }
+    }
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (state == EnemyState.Normal && collision.transform.name == "Player" && _isDead == false)

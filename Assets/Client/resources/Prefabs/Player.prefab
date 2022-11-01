@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5091156041290372234}
-  - component: {fileID: 5091156041290372228}
   - component: {fileID: 5091156041290372235}
+  - component: {fileID: 53563455}
   m_Layer: 8
   m_Name: bottomCollider
   m_TagString: player
@@ -26,35 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5091156041290372233}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.021, y: -0.471, z: 0}
+  m_LocalPosition: {x: -0.021, y: -0.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5091156043021300391}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!68 &5091156041290372228
-EdgeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5091156041290372233}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: 5a9d0f054ab2ae64d94b868154e0c47c, type: 2}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -0.041009706, y: -0.0019390385}
-  - {x: 0.21409103, y: -0.0019899178}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
 --- !u!114 &5091156041290372235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,6 +45,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f378b576f3c0544884584f8d375e5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!61 &53563455
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5091156041290372233}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.084841065, y: 0.034513343}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.24184598, y: 0.030398585}
+  m_EdgeRadius: 0
 --- !u!1 &5091156042525781526
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,7 +81,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5091156042525781527}
   - component: {fileID: 5091156042525781520}
-  - component: {fileID: 5091156042525781522}
   - component: {fileID: 5091156042525781521}
   m_Layer: 8
   m_Name: SpellDummy
@@ -153,32 +156,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &5091156042525781522
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5091156042525781526}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &5091156042525781521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,7 +198,7 @@ Transform:
   m_GameObject: {fileID: 5091156043021300394}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 1.569, y: 1.569, z: 1.569}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5091156041290372234}
@@ -293,14 +270,14 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 100
+  m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &5091156043021300395
 MonoBehaviour:
@@ -318,6 +295,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8324424231299544829, guid: 003a207d82fb9a34da0eb58fe44799e6, type: 3}
   grenadePrefab: {fileID: 3305180255072280105, guid: d418e08899b463743b454e62c7ceafbe, type: 3}
   glassbottlePrefab: {fileID: 8451263279563279404, guid: 9f8a5549b1906984e92a6f7f82683f17, type: 3}
+  animator: {fileID: 5091156043021300385}
 --- !u!95 &5091156043021300385
 Animator:
   serializedVersion: 4
@@ -347,7 +325,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 5091156043021300394}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: a48993daa010d6147a0f44da82d0cedf, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

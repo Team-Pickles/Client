@@ -24,6 +24,7 @@ public class PlayerMoveManager : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject grenadePrefab;
     public GameObject glassbottlePrefab;
+    public Animator animator;
 
     public void ResetVariable()
     {
@@ -53,6 +54,11 @@ public class PlayerMoveManager : MonoBehaviour
     {
         get { return _hp; }
         set { _hp = value; }
+    }
+    public void OnJumpSpringAction()
+    {
+        GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
+        _vPoint = 1.5f;
     }
     public void OnJumpAction()
     {
@@ -168,10 +174,18 @@ public class PlayerMoveManager : MonoBehaviour
         {
             speed += _runState == true ? 1 : 0;
             _hPoint = (_leftPressed == true ? -speed : 0) + (_rightPressed == true ? speed : 0);
+            if (_hPoint != 0)
+                animator.SetBool("isWalking", true);
+            else
+                animator.SetBool("isWalking", false);
             if (_hPoint > 0)
                  _flip= false;
             else if (_hPoint < 0)
                 _flip = true;
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
         }
         _hPoint = _hPoint / (_xAxisDrag + 1.0f);
     }

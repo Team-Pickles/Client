@@ -86,12 +86,10 @@ public class EnemyMoveManager : MonoBehaviour
             {
                 if (mm.PlayerPosition.x < _enemyPosition.x)
                 {
-                    Debug.Log("Bad");
                     GetComponent<Rigidbody2D>().velocity = new Vector2(-2.0f, GetComponent<Rigidbody2D>().velocity.y);
                 }
                 else if (mm.PlayerPosition.x > _enemyPosition.x)
                 {
-                    Debug.Log("Good");
                     GetComponent<Rigidbody2D>().velocity = new Vector2(2.0f, GetComponent<Rigidbody2D>().velocity.y);
                 }
                 if (_onGround)

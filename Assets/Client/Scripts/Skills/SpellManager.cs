@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpellManager : MonoBehaviour
 {
-    private Skill currentSkill = new Vacuum();
+    private Skill currentSkill;// = new Vacuum();
     public void ChangeSkill(Skill newSkill)
     {
         currentSkill = newSkill;
@@ -12,7 +12,7 @@ public class SpellManager : MonoBehaviour
     }
     void Start()
     {
-        
+        ChangeSkill(new Vacuum());
     }
     private void FixedUpdate()
     {
