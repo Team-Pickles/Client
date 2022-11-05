@@ -13,7 +13,7 @@ public class BossMoveManager : MonoBehaviour
     private Vector3Int _bossPosition;
     private Vector3 _aimPosition;
     private BossState _bossState = BossState.IdleState;
-    private bool _onGround = false, _first = true, _isDead = false, _movement = true;
+    private bool _onGround = false, _first = true, _isDead = false, _movement = true, _immortal = false;
     private GameObject _trashPrefab;
     public bool OnGround
     {
@@ -33,6 +33,45 @@ public class BossMoveManager : MonoBehaviour
         StopCoroutine(_bossState.ToString());
         _bossState = newState;
         StartCoroutine(_bossState.ToString());
+    }
+    private IEnumerator Damaged()
+    {
+        _immortal = true;
+        _hp--;
+        Debug.Log(_hp + " 남았습니다");
+        for (int i = 0; i < 6; i++)
+        {
+            Color color = GetComponent<SpriteRenderer>().color;
+            color.a = 0.7f;
+            if (color == new Color(1.0f, 1.0f, 1.0f, 0.7f))
+            {
+                color.g = 0.3f;
+                color.b = 0.3f;
+            }
+            else
+            {
+                color.g = 1.0f;
+                color.b = 1.0f;
+            }
+            GetComponent<SpriteRenderer>().color = color;
+            yield return new WaitForSeconds(0.1f);
+        }
+        // immortal state
+        {
+            Color color = GetComponent<SpriteRenderer>().color;
+            color.a = 0.7f;
+            GetComponent<SpriteRenderer>().color = color;
+
+            yield return new WaitForSeconds(0.7f);
+
+            color.r = 1.0f;
+            color.g = 1.0f;
+            color.b = 0.0f;
+            color.a = 1.0f;
+            GetComponent<SpriteRenderer>().color = color;
+        }
+        _immortal = false;
+        yield break;
     }
     private IEnumerator Movement()
     {
@@ -140,26 +179,21 @@ public class BossMoveManager : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
-        switch (collision.transform.tag)
+        if (!_immortal && collision.name == "Bullet(Clone)")
         {
-            case "bullet":
-                {
-                    Destroy(collision.gameObject);
-                    _hp--;
-                    if(_hp == 0)
-                    {
-                        _isDead = true;
-                        Destroy(gameObject);
-                    }
-                    break;
-                }
+            Destroy(collision.gameObject);
+            StartCoroutine(Damaged());
+            if (_hp == 0)
+            {
+                _isDead = true;
+                Destroy(gameObject);
+            }
         }
     }
     
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.transform.name == "Player" && _isDead == false)
+        if (collision.transform.name == "Player" && !_isDead)
         {
             collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
         }
