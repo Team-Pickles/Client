@@ -18,6 +18,7 @@ public class EnemyMoveManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        mm = GameObject.Find("Grid").GetComponent<MapManager>();
         _enemyPosition = mm.GetTopLeftBasePosition(transform.position);
     }
     

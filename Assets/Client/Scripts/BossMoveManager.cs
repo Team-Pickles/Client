@@ -38,7 +38,7 @@ public class BossMoveManager : MonoBehaviour
     {
         _immortal = true;
         _hp--;
-        Debug.Log(_hp + " 남았습니다");
+        Debug.Log("Boss hp: "+_hp + " left");
         for (int i = 0; i < 6; i++)
         {
             Color color = GetComponent<SpriteRenderer>().color;
@@ -82,7 +82,8 @@ public class BossMoveManager : MonoBehaviour
     }
     private IEnumerator IdleState()
     {
-        while(true)
+        Debug.Log("Boss::IdleState");
+        while (true)
         {
             if (_onGround)
             {
@@ -120,6 +121,7 @@ public class BossMoveManager : MonoBehaviour
     
     private IEnumerator Jumping()
     {
+        Debug.Log("Boss::Jumping");
         _bounceCount = _hp / 2;
         while(true)
         {
@@ -139,7 +141,7 @@ public class BossMoveManager : MonoBehaviour
                     GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.y, 5.0f);
                     _bounceCount--;
                     _onGround = false;
-                    Debug.Log(_bounceCount + " left");
+                    Debug.Log("bounce "+_bounceCount + " left");
                 }
             }
             if (_onGround && _bounceCount == 0)
@@ -150,13 +152,15 @@ public class BossMoveManager : MonoBehaviour
     
     private IEnumerator GroundPound()
     {
+        Debug.Log("Boss::GroundPound");
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         _bossPosition = _mm.GetTopLeftBasePosition(transform.position);
-        _aimPosition = new Vector3(transform.position.x - _bossPosition.x + _mm.PlayerPosition.x, transform.position.y - _bossPosition.y + _mm.PlayerPosition.y + 4);
+        _aimPosition = new Vector3((transform.position.x - _bossPosition.x + _mm.PlayerPosition.x), (transform.position.y - _bossPosition.y + _mm.PlayerPosition.y + 4));
         while (true)
         {
             yield return new WaitForSeconds(1.0f);
             transform.position = _aimPosition;
+            Debug.Log("Boss::Teleport");
             yield return new WaitForSeconds(3.0f);
             ChangeState(BossState.Attacking);
             yield return null;
@@ -165,13 +169,14 @@ public class BossMoveManager : MonoBehaviour
     
     private IEnumerator Attacking()
     {
-        while(true)
+        Debug.Log("Boss::Attacking");
+        while (true)
         {
             GameObject trashLeft, trashRight;
-            trashLeft = Object.Instantiate(_trashPrefab, new Vector3(transform.position.x - transform.localScale.x / 2.0f * 1.2f, transform.position.y + transform.localScale.y / 2.0f * 1.1f, 0), new Quaternion());
-            trashRight = Object.Instantiate(_trashPrefab, new Vector3(transform.position.x + transform.localScale.x / 2.0f * 1.2f, transform.position.y + transform.localScale.y / 2.0f * 1.1f, 0), new Quaternion());
+            trashLeft = Object.Instantiate(_trashPrefab, new Vector3(transform.position.x - transform.localScale.x / 2.0f * 1.4f, transform.position.y + transform.localScale.y / 2.0f * 1.1f, 0), new Quaternion());
+            trashRight = Object.Instantiate(_trashPrefab, new Vector3(transform.position.x + transform.localScale.x / 2.0f * 1.4f, transform.position.y + transform.localScale.y / 2.0f * 1.1f, 0), new Quaternion());
             trashLeft.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(-200.0f, 300.0f));
-            trashLeft.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(200.0f, 300.0f));
+            trashRight.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(200.0f, 300.0f));
             yield return new WaitForSeconds(3.0f);
             ChangeState(BossState.IdleState);
             yield return null;
