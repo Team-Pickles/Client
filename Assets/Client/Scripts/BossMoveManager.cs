@@ -196,7 +196,7 @@ public class BossMoveManager : MonoBehaviour
         }
     }
     
-    private void OnCollisionStay(Collision collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.transform.name == "Player" && !_isDead)
         {
@@ -207,6 +207,7 @@ public class BossMoveManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.rotation = 
         if(_first)
         {
             ChangeState(BossState.IdleState);
