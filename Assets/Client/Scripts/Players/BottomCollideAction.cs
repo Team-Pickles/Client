@@ -6,19 +6,23 @@ public class BottomCollideAction : MonoBehaviour
 {
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
+        if (collision.transform.tag == "floor")
+            transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
+        if (collision.transform.tag == "floor")
+            transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
+        if (collision.transform.tag == "floor")
+            transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
+        if (collision.transform.tag == "floor")
+            transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
     }
     // Start is called before the first frame update
     void Start()

@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 5121378400887899135}
   - component: {fileID: 5121378400887899120}
   - component: {fileID: 5121378400887899123}
+  - component: {fileID: 3923735362472438252}
   m_Layer: 10
   m_Name: Boss1Barrior
   m_TagString: enemy
@@ -180,7 +181,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &5121378400887899135
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -232,3 +233,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edcb0a42ee9741342bb7a8fbdf8d3223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3923735362472438252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5121378400887899133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d7ed358a6452ea4297363d2cc3aa20e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boss: {fileID: 711762697794150649, guid: 89661cdcbcfdc6f4aa632bcefb8015fd, type: 3}
+  radius: 1

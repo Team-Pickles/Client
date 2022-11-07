@@ -10,6 +10,7 @@ TagManager:
   - floor
   - bullet
   - trash
+  - rope
   layers:
   - Default
   - TransparentFX

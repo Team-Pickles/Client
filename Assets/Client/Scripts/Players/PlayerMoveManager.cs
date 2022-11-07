@@ -11,6 +11,8 @@ public enum PlayerStateFlags
 public class PlayerMoveManager : MonoBehaviour
 {
     private bool _onGround = false;
+    private bool _onRope = false;
+    private bool _isHanging = false;
     private float _xAxisDrag = 0.005f;
     private float _hPoint = 0, _vPoint = 0;
     private const float _hSpeed = 4.0f, _vSpeed = 5.0f;
@@ -26,6 +28,40 @@ public class PlayerMoveManager : MonoBehaviour
     public GameObject glassbottlePrefab;
     public Animator animator;
 
+    public GameObject vacuumCleaner;
+    private Animator vacuumAnimator;
+    private Vector3 recentRopePosition;
+    private int ropeCollisionCount = 0;
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch (collision.tag)
+        {
+            case "rope":
+            {
+                ropeCollisionCount++;
+                _onRope = true;
+                recentRopePosition = collision.transform.position;
+                break;
+            }
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        switch (collision.tag)
+        {
+            case "rope":
+            {
+                ropeCollisionCount--;
+                if (ropeCollisionCount == 0)
+                {
+                    _onRope = false;
+                    _isHanging = false;
+                    GetComponent<Rigidbody2D>().gravityScale = 1.0f;
+                }
+                break;
+            }
+        }
+    }
     public void ResetVariable()
     {
         _onGround = false;
@@ -35,6 +71,7 @@ public class PlayerMoveManager : MonoBehaviour
         _rightPressed = false;
         _runState = false;
         _flip = false;
+        vacuumCleaner.GetComponent<SpriteRenderer>().flipX = false;
         _state = PlayerStateFlags.Normal;
         _hp = 3;
         _bulletCount = 0;
@@ -62,7 +99,7 @@ public class PlayerMoveManager : MonoBehaviour
     }
     public void OnJumpAction()
     {
-        _vPoint = 1.0f;
+        _vPoint = 1.2f;
     }
     public void SetPlayerStateFlags(PlayerStateFlags flag)
     {
@@ -150,6 +187,7 @@ public class PlayerMoveManager : MonoBehaviour
     }
     void Start()
     {
+        vacuumAnimator = vacuumCleaner.GetComponent<Animator>();
         bulletPrefab = (GameObject)Resources.Load("Prefabs/bullet", typeof(GameObject));
     }
 
@@ -161,31 +199,118 @@ public class PlayerMoveManager : MonoBehaviour
     }
     void Update()
     {
-        // 위
-        if (_onGround && Input.GetKeyDown(KeyCode.UpArrow) && CanControl())
+        // 점프
+        if (_onGround && Input.GetKeyDown(KeyCode.D) && CanControl())
+        {
             OnJumpAction();
-
+            if (_isHanging)
+                _isHanging = false;
+        }
+        // 위 (로프)
+        if (CanControl())
+        {
+            // 매달리기 시작
+            if (_onRope && Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                _isHanging = true;
+                transform.position = new Vector2(recentRopePosition.x, transform.position.y);
+            }
+            if (_isHanging)
+            {
+                if (Input.GetKeyDown(KeyCode.D))
+                {
+                    _vPoint = 1.2f;
+                    _isHanging = false;
+                }
+                else if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    _vPoint = 0.8f;
+                }
+                else if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    _vPoint = -0.8f;
+                }
+                else
+                {
+                    _vPoint = 0.0f;
+                }
+            }
+        }
+        // 매달린 상태 체크
+        if (_isHanging)
+        {
+            vacuumCleaner.SetActive(false);
+            GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
+            GetComponent<Rigidbody2D>().gravityScale = 0.0f;
+            animator.SetBool("isHanging", true);
+        }
+        else
+        {
+            vacuumCleaner.SetActive(true);
+            GetComponent<Rigidbody2D>().gravityScale = 1.0f;
+            animator.SetBool("isHanging", false);
+        }
         // 좌우
         _leftPressed = Input.GetKey(KeyCode.LeftArrow);
         _rightPressed = Input.GetKey(KeyCode.RightArrow);
         _runState = Input.GetKey(KeyCode.X);
-        float speed = 1.0f;
+        float speed = 1.5f;
         if (CanControl())
         {
             speed += _runState == true ? 1 : 0;
             _hPoint = (_leftPressed == true ? -speed : 0) + (_rightPressed == true ? speed : 0);
+            if (_isHanging)
+                _hPoint = 0.0f;
+            // animation change
             if (_hPoint != 0)
+            {
                 animator.SetBool("isWalking", true);
+                vacuumAnimator.SetBool("isWalking", true);
+            }
             else
+            {
                 animator.SetBool("isWalking", false);
+                vacuumAnimator.SetBool("isWalking", false);
+            }
+
             if (_hPoint > 0)
-                 _flip= false;
+            {
+                Vector3 vacuumPosition = vacuumCleaner.transform.localPosition;
+                vacuumPosition.x = 0.35f;
+                vacuumCleaner.transform.localPosition = vacuumPosition;
+                vacuumCleaner.GetComponent<SpriteRenderer>().flipX = false;
+
+                Vector2 offset = vacuumCleaner.GetComponent<BoxCollider2D>().offset;
+                offset.x = -0.15f;
+                vacuumCleaner.GetComponent<BoxCollider2D>().offset = offset;
+
+                offset = GetComponent<BoxCollider2D>().offset;
+                offset.x = 0.06f;
+                GetComponent<BoxCollider2D>().offset = offset;
+                _flip = false;
+            }
             else if (_hPoint < 0)
+            {
+                Vector3 vacuumPosition = vacuumCleaner.transform.localPosition;
+                vacuumPosition.x = -0.35f;
+                vacuumCleaner.transform.localPosition = vacuumPosition;
+                vacuumCleaner.GetComponent<SpriteRenderer>().flipX = true;
+
+                Vector2 offset = vacuumCleaner.GetComponent<BoxCollider2D>().offset;
+                offset.x = 0.15f;
+                vacuumCleaner.GetComponent<BoxCollider2D>().offset = offset;
+
+                offset = GetComponent<BoxCollider2D>().offset;
+                offset.x = -0.06f;
+                GetComponent<BoxCollider2D>().offset = offset;
                 _flip = true;
+            }
         }
         else
         {
             animator.SetBool("isWalking", false);
+            vacuumAnimator.SetBool("isWalking", false);
+            vacuumAnimator.SetBool("isConsuming", false);
         }
         _hPoint = _hPoint / (_xAxisDrag + 1.0f);
     }

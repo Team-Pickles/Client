@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpellManager : MonoBehaviour
 {
+    public Animator vacuumAnimator;
     private Skill currentSkill;// = new Vacuum();
     public void ChangeSkill(Skill newSkill)
     {
@@ -20,15 +21,18 @@ public class SpellManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                currentSkill.OnStart();
+                if (vacuumAnimator.gameObject.activeSelf)
+                    currentSkill.OnStart();
             }
             else if (Input.GetKeyUp(KeyCode.A))
             {
-                currentSkill.OnEnd();
+                if (vacuumAnimator.gameObject.activeSelf)
+                    currentSkill.OnEnd();
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                currentSkill.OnSkill();
+                if (vacuumAnimator.gameObject.activeSelf)
+                    currentSkill.OnSkill();
             }
             
         }
@@ -38,6 +42,16 @@ public class SpellManager : MonoBehaviour
     {
         if ((GameObject.Find("Player").GetComponent<PlayerMoveManager>()._state & PlayerStateFlags.Stun) == 0)
         {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                if (vacuumAnimator.gameObject.activeSelf)
+                    vacuumAnimator.SetBool("isConsuming", true);
+            }
+            else if (Input.GetKeyUp(KeyCode.A))
+            {
+                if (vacuumAnimator.gameObject.activeSelf)
+                    vacuumAnimator.SetBool("isConsuming", false);
+            }
             if (Input.GetKeyDown(KeyCode.S))
             {
                 StartCoroutine(currentSkill.OnFire());

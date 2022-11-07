@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Boss1Barrior : Boss1State
 {
-    int barriorCount = 10;
+    int barriorCount = 5;
     public Boss1Barrior(Boss1 boss) : base(boss)
     {
     }

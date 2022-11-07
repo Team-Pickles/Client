@@ -15,12 +15,10 @@ public class EnemyMoveManager : MonoBehaviour
         get { return _onGround; }
         set { _onGround = value; }
     }
-    // Start is called before the first frame update
     void Start()
     {
         _enemyPosition = mm.GetTopLeftBasePosition(transform.position);
     }
-    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         switch (collision.transform.tag)

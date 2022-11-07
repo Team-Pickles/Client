@@ -5,9 +5,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject player;
-    public List<GameObject> resurrectionPoints;
-    int currentResurrectionIndex = 0;
+    public Vector3 resurrectionPoint;
     private PlayerMoveManager pmm;
+
+    public void SetResurrectionPoint(Vector3 point)
+    {
+        resurrectionPoint = point;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +29,7 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                player.transform.position = resurrectionPoints[currentResurrectionIndex].transform.position;
+                player.transform.position = resurrectionPoint;
                 pmm.ResetVariable();
                 player.SetActive(true);
             }

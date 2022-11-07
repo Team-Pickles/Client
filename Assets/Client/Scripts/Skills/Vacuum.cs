@@ -34,6 +34,7 @@ public class Vacuum : Skill
                 {
                     //_curEnemy = hit.transform.gameObject;
                     hit.transform.gameObject.GetComponent<Rigidbody2D>().AddForce((hit.point - rayOrigin).normalized * -3.0f);
+                    hit.transform.gameObject.GetComponent<Rigidbody2D>().angularVelocity = 200.0f;
                     if (_oldEnemy == null)
                     {
                         //_curEnemy.GetComponent<Enemy>().OnCaptive();
