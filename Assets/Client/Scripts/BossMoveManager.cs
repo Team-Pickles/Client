@@ -207,7 +207,6 @@ public class BossMoveManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = 
         if(_first)
         {
             ChangeState(BossState.IdleState);
