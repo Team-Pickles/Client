@@ -17,6 +17,7 @@ public class EnemyMoveManager : MonoBehaviour
     }
     void Start()
     {
+        mm = GameObject.Find("Grid").GetComponent<MapManager>();
         _enemyPosition = mm.GetTopLeftBasePosition(transform.position);
     }
     private void OnCollisionEnter2D(Collision2D collision)

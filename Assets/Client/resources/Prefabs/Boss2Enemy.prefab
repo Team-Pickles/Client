@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3467823648233129955}
   - component: {fileID: 4224263408675773918}
   m_Layer: 10
-  m_Name: Boss
+  m_Name: Boss2Enemy
   m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,7 +108,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &-3467823648233129955
 BoxCollider2D:
   m_ObjectHideFlags: 0
