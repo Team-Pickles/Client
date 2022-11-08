@@ -43,7 +43,7 @@ public class Boss1Rain : Boss1State
             obj.GetComponent<Rigidbody2D>().angularVelocity = 3.0f;
             if (_boss.hp == 0)
             {
-
+                yield return new WaitForSeconds(3.0f);
                 yield return End();
                 break;
             }
@@ -58,6 +58,9 @@ public class Boss1Rain : Boss1State
     }
     public override IEnumerator End()
     {
+        GameObject player = GameObject.Find("Player");
+        GameObject lv2StartPoint = GameObject.Find("Lv2StartPoint");
+        player.transform.position = lv2StartPoint.transform.position;
         yield break;
     }
 }

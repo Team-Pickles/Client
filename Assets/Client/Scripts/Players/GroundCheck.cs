@@ -12,11 +12,19 @@ public class GroundCheck : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        transform.parent.GetComponent<EnemyMoveManager>().OnGround = true;
+        EnemyMoveManager emm;
+        if (transform.parent.TryGetComponent<EnemyMoveManager>(out emm))
+        {
+            transform.parent.GetComponent<EnemyMoveManager>().OnGround = true;
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        transform.parent.GetComponent<EnemyMoveManager>().OnGround = false;
+        EnemyMoveManager emm;
+        if (transform.parent.TryGetComponent<EnemyMoveManager>(out emm))
+        {
+            transform.parent.GetComponent<EnemyMoveManager>().OnGround = false;
+        }
     }
 
     // Update is called once per frame

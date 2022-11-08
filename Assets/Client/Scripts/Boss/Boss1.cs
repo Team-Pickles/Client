@@ -71,6 +71,6 @@ public class Boss1 : MonoBehaviour
     }
     private void Start()
     {
-        SetState(new Boss1Idle(this));
+        //SetState(new Boss1Idle(this));
     }
 }

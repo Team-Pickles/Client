@@ -83,8 +83,8 @@ GameObject:
   - component: {fileID: 5121378400887899121}
   - component: {fileID: 5121378400887899134}
   - component: {fileID: 5121378400887899135}
-  - component: {fileID: 5121378400887899120}
   - component: {fileID: 5121378400887899123}
+  - component: {fileID: 8369117609238312713}
   m_Layer: 10
   m_Name: Boss1Enemy
   m_TagString: enemy
@@ -207,19 +207,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &5121378400887899120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5121378400887899133}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d716577f12522e546956f262be1ab889, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mm: {fileID: 4579290647215471880, guid: 149913ad405450141a097817b0767e0e, type: 3}
 --- !u!114 &5121378400887899123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,5 +217,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: edcb0a42ee9741342bb7a8fbdf8d3223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8369117609238312713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5121378400887899133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c585c5b5f654ac442bbe332ef3032acf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -468,8 +468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 324809302}
-  resurrectionPoints:
-  - {fileID: 1590311824}
+  resurrectionPoint: {x: 0, y: 0, z: 0}
 --- !u!4 &701497103
 Transform:
   m_ObjectHideFlags: 0
