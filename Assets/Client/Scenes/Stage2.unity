@@ -450,77 +450,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5091156043021300394, guid: 0360358f1f549094a8d107cdfc3c8b9e, type: 3}
   m_PrefabInstance: {fileID: 5091156042797154556}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &340476638
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 340476641}
-  - component: {fileID: 340476640}
-  - component: {fileID: 340476639}
-  m_Layer: 0
-  m_Name: DeathZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &340476639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 340476638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1a5f2a54e0ac4f49a6b7f89521ae7dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!61 &340476640
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 340476638}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 19.2, y: 19.2}
-    newSize: {x: 19.2, y: 19.2}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 140, y: 1}
-  m_EdgeRadius: 0
---- !u!4 &340476641
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 340476638}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 28, y: -7, z: 0.24885798}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &511045530
 GameObject:
   m_ObjectHideFlags: 0
@@ -2030,6 +1959,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[0].x
+      value: 92.99997
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[0].y
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[1].x
+      value: 92.99997
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[1].y
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[2].x
+      value: -33
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[2].y
+      value: -6.000029
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[3].x
+      value: -32.999973
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293192666309403735, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[3].y
+      value: -7
+      objectReference: {fileID: 0}
     - target: {fileID: 4579290646859068465, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.data[0].Array.data[0].y
       value: 8
@@ -2809,6 +2778,10 @@ PrefabInstance:
     - target: {fileID: 4579290647215471885, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
       propertyPath: m_Name
       value: Grid
+      objectReference: {fileID: 0}
+    - target: {fileID: 5328698446057086392, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
+      propertyPath: m_Name
+      value: Tilemap_deathzone
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7eeb34a1bd2b80b4e860fc708392832a, type: 3}
