@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +7,14 @@ using UnityEngine.Tilemaps;
 public class Grenade : Skill
 {
     GameObject _player;
-    GameObject _tilemap;
+    private GameObject _tilemapFragile, _tilemapBlock;
+    private int _x, _y;
 
     public override void OnChange()
     {
         _player = GameObject.Find("Player");
-        _tilemap = GameObject.Find("Tilemap_ground");
+        _tilemapFragile = GameObject.Find("Tilemap_fragile");
+        _tilemapBlock = GameObject.Find("Tilemap_block");
         Debug.Log("Grenade equib");
     }
     public override void OnStart()
@@ -32,29 +35,32 @@ public class Grenade : Skill
             GameObject grenade;
             if(!flip)
             {
-                grenade = Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
+                grenade = UnityEngine.Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
                 grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(100.0f, 500.0f));
                 grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
             }
             else
             {
-                grenade = Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
+                grenade = UnityEngine.Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
                 grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100.0f, 500.0f));
                 grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
             }
 
             yield return new WaitForSeconds(5.0f);
 
-            for (int i=-3;i<=3;i++)
+            _x = (int)Math.Floor(grenade.transform.position.x);
+            _y = (int)Math.Floor(grenade.transform.position.y);
+            for (int i=-2;i<= 2;i++)
             {
-                for (int j=-3;j<=3;j++)
+                for (int j=-2;j<=2;j++)
                 {
-                    Vector3Int position = new Vector3Int((int)grenade.transform.position.x + i, (int)grenade.transform.position.y + j, 0);
-                    _tilemap.GetComponent<Tilemap>().SetTile(position, null);
+                    Vector3Int position = new Vector3Int(_x + i, _y + j, 0);
+                    _tilemapFragile.GetComponent<Tilemap>().SetTile(position, null);
+                    _tilemapBlock.GetComponent<Tilemap>().SetTile(position, null);
                 }
             }
 
-            Object.Destroy(grenade);
+            UnityEngine.Object.Destroy(grenade);
         }
         yield return 0;
     }
