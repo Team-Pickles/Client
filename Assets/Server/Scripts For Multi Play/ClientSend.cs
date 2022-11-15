@@ -96,4 +96,30 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
     }
+
+    public static void CreateRoom(string _roomName)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.createRoom))
+        {
+            _packet.Write(_roomName);
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void JoinRoom(string _roomId)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.joinRoom))
+        {
+            _packet.Write(_roomId);
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void RoomList()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.roomList))
+        {
+            SendTCPData(_packet);
+        }
+    }
 }

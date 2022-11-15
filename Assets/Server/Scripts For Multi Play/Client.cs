@@ -14,6 +14,7 @@ public class Client : MonoBehaviour
     public string ip = "127.0.0.1";
     public int port = 26950;
     public int myId = 0;
+    public string roomId;
     public TCP tcp;
     public UDP udp;
 
@@ -35,7 +36,7 @@ public class Client : MonoBehaviour
         }
     }
 
-    //¾îÇÃ¸®ÄÉÀÌ¼ÇÀÌ Á¾·áµÇ±â Àü¿¡ È£Ãâ
+    //ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
     private void OnApplicationQuit()
     {
         Disconnect();
@@ -85,6 +86,8 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnItem, ClientHandle.SpawnItem},
             { (int)ServerPackets.ItemPosition, ClientHandle.ItemPosition },
             { (int)ServerPackets.itemCollide, ClientHandle.ItemCollide },
+            { (int)ServerPackets.roomCreated, ClientHandle.RoomCreated },
+            { (int)ServerPackets.roomList, ClientHandle.RoomList },
         };
         Debug.Log("Initiallized packets.");
     }
@@ -105,8 +108,8 @@ public class Client : MonoBehaviour
             };
 
             receiveBuffer = new byte[dataBufferSize];
-            //BeginConnect´Â ºñµ¿±â½Ä, ´Ù¸¥ ½º·¹µå¿¡¼­ ¿¬°á ¼öÇà ÈÄ ¿Ï·áµÇ¸é ¾Ë¸²
-            //ÇöÀç È£Ãâ ½º·¹µå¸¦ Â÷´ÜÇÏÁö ¾ÊÀ½
+            //BeginConnectï¿½ï¿½ ï¿½ñµ¿±ï¿½ï¿½, ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ï·ï¿½Ç¸ï¿½ ï¿½Ë¸ï¿½
+            //ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             socket.BeginConnect(instance.ip, instance.port, ConnenctionCallback, socket);
         }
 
@@ -117,12 +120,12 @@ public class Client : MonoBehaviour
             if (!socket.Connected)
                 return;
 
-            //data ¼Û¼ö½Å °¡´ÉÇÑ NetworkStream ¹ÝÈ¯
+            //data ï¿½Û¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ NetworkStream ï¿½ï¿½È¯
             stream = socket.GetStream();
             receiveData = new Packet();
 
-            //BeginRead ºñµ¿±â½Ä, ´Ù¸¥ ½º·¹µå¿¡¼­ ¿¬°á ¼öÇà ÈÄ ¿Ï·áµÇ¸é ¾Ë¸²
-            //ÇöÀç È£Ãâ ½º·¹µå¸¦ Â÷´ÜÇÏÁö ¾ÊÀ½
+            //BeginRead ï¿½ñµ¿±ï¿½ï¿½, ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ï·ï¿½Ç¸ï¿½ ï¿½Ë¸ï¿½
+            //ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
         }
 
@@ -130,7 +133,7 @@ public class Client : MonoBehaviour
         {
             try
             {
-                //NetworkStream¿¡¼­ ÀÐÀº ¹ÙÀÌÆ® ¼ö ¹ÝÈ¯
+                //NetworkStreamï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½È¯
                 int _byteLength = stream.EndRead(_result);
                 if(_byteLength <= 0)
                 {
@@ -159,8 +162,8 @@ public class Client : MonoBehaviour
 
             if (receiveData.UnreadLength() >= 4)
             {
-                //receiveDataÀÇ ¸Ç Ã³À½ ºÎºÐ¿¡´Â dataÀÇ ±æÀÌ°¡ intÇüÀ¸·Î µé¾î°¨
-                //send½Ã¿¡ dataÀÇ ±æÀÌ¸¦ ¹öÆÛÀÇ ¸Ç ¾Õ¿¡ ±â·ÏÇÏ±â ¶§¹®
+                //receiveDataï¿½ï¿½ ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ÎºÐ¿ï¿½ï¿½ï¿½ dataï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ intï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½î°¨
+                //sendï¿½Ã¿ï¿½ dataï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
                 _packetLength = receiveData.ReadInt();
                 if (_packetLength <= 0)
                     return true;
@@ -170,10 +173,10 @@ public class Client : MonoBehaviour
             {
 
                 byte[] _packetBytes = receiveData.ReadBytes(_packetLength);
-                //º°µµÀÇ ½º·¹µå¿¡¼­ ÆÐÅ¶¿¡ ¸Â´Â ÇÔ¼ö ½ÇÇà
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½ï¿½Å¶ï¿½ï¿½ ï¿½Â´ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½
                 ThreadManager.ExecuteOnMainThread(() =>
                 {
-                    //stream¿¡¼­ ÀÐ¾î¿Â µ¥ÀÌÅÍ¸¦ ÆÐÅ¶ ÇüÅÂ·Î ¸¸µç´Ù.
+                    //streamï¿½ï¿½ï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½Å¶ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
                     using (Packet _packet = new Packet(_packetBytes))
                     {
                         int _packetId = _packet.ReadInt();
@@ -181,7 +184,7 @@ public class Client : MonoBehaviour
                     }
                 });
 
-                //stream¿¡ ¿©·¯°³ÀÇ ÆÐÅ¶ÀÌ ÀÖÀ» ¼ö ÀÖ±â¿¡.
+                //streamï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö±â¿¡.
                 _packetLength = 0;
                 if (receiveData.UnreadLength() >= 4)
                 {
@@ -191,8 +194,8 @@ public class Client : MonoBehaviour
                 }
             }
 
-            //while ¿¡¼­ ³ª¿À´Â Á¶°ÇÀÌ > 0 ÀÌ±â ¶§¹®¿¡
-            // <= 0Àº trueÀÓ
+            //while ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ > 0 ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            // <= 0ï¿½ï¿½ trueï¿½ï¿½
             if (_packetLength <= 1)
             {
                 return true;
@@ -255,7 +258,7 @@ public class Client : MonoBehaviour
         {
             try
             {
-                //datagram data¸¦ Æ÷ÇÔÇÑ ¹ÙÀÌÆ®¿­À» ¹ÝÈ¯
+                //datagram dataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
                 byte[] _data = socket.EndReceive(_result, ref endPoint);
                 socket.BeginReceive(ReceiveCallback, null);
 
@@ -282,7 +285,7 @@ public class Client : MonoBehaviour
                 _data = _packet.ReadBytes(_packtLength);
             }
 
-            //ÆÐÅ¶Ã³¸®´Â º°µµÀÇ ½º·¹µå¿¡¼­
+            //ï¿½ï¿½Å¶Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½
             ThreadManager.ExecuteOnMainThread(() =>
             {
                 using (Packet _packet = new Packet(_data))
