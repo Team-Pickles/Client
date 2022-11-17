@@ -12,7 +12,7 @@ public class Client : MonoBehaviour
     public static int dataBufferSize = 4096;
 
     public string ip = "127.0.0.1";
-    public int port = 26950;
+    public int port;
     public int myId = 0;
     public string roomId;
     public TCP tcp;
@@ -44,9 +44,7 @@ public class Client : MonoBehaviour
 
     public void ConnectToServer()
     {
-        Debug.Log("Test2");
         tcp = new TCP();
-        Debug.Log("Test3");
         udp = new UDP();
         
         InitializeClientData();
@@ -87,7 +85,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.ItemPosition, ClientHandle.ItemPosition },
             { (int)ServerPackets.itemCollide, ClientHandle.ItemCollide },
             { (int)ServerPackets.roomCreated, ClientHandle.RoomCreated },
-            { (int)ServerPackets.roomList, ClientHandle.RoomList },
+            //{ (int)ServerPackets.roomList, ClientHandle.RoomList },
         };
         Debug.Log("Initiallized packets.");
     }

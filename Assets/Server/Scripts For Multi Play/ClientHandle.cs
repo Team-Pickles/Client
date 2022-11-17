@@ -184,14 +184,14 @@ public class ClientHandle : MonoBehaviour
         }
     }
 
-    public static void RoomList(Packet _packet)
-    {
-        int roomCount = _packet.ReadInt();
-        Dictionary<string, string> rooms = new Dictionary<string, string>();
-        for(int i = 0; i < roomCount; ++i)
-        {
-            rooms.Add(_packet.ReadString(), _packet.ReadString());
-        }
-        UIManagerInMultiPlayer.instance.setRoomList(rooms);
-    }
+    //public static void RoomList(Packet _packet)
+    //{
+    //    int roomCount = _packet.ReadInt();
+    //    Dictionary<string, string> rooms = new Dictionary<string, string>();
+    //    for(int i = 0; i < roomCount; ++i)
+    //    {
+    //        rooms.Add(_packet.ReadString(), _packet.ReadString());
+    //    }
+    //    UIManagerInMultiPlayer.instance.setRoomList(rooms);
+    //}
 }
