@@ -4,23 +4,22 @@ using UnityEngine;
 
 public class SignWork : MonoBehaviour
 {
-    private bool _notSeen = true, _isOpen = false;
+    private bool _isOpen = false;
     public GameObject panel;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.name == "Player" && _notSeen && !_isOpen)
+        if (collision.transform.name == "Player" && !_isOpen)
         {
-            _notSeen = false;
             _isOpen = true;
             panel.SetActive(true);
         }
     }
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.transform.name == "Player" && Input.GetKey(KeyCode.W) && !_isOpen)
+        if (collision.transform.name == "Player" && _isOpen)
         {
-            _isOpen = true;
-            panel.SetActive(true);
+            _isOpen = false;
+            panel.SetActive(false);
         }
     }
     // Start is called before the first frame update
@@ -32,10 +31,6 @@ public class SignWork : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Q) && _isOpen)
-        {
-            _isOpen = false;
-            panel.SetActive(false);
-        }
+
     }
 }
