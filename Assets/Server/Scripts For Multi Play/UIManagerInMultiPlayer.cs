@@ -96,11 +96,13 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         }
     }
 
-    public void CreateRoomButtonClicked()
+    public void CreateRoomButtonClicked(InputField _roomName)
     {
         Debug.Log("[CreateRoomButtonClicked]");
-
-        byte[] sendBuff = Encoding.UTF8.GetBytes($"Create Room");
+        string temp = "CreateRoom ";
+        temp += _roomName.text;
+        Debug.Log(temp);
+        byte[] sendBuff = Encoding.UTF8.GetBytes(temp);
         Debug.Log(socket);
         int sendBytes = socket.Send(sendBuff);
 
