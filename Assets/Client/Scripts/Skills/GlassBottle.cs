@@ -6,10 +6,14 @@ using UnityEngine.Tilemaps;
 public class GlassBottle : Skill
 {
     GameObject _player;
+    private PlayerMoveManager _pmm;
+    private SpellManager _sm;
 
     public override void OnChange()
     {
         _player = GameObject.Find("Player");
+        _sm = _player.GetComponentInChildren<SpellManager>();
+        _pmm = _player.GetComponent<PlayerMoveManager>();
         Debug.Log("GlassBottle equib");
     }
     public override void OnStart()
@@ -22,17 +26,16 @@ public class GlassBottle : Skill
     }
     public override IEnumerator OnFire()
     {
-        PlayerMoveManager pmm = _player.GetComponent<PlayerMoveManager>();
         bool flip = _player.GetComponent<SpriteRenderer>().flipX;
-        //if (pmm.BulletCount > 0)
+        if (_pmm.GlassBottleCount > 0)
         {
-            //pmm.DecreaseBullet();
+            _pmm.DecreaseGlassBottle();
             Vector3 position;
             GameObject glassbottle;
             if(!flip)
             {
                 position = new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f, _player.transform.position.y + _player.transform.localScale.y / 2.0f * 1.5f, 0);
-                glassbottle = Object.Instantiate(pmm.glassbottlePrefab, position, new Quaternion());
+                glassbottle = Object.Instantiate(_pmm.glassbottlePrefab, position, new Quaternion());
 
                 for (int i = 0; i < 9; i++)
                 {
@@ -43,7 +46,7 @@ public class GlassBottle : Skill
             else
             {
                 position = new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f, _player.transform.position.y + _player.transform.localScale.y / 2.0f * 1.5f, 0);
-                glassbottle = Object.Instantiate(pmm.glassbottlePrefab, position, new Quaternion());
+                glassbottle = Object.Instantiate(_pmm.glassbottlePrefab, position, new Quaternion());
 
                 for (int i = 0; i < 9; i++)
                 {
@@ -56,6 +59,8 @@ public class GlassBottle : Skill
 
             //Object.Destroy(bullet);
         }
+        if (_pmm.GlassBottleCount == 0)
+            _sm.ChangeSkill(new Vacuum());
         yield return 0;
     }
     public override void OnEnd()

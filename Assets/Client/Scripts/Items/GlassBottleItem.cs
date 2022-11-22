@@ -5,6 +5,8 @@ using UnityEngine;
 public class GlassBottleItem : MonoBehaviour
 {
     public GameObject player;
+    private GameObject _player;
+    private PlayerMoveManager _pmm;
     private bool touchItem = false;
     SpellManager sm;
     private void OnTriggerEnter2D(Collider2D collision)
@@ -24,6 +26,8 @@ public class GlassBottleItem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _player = GameObject.Find("Player");
+        _pmm = _player.GetComponent<PlayerMoveManager>();
         sm = player.GetComponent<SpellManager>();
     }
 
@@ -36,6 +40,7 @@ public class GlassBottleItem : MonoBehaviour
             {
 
                 sm.ChangeSkill(new GlassBottle());
+                _pmm.IncreaseGlassBottle(3);
                 Destroy(gameObject);
             }
         }

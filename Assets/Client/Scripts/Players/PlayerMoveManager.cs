@@ -22,6 +22,8 @@ public class PlayerMoveManager : MonoBehaviour
     public PlayerStateFlags _state = PlayerStateFlags.Normal;
     private int _hp = 3;
     private int _bulletCount = 0;
+    private int _grenadeCount = 0;
+    private int _glassBottleCount = 0;
 
     public GameObject bulletPrefab;
     public GameObject grenadePrefab;
@@ -92,6 +94,14 @@ public class PlayerMoveManager : MonoBehaviour
         get { return _hp; }
         set { _hp = value; }
     }
+    public int GrenadeCount
+    {
+        get { return _grenadeCount; }
+    }
+    public int GlassBottleCount
+    {
+        get { return _glassBottleCount; }
+    }
     public void OnJumpSpringAction()
     {
         GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
@@ -117,6 +127,26 @@ public class PlayerMoveManager : MonoBehaviour
     public void DecreaseBullet()
     {
         _bulletCount--;
+    }
+    public void IncreaseGrenade(int amount)
+    {
+        _grenadeCount += amount;
+        if (_grenadeCount >= 100)
+            _grenadeCount = 99;
+    }
+    public void DecreaseGrenade()
+    {
+        _grenadeCount--;
+    }
+    public void IncreaseGlassBottle(int amount)
+    {
+        _glassBottleCount += amount;
+        if (_glassBottleCount >= 100)
+            _glassBottleCount = 99;
+    }
+    public void DecreaseGlassBottle()
+    {
+        _glassBottleCount--;
     }
     private IEnumerator Damaged()
     {

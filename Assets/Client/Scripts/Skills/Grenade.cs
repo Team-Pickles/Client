@@ -8,13 +8,17 @@ public class Grenade : Skill
 {
     GameObject _player;
     private GameObject _tilemapFragile, _tilemapBlock;
+    private PlayerMoveManager _pmm;
+    private SpellManager _sm;
     private int _x, _y;
 
     public override void OnChange()
     {
         _player = GameObject.Find("Player");
+        _sm = _player.GetComponentInChildren<SpellManager>();
         _tilemapFragile = GameObject.Find("Tilemap_fragile");
         _tilemapBlock = GameObject.Find("Tilemap_block");
+        _pmm = _player.GetComponent<PlayerMoveManager>();
         Debug.Log("Grenade equib");
     }
     public override void OnStart()
@@ -27,21 +31,20 @@ public class Grenade : Skill
     }
     public override IEnumerator OnFire()
     {
-        PlayerMoveManager pmm = _player.GetComponent<PlayerMoveManager>();
         bool flip = _player.GetComponent<SpriteRenderer>().flipX;
-        //if (pmm.BulletCount > 0)
+        if (_pmm.GrenadeCount > 0)
         {
-            //pmm.DecreaseBullet();
+            _pmm.DecreaseGrenade();
             GameObject grenade;
             if(!flip)
             {
-                grenade = UnityEngine.Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
+                grenade = UnityEngine.Object.Instantiate(_pmm.grenadePrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
                 grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(100.0f, 500.0f));
                 grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
             }
             else
             {
-                grenade = UnityEngine.Object.Instantiate(pmm.grenadePrefab, new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
+                grenade = UnityEngine.Object.Instantiate(_pmm.grenadePrefab, new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
                 grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100.0f, 500.0f));
                 grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
             }
@@ -62,6 +65,8 @@ public class Grenade : Skill
 
             UnityEngine.Object.Destroy(grenade);
         }
+        if (_pmm.GrenadeCount == 0)
+            _sm.ChangeSkill(new Vacuum());
         yield return 0;
     }
     public override void OnEnd()

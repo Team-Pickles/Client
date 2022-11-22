@@ -5,6 +5,8 @@ using UnityEngine;
 public class GrenadeItem : MonoBehaviour
 {
     public GameObject player;
+    private GameObject _player;
+    private PlayerMoveManager _pmm;
     private bool touchItem = false;
     SpellManager sm;
     private void OnTriggerEnter2D(Collider2D collision)
@@ -24,6 +26,8 @@ public class GrenadeItem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _player = GameObject.Find("Player");
+        _pmm = _player.GetComponent<PlayerMoveManager>();
         sm = player.GetComponent<SpellManager>();
     }
 
@@ -35,6 +39,7 @@ public class GrenadeItem : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 sm.ChangeSkill(new Grenade());
+                _pmm.IncreaseGrenade(5);
                 Destroy(gameObject);
             }
         }
