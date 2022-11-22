@@ -52,7 +52,15 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             byte[] recvBuff = new byte[1024];
             int recvBytes = socket.Receive(recvBuff);
             string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-            Debug.Log($"[From Server] {recvData}");
+            string[] split = recvData.Split(',');
+            Debug.Log($"[From Server] {split[0]}");
+            Dictionary<int, string> rooms = new Dictionary<int, string>();
+            for (int i=1; i< split.Length; i++)
+            {
+                rooms.Add(i, split[i]);
+            }
+
+            setRoomList(rooms);
         }
         catch(Exception e)
         {
@@ -94,24 +102,38 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             _btn.name = _roomData.Key.ToString();
             _btn.GetComponentInChildren<Text>().text = _roomData.Value;
         }
+
+        loadingScene.SetActive(false);
     }
 
     public void CreateRoomButtonClicked(InputField _roomName)
     {
         Debug.Log("[CreateRoomButtonClicked]");
-        string temp = "CreateRoom ";
-        temp += _roomName.text;
+        string temp = $"CreateRoom {_roomName.text}";
         Debug.Log(temp);
         byte[] sendBuff = Encoding.UTF8.GetBytes(temp);
         Debug.Log(socket);
         int sendBytes = socket.Send(sendBuff);
-
-        byte[] recvBuff = new byte[1024];
-        int recvBytes = socket.Receive(recvBuff);
-        string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-        Debug.Log($"[Room Name] {recvData}");
-        JoinClicked(recvData);
-        //roomLobbyUI.SetActive(true);
+        
+        for(int errCnt = 0; errCnt < 5; ++errCnt){
+            byte[] recvBuff = new byte[1024];
+            try {
+                int recvBytes = socket.Receive(recvBuff);
+                string[] recvDatas = Encoding.UTF8.GetString(recvBuff, 0, recvBytes).Split(' ');
+                Debug.Log($"[Room] {recvDatas[0]} {recvDatas[1]}");
+                JoinClicked(recvDatas[0]);
+                break;
+                // roomLobbyUI.SetActive(true);
+            } catch(SocketException _e) {
+                if(_e.SocketErrorCode.ToString() != "TimedOut")
+                {
+                    Debug.Log(_e.SocketErrorCode);
+                    break;
+                } else {
+                    Debug.Log(errCnt);
+                }
+            }
+        }
     }
 
     public void StartGame()
@@ -122,26 +144,26 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     public void RefreshRoomList()
     {
         Dictionary<int, string> rooms = new Dictionary<int, string>();
-        byte[] sendBuff = Encoding.UTF8.GetBytes($"Refresh Room");
+        byte[] sendBuff = Encoding.UTF8.GetBytes($"RefreshRoom");
         int sendBytes = socket.Send(sendBuff);
 
         byte[] recvBuff = new byte[1024];
         int recvBytes = socket.Receive(recvBuff);
         string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
 
-        string[] split = recvData.Split(new char[] { ',' });
+        string[] split = recvData.Split(',');
         for (int i=1; i< split.Length; i++)
         {
-            
+
             rooms.Add(i, split[i - 1]);
         }
 
         setRoomList(rooms);
     }
 
-    public void JoinClicked(string roomName)
+    public void JoinClicked(string _roomId)
     {
-        string tempString = $"Join Room" + roomName; 
+        string tempString = "JoinRoom" + _roomId;
         byte[] sendBuff = Encoding.UTF8.GetBytes(tempString);
         int sendBytes = socket.Send(sendBuff);
 
@@ -150,15 +172,20 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
         int port = int.Parse(recvData);
 
-
-
-        StartCoroutine(ConnectToServer(port));
+        if(port == -1)
+        {
+            RefreshRoomList();
+            Debug.Log($"This room({_roomId}) is destroyed.");
+        } else {
+            StartCoroutine(ConnectToServer(port, _roomId));
+        }
     }
 
-    private IEnumerator ConnectToServer(int port)
+    private IEnumerator ConnectToServer(int port, string _roomId)
     {
         yield return new WaitForSeconds(1);
         Client.instance.port = port;
+        Client.instance.roomId = _roomId;
         Client.instance.ConnectToServer();
         lobbyUI.SetActive(false);
         loadingScene.SetActive(false);

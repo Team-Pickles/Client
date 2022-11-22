@@ -24,6 +24,7 @@ public class ClientSend : MonoBehaviour
             _packet.Write(Client.instance.myId);
             //_packet.Write(UIManager.instance.usernameField.text);
             _packet.Write("test");
+            _packet.Write(Client.instance.roomId);
             Debug.Log("TCPConnenctinCheckReceived");
             SendTCPData(_packet);
         }
