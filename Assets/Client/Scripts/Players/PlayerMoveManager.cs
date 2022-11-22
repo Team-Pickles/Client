@@ -22,6 +22,8 @@ public class PlayerMoveManager : MonoBehaviour
     public PlayerStateFlags _state = PlayerStateFlags.Normal;
     private int _hp = 3;
     private int _bulletCount = 0;
+    private int _grenadeCount = 0;
+    private int _glassBottleCount = 0;
     private GameObject _firePoint;
 
     public GameObject bulletPrefab;
@@ -90,6 +92,14 @@ public class PlayerMoveManager : MonoBehaviour
         get { return _hp; }
         set { _hp = value; }
     }
+    public int GrenadeCount
+    {
+        get { return _grenadeCount; }
+    }
+    public int GlassBottleCount
+    {
+        get { return _glassBottleCount; }
+    }
     public void OnJumpSpringAction()
     {
         GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
@@ -115,6 +125,26 @@ public class PlayerMoveManager : MonoBehaviour
     public void DecreaseBullet()
     {
         _bulletCount--;
+    }
+    public void IncreaseGrenade(int amount)
+    {
+        _grenadeCount += amount;
+        if (_grenadeCount >= 100)
+            _grenadeCount = 99;
+    }
+    public void DecreaseGrenade()
+    {
+        _grenadeCount--;
+    }
+    public void IncreaseGlassBottle(int amount)
+    {
+        _glassBottleCount += amount;
+        if (_glassBottleCount >= 100)
+            _glassBottleCount = 99;
+    }
+    public void DecreaseGlassBottle()
+    {
+        _glassBottleCount--;
     }
     private IEnumerator Damaged()
     {
@@ -200,17 +230,17 @@ public class PlayerMoveManager : MonoBehaviour
     }
     void Update()
     {
-        // Á¡ÇÁ
+        // ì í”„
         if (_onGround && Input.GetKeyDown(KeyCode.D) && CanControl())
         {
             OnJumpAction();
             if (_isHanging)
                 _isHanging = false;
         }
-        // À§ (·ÎÇÁ)
+        // ìœ„ (ë¡œí”„)
         if (CanControl())
         {
-            // ¸Å´Ş¸®±â ½ÃÀÛ
+            // ë§¤ë‹¬ë¦¬ê¸° ì‹œì‘
             if (_onRope && Input.GetKeyDown(KeyCode.UpArrow))
             {
                 _isHanging = true;
@@ -237,7 +267,7 @@ public class PlayerMoveManager : MonoBehaviour
                 }
             }
         }
-        // ¸Å´Ş¸° »óÅÂ Ã¼Å©
+        // ë§¤ë‹¬ë¦° ìƒíƒœ ì²´í¬
         if (_isHanging)
         {
             GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
@@ -249,7 +279,7 @@ public class PlayerMoveManager : MonoBehaviour
             GetComponent<Rigidbody2D>().gravityScale = 1.0f;
             animator.SetBool("isHanging", false);
         }
-        // ÁÂ¿ì
+        // ì¢Œìš°
         _leftPressed = Input.GetKey(KeyCode.LeftArrow);
         _rightPressed = Input.GetKey(KeyCode.RightArrow);
         _runState = Input.GetKey(KeyCode.X);
