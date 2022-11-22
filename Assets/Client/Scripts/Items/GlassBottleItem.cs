@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GlassBottleItem : MonoBehaviour
 {
-    public GameObject player;
     private GameObject _player;
     private PlayerMoveManager _pmm;
 
@@ -31,7 +30,7 @@ public class GlassBottleItem : MonoBehaviour
 
         _pmm = _player.GetComponent<PlayerMoveManager>();
 
-        sm = _player.GetComponent<SpellManager>();
+        sm = GameObject.Find(_player.name+"/SpellDummy").GetComponent<SpellManager>();
     }
 
     // Update is called once per frame
@@ -41,7 +40,6 @@ public class GlassBottleItem : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-
                 sm.ChangeSkill(new GlassBottle());
                 _pmm.IncreaseGlassBottle(3);
                 Destroy(gameObject);

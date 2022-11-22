@@ -53,25 +53,6 @@ public class Vacuum : Skill
             bullet.transform.GetComponent<Rigidbody2D>().angularVelocity = 500.0f;
             yield return new WaitForSeconds(2.0f);
             Object.Destroy(bullet);
-
-            /*
-            if (!flip)
-            {
-                bullet = Object.Instantiate(pmm.bulletPrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
-                bullet.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(500.0f, 0.0f));
-                bullet.transform.GetComponent<Rigidbody2D>().angularVelocity = 500.0f;
-                yield return new WaitForSeconds(2.0f);
-                Object.Destroy(bullet);
-            }
-            else
-            {
-                bullet = Object.Instantiate(pmm.bulletPrefab, new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
-                bullet.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(-500.0f, 0.0f));
-                bullet.transform.GetComponent<Rigidbody2D>().angularVelocity = 500.0f;
-                yield return new WaitForSeconds(2.0f);
-                Object.Destroy(bullet);
-            }
-            */
         }
     }
     public override void OnEnd()

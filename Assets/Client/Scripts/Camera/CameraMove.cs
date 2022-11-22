@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
-    private GameObject _player;
+    public GameObject _player;
     private Vector3 _offset;
 
     private bool isShaking;

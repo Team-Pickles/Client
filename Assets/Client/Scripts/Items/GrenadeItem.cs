@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class GrenadeItem : MonoBehaviour
 {
-
-    public GameObject player;
     private GameObject _player;
     private PlayerMoveManager _pmm;
     
@@ -31,7 +29,7 @@ public class GrenadeItem : MonoBehaviour
         _player = GameObject.Find("Player");
 
         _pmm = _player.GetComponent<PlayerMoveManager>();
-        sm = _player.GetComponent<SpellManager>();
+        sm = GameObject.Find(_player.name + "/SpellDummy").GetComponent<SpellManager>();
     }
 
     // Update is called once per frame
