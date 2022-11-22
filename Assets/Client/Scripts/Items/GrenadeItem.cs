@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GrenadeItem : MonoBehaviour
 {
-    public GameObject player;
+    private GameObject _player;
     private bool touchItem = false;
     SpellManager sm;
     private void OnTriggerEnter2D(Collider2D collision)
@@ -24,7 +24,8 @@ public class GrenadeItem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        sm = player.GetComponent<SpellManager>();
+        _player = GameObject.Find("Player");
+        sm = _player.GetComponent<SpellManager>();
     }
 
     // Update is called once per frame

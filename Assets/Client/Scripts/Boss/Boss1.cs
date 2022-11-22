@@ -27,7 +27,6 @@ public class Boss1 : MonoBehaviour
     {
         _immortal = true;
         hp--;
-        Debug.Log(hp + " 남았습니다");
         for (int i = 0; i < 6; i++)
         {
             Color color = GetComponent<SpriteRenderer>().color;

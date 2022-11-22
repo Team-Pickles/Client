@@ -22,14 +22,13 @@ public class PlayerMoveManager : MonoBehaviour
     public PlayerStateFlags _state = PlayerStateFlags.Normal;
     private int _hp = 3;
     private int _bulletCount = 0;
+    private GameObject _firePoint;
 
     public GameObject bulletPrefab;
     public GameObject grenadePrefab;
     public GameObject glassbottlePrefab;
     public Animator animator;
 
-    public GameObject vacuumCleaner;
-    private Animator vacuumAnimator;
     private Vector3 recentRopePosition;
     private int ropeCollisionCount = 0;
     private void OnTriggerEnter2D(Collider2D collision)
@@ -71,7 +70,6 @@ public class PlayerMoveManager : MonoBehaviour
         _rightPressed = false;
         _runState = false;
         _flip = false;
-        vacuumCleaner.GetComponent<SpriteRenderer>().flipX = false;
         _state = PlayerStateFlags.Normal;
         _hp = 3;
         _bulletCount = 0;
@@ -128,7 +126,6 @@ public class PlayerMoveManager : MonoBehaviour
             _hPoint = -0.7f * (_flip==false ? 1 : -1);
             _vPoint = 0.5f;
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
-            Debug.Log(_hp + " 남았습니다");
             for (int i=0;i<6;i++)
             {
                 Color color = GetComponent<SpriteRenderer>().color;
@@ -185,9 +182,13 @@ public class PlayerMoveManager : MonoBehaviour
     {
         return (_state & PlayerStateFlags.Stun) == 0;
     }
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
     void Start()
     {
-        vacuumAnimator = vacuumCleaner.GetComponent<Animator>();
+        _firePoint = GameObject.Find(transform.name+"/FirePoint");
         bulletPrefab = (GameObject)Resources.Load("Prefabs/bullet", typeof(GameObject));
     }
 
@@ -239,14 +240,12 @@ public class PlayerMoveManager : MonoBehaviour
         // 매달린 상태 체크
         if (_isHanging)
         {
-            vacuumCleaner.SetActive(false);
             GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
             GetComponent<Rigidbody2D>().gravityScale = 0.0f;
             animator.SetBool("isHanging", true);
         }
         else
         {
-            vacuumCleaner.SetActive(true);
             GetComponent<Rigidbody2D>().gravityScale = 1.0f;
             animator.SetBool("isHanging", false);
         }
@@ -265,42 +264,28 @@ public class PlayerMoveManager : MonoBehaviour
             if (_hPoint != 0)
             {
                 animator.SetBool("isWalking", true);
-                vacuumAnimator.SetBool("isWalking", true);
             }
             else
             {
                 animator.SetBool("isWalking", false);
-                vacuumAnimator.SetBool("isWalking", false);
             }
 
             if (_hPoint > 0)
             {
-                Vector3 vacuumPosition = vacuumCleaner.transform.localPosition;
-                vacuumPosition.x = 0.35f;
-                vacuumCleaner.transform.localPosition = vacuumPosition;
-                vacuumCleaner.GetComponent<SpriteRenderer>().flipX = false;
+                if (_firePoint.transform.localPosition.x < 0)
+                    _firePoint.transform.localPosition = new Vector3(-_firePoint.transform.localPosition.x, _firePoint.transform.localPosition.y, 0.0f);
 
-                Vector2 offset = vacuumCleaner.GetComponent<BoxCollider2D>().offset;
-                offset.x = -0.15f;
-                vacuumCleaner.GetComponent<BoxCollider2D>().offset = offset;
-
-                offset = GetComponent<BoxCollider2D>().offset;
+                Vector2 offset = GetComponent<BoxCollider2D>().offset;
                 offset.x = 0.06f;
                 GetComponent<BoxCollider2D>().offset = offset;
                 _flip = false;
             }
             else if (_hPoint < 0)
             {
-                Vector3 vacuumPosition = vacuumCleaner.transform.localPosition;
-                vacuumPosition.x = -0.35f;
-                vacuumCleaner.transform.localPosition = vacuumPosition;
-                vacuumCleaner.GetComponent<SpriteRenderer>().flipX = true;
+                if (_firePoint.transform.localPosition.x > 0)
+                    _firePoint.transform.localPosition = new Vector3(-_firePoint.transform.localPosition.x, _firePoint.transform.localPosition.y, 0.0f);
 
-                Vector2 offset = vacuumCleaner.GetComponent<BoxCollider2D>().offset;
-                offset.x = 0.15f;
-                vacuumCleaner.GetComponent<BoxCollider2D>().offset = offset;
-
-                offset = GetComponent<BoxCollider2D>().offset;
+                Vector2 offset = GetComponent<BoxCollider2D>().offset;
                 offset.x = -0.06f;
                 GetComponent<BoxCollider2D>().offset = offset;
                 _flip = true;
@@ -309,8 +294,6 @@ public class PlayerMoveManager : MonoBehaviour
         else
         {
             animator.SetBool("isWalking", false);
-            vacuumAnimator.SetBool("isWalking", false);
-            vacuumAnimator.SetBool("isConsuming", false);
         }
         _hPoint = _hPoint / (_xAxisDrag + 1.0f);
     }
