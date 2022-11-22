@@ -17,7 +17,7 @@ public class ClientHandle : MonoBehaviour
 
         Debug.Log("Trying connect to server");
         Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
-        
+    
     }
 
     public static void UDPTest(Packet _packet)
@@ -172,4 +172,26 @@ public class ClientHandle : MonoBehaviour
             _item.Collide();
         }
     }
+
+    public static void RoomCreated(Packet _packet)
+    {
+        string _roomId = _packet.ReadString();
+        if(_roomId == "None")
+        {
+            Debug.Log("Room Name is duplicated");
+        } else {
+            Client.instance.roomId = _roomId;
+        }
+    }
+
+    //public static void RoomList(Packet _packet)
+    //{
+    //    int roomCount = _packet.ReadInt();
+    //    Dictionary<string, string> rooms = new Dictionary<string, string>();
+    //    for(int i = 0; i < roomCount; ++i)
+    //    {
+    //        rooms.Add(_packet.ReadString(), _packet.ReadString());
+    //    }
+    //    UIManagerInMultiPlayer.instance.setRoomList(rooms);
+    //}
 }

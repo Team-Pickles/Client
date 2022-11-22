@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject player;
+    private GameObject _player;
     public Vector3 resurrectionPoint;
     private PlayerMoveManager pmm;
 
@@ -15,7 +15,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pmm = player.GetComponent<PlayerMoveManager>();
+        _player = GameObject.Find("Player");
+        pmm = _player.GetComponent<PlayerMoveManager>();
     }
 
     // Update is called once per frame
@@ -23,15 +24,15 @@ public class GameManager : MonoBehaviour
     {
         if (pmm.Hp <= 0)
         {
-            player.SetActive(false);
+            _player.SetActive(false);
         }
-        if (player.activeSelf == false) // Á×Àº »óÅÂ
+        if (_player.activeSelf == false) // Á×Àº »óÅÂ
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                player.transform.position = resurrectionPoint;
+                _player.transform.position = resurrectionPoint;
                 pmm.ResetVariable();
-                player.SetActive(true);
+                _player.SetActive(true);
             }
         }
     }

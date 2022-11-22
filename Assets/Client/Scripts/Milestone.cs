@@ -10,7 +10,7 @@ public class Milestone : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.name == "JumpSpring(Clone)")
+        if (collision.name == "Spring(Clone)")
         {
             GameObject activedObj = collision.gameObject;
             if (isDestroy)

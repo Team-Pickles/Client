@@ -55,23 +55,18 @@ public class Enemy : MonoBehaviour
         {
             collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
         }
-        /*
-        if (state == EnemyState.Captive && collision.transform.name == "Player" && _isDead == false)
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (state == EnemyState.Normal && collision.transform.name == "Player" && _isDead == false)
         {
-            _isDead = true;
-            Debug.Log(collision.transform.name + "¿¡°Ô ¸ÔÇûÀ½");
-
-            collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet();
-            Destroy(gameObject);
+            collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
         }
-        */
     }
     void Start()
     {
         
     }
-
-    // Update is called once per frame
     void Update()
     {
         

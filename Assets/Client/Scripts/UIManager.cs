@@ -91,8 +91,9 @@ public class UIManager : MonoBehaviour
 
     public void MultyPlayButtonClicked()
     {
-        startMenu.SetActive(false);
-        multiMenu.SetActive(true);
+        // startMenu.SetActive(false);
+        // multiMenu.SetActive(true);
+        SceneManager.LoadScene("MultiplaySample");
     }
 
     public void SubmitButtonClicked()
@@ -322,7 +323,7 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-        public void RefreshButtonClicked()
+    public void RefreshButtonClicked()
     {
         refreshButton.interactable = false;
 

@@ -9089,6 +9089,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 324809302}
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &527980264
 GameObject:
   m_ObjectHideFlags: 0
@@ -12022,6 +12028,10 @@ PrefabInstance:
     - target: {fileID: 726586293702196038, guid: 562d3fb751126924f860edadca5cace8, type: 3}
       propertyPath: m_Text
       value: "\uBC29\uD5A5\uD0A4\uB85C \uC6C0\uC9C1\uC774\uAE30"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4796343173532736946, guid: 562d3fb751126924f860edadca5cace8, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4796343173532736947, guid: 562d3fb751126924f860edadca5cace8, type: 3}
       propertyPath: m_RootOrder

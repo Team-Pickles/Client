@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class MapManager : MonoBehaviour
 {
     public Tilemap tilemap;
-    public GameObject player;
+    private GameObject _player;
 
     private List<List<int>> _map = new List<List<int>>();
     private int _mapX, _mapY;
@@ -24,12 +24,12 @@ public class MapManager : MonoBehaviour
     IEnumerator SetPlayerPosition()
     {
         Vector3Int oldPosition;
-        _playerPosition = GetTopLeftBasePosition(player.transform.position);
+        _playerPosition = GetTopLeftBasePosition(_player.transform.position);
         oldPosition = _playerPosition;
         while (true)
         {
             _map[oldPosition.y][oldPosition.x] = 0;
-            _playerPosition = GetTopLeftBasePosition(player.transform.position);
+            _playerPosition = GetTopLeftBasePosition(_player.transform.position);
             _map[_playerPosition.y][_playerPosition.x] = 5;
             oldPosition = _playerPosition;
 
@@ -38,7 +38,8 @@ public class MapManager : MonoBehaviour
     }
     void Start()
     {
-        _playerPosition = GetTopLeftBasePosition(player.transform.position);
+        _player = GameObject.Find("Player");
+        _playerPosition = GetTopLeftBasePosition(_player.transform.position);
         _mapX = tilemap.size.x * 2 + 1;
         _mapY = tilemap.size.y * 2 + 1;
         for (int i = tilemap.size.y; i >= -tilemap.size.y; i--)

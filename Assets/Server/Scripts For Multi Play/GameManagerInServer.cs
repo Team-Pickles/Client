@@ -22,6 +22,7 @@ public class GameManagerInServer : MonoBehaviour
     public GameObject enemyPrefab;
     public GameObject bulletPrefab;
     public GameObject itemPrefab;
+    public GameObject camera;
 
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class GameManagerInServer : MonoBehaviour
         if (_id == Client.instance.myId)
         {
             _player = Instantiate(localPlayerPrefab, _position, _rotaion);
+            camera.GetComponent<CameraMove>()._player = _player;
         }
         else
         {

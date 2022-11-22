@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Server/scene/MultiplaySample.unity
     guid: 992002b0c5c013a44be5d9e8866b5640
+  - enabled: 1
+    path: Assets/Client/Scenes/LevelChange.unity
+    guid: 44bb1078edc5b3046a0df30eee407711
   m_configObjects: {}
