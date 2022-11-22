@@ -22,7 +22,9 @@ public class ClientSend : MonoBehaviour
         using(Packet _packet = new Packet((int)ClientPackets.TCPConnenctinCheckReceived))
         {
             _packet.Write(Client.instance.myId);
-            _packet.Write(UIManager.instance.usernameField.text);
+            //_packet.Write(UIManager.instance.usernameField.text);
+            _packet.Write("test");
+            _packet.Write(Client.instance.roomId);
             Debug.Log("TCPConnenctinCheckReceived");
             SendTCPData(_packet);
         }
@@ -93,6 +95,32 @@ public class ClientSend : MonoBehaviour
         using (Packet _packet = new Packet((int)ClientPackets.ItemCollide))
         {
             _packet.Write(_itemId);
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void CreateRoom(string _roomName)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.createRoom))
+        {
+            _packet.Write(_roomName);
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void JoinRoom(string _roomId)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.joinRoom))
+        {
+            _packet.Write(_roomId);
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void RoomList()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.roomList))
+        {
             SendTCPData(_packet);
         }
     }
