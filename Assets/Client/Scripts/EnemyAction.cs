@@ -29,6 +29,7 @@ public class EnemyAction : MonoBehaviour
         {
             case "bullet":
             {
+                Destroy(collision.gameObject);
                 StartCoroutine(HitAction());
                 break;
             }

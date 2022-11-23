@@ -28,7 +28,6 @@ public class SpellManager : MonoBehaviour
             {
                 case KeyPressed.DOWN:
                 {
-                    //Debug.Log("DOWNFixed");
                     currentSkill.OnStart();
                     break;
                 }
@@ -39,30 +38,14 @@ public class SpellManager : MonoBehaviour
                 }
                 case KeyPressed.ING:
                 {
-                    Debug.Log("INGFixed");
                     currentSkill.OnSkill();
                     break;
                 }
                 default:
                 {
-                    Debug.Log("NONEFixed");
                     break;
                 }
             }
-            /*
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                currentSkill.OnStart();
-            }
-            else if (Input.GetKeyUp(KeyCode.A))
-            {
-                currentSkill.OnEnd();
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                currentSkill.OnSkill();
-            }
-            */
         }
     }
     // Update is called once per frame
@@ -72,17 +55,14 @@ public class SpellManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                Debug.Log("DOWN");
                 _keyPressed = KeyPressed.DOWN;
             }
             else if (Input.GetKeyUp(KeyCode.A))
             {
-                Debug.Log("UP");
                 _keyPressed = KeyPressed.UP;
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                Debug.Log("ING");
                 _keyPressed = KeyPressed.ING;
             }
             if (Input.GetKeyDown(KeyCode.S))

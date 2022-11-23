@@ -41,7 +41,7 @@ public class Vacuum : Skill
     public override IEnumerator OnFire()
     {
         PlayerMoveManager pmm = _player.GetComponent<PlayerMoveManager>();
-        //bool flip = _player.GetComponent<SpriteRenderer>().flipX;
+
         if (pmm.BulletCount > 0)
         {
             pmm.DecreaseBullet();
