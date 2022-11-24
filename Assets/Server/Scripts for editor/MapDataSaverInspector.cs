@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEditor;
-
+#if UNITY_EDITOR
 [CustomEditor(typeof(MapDataSaverWOTilemap))]
 public class MapDataSaverInspector : Editor
 {
@@ -17,3 +17,4 @@ public class MapDataSaverInspector : Editor
             current.Save();
     }
 }
+#endif

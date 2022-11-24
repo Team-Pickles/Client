@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float zoomSpeed = 1000;
     [SerializeField]
-    private float minViewSize=2;
+    private float minViewSize=5;
     private float maxViewSize = 15;
 
     private void Awake()

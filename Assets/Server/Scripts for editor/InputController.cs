@@ -19,6 +19,10 @@ public class InputController : MonoBehaviour
     private TileBase[] enemyBase;
     [SerializeField]
     public TileBase[] playerBase;
+    [SerializeField]
+    public Sprite[] backGroundBase;
+    [SerializeField]
+    private Sprite EmptySprite;
 
     [SerializeField]
     private Tilemap tileMap;
@@ -34,7 +38,11 @@ public class InputController : MonoBehaviour
     void Update()
     {
         UpdateCamera();
-
+        if (Input.GetMouseButton(1) && currentType != TileType.Empty)
+        {
+            SetTileType(0);
+            return;
+        }
         RaycastHit _hit;
         if (Input.GetMouseButton(0) && EventSystem.current.IsPointerOverGameObject() == false) 
         {
@@ -61,6 +69,13 @@ public class InputController : MonoBehaviour
     }
     public void SetTileType(int _tileType)
     {
+        if (_tileType == 0)
+        {
+            currentType = (TileType)_tileType;
+            currnetButton.GetComponent<Image>().sprite = EmptySprite; 
+            return;
+        }       
+
         currentType = (TileType)_tileType;
         GameObject clickObject = EventSystem.current.currentSelectedGameObject;
         Image image = clickObject.GetComponent<Image>();
@@ -93,6 +108,11 @@ public class InputController : MonoBehaviour
         }
     }
 
+    public void changeBackGround(int _type)
+    {
+        cameraController.GetComponentInChildren<SpriteRenderer>().sprite = backGroundBase[_type];
+    }
+
     public void UpdateCamera()
     {
         float _x = Input.GetAxisRaw("Horizontal");
@@ -104,7 +124,7 @@ public class InputController : MonoBehaviour
             currentMousePosition = previousMousePosition = Input.mousePosition;
         }
 
-        else if (Input.GetMouseButton (2))
+        else if (Input.GetMouseButton(2))
         {
             currentMousePosition = Input.mousePosition;
             if (previousMousePosition != currentMousePosition)
