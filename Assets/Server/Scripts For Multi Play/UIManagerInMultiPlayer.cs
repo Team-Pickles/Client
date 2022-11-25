@@ -2,24 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.IO;
 using System;
+
+[Serializable]
+public class MapListItem
+{
+    public int map_id;
+    public string map_tag;
+    public string map_info;
+    public int map_grade;
+    public int map_difficulty;
+    public string map_maker;
+}
 
 public class UIManagerInMultiPlayer : MonoBehaviour
 {
     public static UIManagerInMultiPlayer instance;
 
-    public GameObject tileMap;
+
     public GameObject loadingScene;
     public GameObject lobbyUI;
     public GameObject roomLobbyUI;
+    public List<Text> RoomInfoUiTexts;
+    public List<GameObject> MemberListUiTexts;
+    public GameObject MapSelectPopUp;
+    public List<GameObject> MapListUis;
     public Button roomButtonPrefab;
     public Button MemberButtonPrefab;
 
     public static Socket socket;
+    public List<string> memberNames = new List<string>();
+    public Dictionary<int, MapListItem> mapListItems = new Dictionary<int, MapListItem>();
+
+    private int nowMapItemStartNum = 0;
 
     private void Awake()
     {
@@ -114,16 +135,22 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         byte[] sendBuff = Encoding.UTF8.GetBytes(temp);
         Debug.Log(socket);
         int sendBytes = socket.Send(sendBuff);
-        
+        socket.ReceiveTimeout = 3000;
         for(int errCnt = 0; errCnt < 5; ++errCnt){
             byte[] recvBuff = new byte[1024];
             try {
                 int recvBytes = socket.Receive(recvBuff);
-                string[] recvDatas = Encoding.UTF8.GetString(recvBuff, 0, recvBytes).Split(' ');
-                Debug.Log($"[Room] {recvDatas[0]} {recvDatas[1]}");
-                JoinClicked(recvDatas[0]);
+                string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
+                if(recvData != "None")
+                {
+                    string[] recvDatas = recvData.Split(' ');
+                    Debug.Log($"[Room] {recvDatas[0]} {recvDatas[1]}");
+                    JoinClicked(recvDatas[0]);
+                    lobbyUI.SetActive(false);
+                    loadingScene.SetActive(true);
+                }
                 break;
-                // roomLobbyUI.SetActive(true);
+
             } catch(SocketException _e) {
                 if(_e.SocketErrorCode.ToString() != "TimedOut")
                 {
@@ -136,9 +163,120 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         }
     }
 
+    public void MapSelectButtonClicked()
+    {
+        MapSelectPopUp.SetActive(true);
+        StartCoroutine(IneternetConnectCheck(isConnected => {
+            if (isConnected)
+            {
+                Debug.Log("Server Available!");
+                StartCoroutine(GetMapList(mapListItemCnt => {
+                    int nowMapItemNum = 0;
+                    foreach(MapListItem _item in mapListItems.Values)
+                    {
+                        GameObject nowListItem = MapListUis[nowMapItemNum-nowMapItemStartNum];
+                        nowListItem.SetActive(true);
+                        nowListItem.transform.GetChild(0).GetComponent<Text>().text = $"{_item.map_id}";
+                        nowListItem.transform.GetChild(1).GetComponent<Text>().text = _item.map_tag;
+                        nowListItem.transform.GetChild(2).GetComponent<Text>().text = $"{_item.map_grade}";
+                        nowListItem.transform.GetChild(3).GetComponent<Text>().text = $"{_item.map_difficulty}";
+                        nowListItem.transform.GetChild(4).GetComponent<Text>().text = $"{_item.map_maker}";
+                        nowMapItemNum++;
+                        if(nowMapItemNum == 4)
+                        {
+                            break;
+                        }
+                    }
+                }));
+            }
+            else
+            {
+                Debug.Log("Internet or server Not Available");
+            }
+        }));
+
+        IEnumerator GetMapList(Action<int> ResultHandler){
+            using ( UnityWebRequest request = UnityWebRequest.Get("http://localhost:3001/api/map/getAllList"))
+            {
+                request.downloadHandler = new DownloadHandlerBuffer();
+
+                yield return request.SendWebRequest();
+                string _result = request.downloadHandler.text;
+                string _forparse = "{\"Items\":" + _result + "}";
+                MapDatas mapInfos = JsonUtility.FromJson<MapDatas>(_forparse);
+                foreach(MapDataClass _mapInfo in mapInfos.Items)
+                {
+                    MapListItem _item = new MapListItem();
+                    _item.map_id = _mapInfo.map_id;
+                    _item.map_tag = _mapInfo.map_tag;
+                    _item.map_info = _mapInfo.map_info;
+                    _item.map_grade = _mapInfo.map_grade;
+                    _item.map_difficulty = _mapInfo.map_difficulty;
+                    _item.map_maker = _mapInfo.map_maker;
+                    mapListItems.Add(_item.map_id, _item);
+                }
+
+                if (request.error != null)
+                {
+                    Debug.Log(request.error);
+                }
+                else
+                {
+                    ResultHandler(mapListItems.Count);
+                }
+                request.downloadHandler.Dispose();
+                request.Dispose();
+            }
+        }
+
+        IEnumerator IneternetConnectCheck(Action<bool> action)
+        {
+            using (UnityWebRequest request = new UnityWebRequest("http://localhost:3001/"))
+            {
+
+                request.downloadHandler = new DownloadHandlerBuffer();
+                yield return request.SendWebRequest();
+                if (request.error != null)
+                {
+                    action(false);
+                }
+                else
+                {
+                    action(true);
+                }
+                request.downloadHandler.Dispose();
+                request.Dispose();
+            }
+        }
+    }
+
+    public void MapItemClicked(Text _mapIdText)
+    {
+        int _mapId = Convert.ToInt32(_mapIdText.text);
+        MapListItem _nowMap = mapListItems[_mapId];
+        MapDataLoader.instance.Load(_nowMap.map_info);
+        MapSelectPopUp.SetActive(false);
+        RoomInfoUiTexts[0].text = $"{_nowMap.map_id}";
+        RoomInfoUiTexts[1].text = _nowMap.map_maker;
+        RoomInfoUiTexts[2].text = $"{_nowMap.map_difficulty}";
+    }
+
     public void StartGame()
     {
-        
+        loadingScene.SetActive(false);
+        roomLobbyUI.SetActive(false);
+        int mapId = Convert.ToInt32(RoomInfoUiTexts[0].text);
+        if(mapId == 0)
+        {
+            string path = "MapData/MyMap.json";
+            if(File.Exists(path) == false){
+                Debug.LogError("Load failed. There is no file(MyMap.json).");
+                return;
+            }
+            string fromJson = File.ReadAllText(path);
+            MapDataLoader.instance.Load(fromJson);
+        }
+        ClientSend.StartGame(Client.instance.roomId, Convert.ToInt32(RoomInfoUiTexts[0].text));
     }
 
     public void RefreshRoomList()
@@ -159,6 +297,12 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         }
 
         setRoomList(rooms);
+    }
+
+    public void SetMemberItem(int _id, string _username)
+    {
+        MemberListUiTexts[_id].SetActive(true);
+        MemberListUiTexts[_id].GetComponentInChildren<Text>().text = _username;
     }
 
     public void JoinClicked(string _roomId)
@@ -189,6 +333,6 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         Client.instance.ConnectToServer();
         lobbyUI.SetActive(false);
         loadingScene.SetActive(false);
-        tileMap.SetActive(true);
+        roomLobbyUI.SetActive(true);
     }
 }

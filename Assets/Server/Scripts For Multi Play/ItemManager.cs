@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     public int id;
-    public MeshRenderer projectileModel;
+
 
     public void Initialize(int _id)
     {
@@ -14,7 +14,7 @@ public class ItemManager : MonoBehaviour
 
     public void Collide()
     {
-        GameManagerInServer.projectiles.Remove(id);
+        GameManagerInServer.items.Remove(id);
         Destroy(gameObject);
     }
 
