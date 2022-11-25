@@ -219,12 +219,13 @@ public class PlayerMoveManager : MonoBehaviour
     void Start()
     {
         _firePoint = GameObject.Find(transform.name+"/FirePoint");
-        bulletPrefab = (GameObject)Resources.Load("Prefabs/bullet", typeof(GameObject));
+        bulletPrefab = (GameObject)Resources.Load("Prefabs/Bullet", typeof(GameObject));
     }
 
     private void FixedUpdate()
     {
         GetComponent<Rigidbody2D>().velocity = new Vector2(_hPoint * _hSpeed, GetComponent<Rigidbody2D>().velocity.y + _vPoint * _vSpeed);
+        _hPoint = _hPoint / (_xAxisDrag + 1.0f);
         _vPoint = 0.0f;
         GetComponent<SpriteRenderer>().flipX = _flip;
     }
@@ -325,7 +326,6 @@ public class PlayerMoveManager : MonoBehaviour
         {
             animator.SetBool("isWalking", false);
         }
-        _hPoint = _hPoint / (_xAxisDrag + 1.0f);
     }
 }
 

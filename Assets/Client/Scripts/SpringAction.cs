@@ -27,7 +27,7 @@ public class SpringAction : MonoBehaviour
                 if (collision.TryGetComponent<PlayerMoveManager>(out pmm))
                 {
                     pmm.OnJumpSpringAction();
-                    _ps.Play();
+                    //_ps.Play();
                     StartCoroutine(ChangeColor());
                 }
                 break;

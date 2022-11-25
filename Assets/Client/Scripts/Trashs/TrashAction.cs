@@ -8,10 +8,14 @@ public class TrashAction : MonoBehaviour
     {
         if (collision.transform.tag == "player")
         {
-            collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet();
+            for (int i = 0; i < 100; i++)
+            {
+                collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet();
+            }
             Destroy(gameObject);
+
+            }
         }
-    }
     void Start()
     {
         

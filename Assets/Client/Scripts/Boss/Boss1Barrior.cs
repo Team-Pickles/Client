@@ -25,7 +25,7 @@ public class Boss1Barrior : Boss1State
         for (int i=0;i < barriorCount;i++)
         {
             GameObject obj = Object.Instantiate(_boss.barrior, barriorPosition, new Quaternion());
-            
+            obj.GetComponent<Rigidbody2D>().angularVelocity = 100.0f;
             yield return new WaitForSeconds(2.0f / barriorCount);
         }
         _boss.SetState(new Boss1Rain(_boss));

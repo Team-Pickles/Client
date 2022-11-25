@@ -29,7 +29,6 @@ public class EnemyAction : MonoBehaviour
         {
             case "bullet":
             {
-                Destroy(collision.gameObject);
                 StartCoroutine(HitAction());
                 break;
             }
@@ -42,6 +41,11 @@ public class EnemyAction : MonoBehaviour
             case "player":
             {
                 collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
+                break;
+            }
+            case "bullet":
+            {
+                StartCoroutine(HitAction());
                 break;
             }
         }

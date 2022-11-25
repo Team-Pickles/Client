@@ -12,9 +12,9 @@ public class TntManager : MonoBehaviour
         {
             case "player":
             {
-                Vector2 value = (_player.transform.position - transform.position).normalized * 5.0f;
+                Vector2 value = (_player.transform.position - transform.position).normalized * 4.0f;
                 _player.GetComponent<PlayerMoveManager>().OnExplosionAction(value.x, value.y);
-                Destroy(this.gameObject);
+                //Destroy(this.gameObject);
                 break;
             }
         }

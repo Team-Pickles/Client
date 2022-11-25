@@ -12,6 +12,7 @@ public class Boss1BoomDummy : MonoBehaviour
         _origin = origin;
         _lifeTime = lifeTime;
         GetComponent<Rigidbody2D>().AddForce(((Vector2)transform.position - _origin).normalized * 130.0f);
+        GetComponent<Rigidbody2D>().angularVelocity = 150.0f;
     }
     private void Update()
     {
