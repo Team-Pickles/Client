@@ -25,7 +25,7 @@ public class TrashWhite : MonoBehaviour
         {
             Debug.Log(collision.transform.name + "¿¡°Ô ¸ÔÇûÀ½");
 
-            collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet();
+            collision.transform.GetComponent<PlayerMoveManager>().IncreaseBullet(1);
             Destroy(gameObject);
         }
     }
