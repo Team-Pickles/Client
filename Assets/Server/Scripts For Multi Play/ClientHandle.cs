@@ -20,6 +20,19 @@ public class ClientHandle : MonoBehaviour
     
     }
 
+    public static void JoinRoomDone(Packet _packet)
+    {
+        string _members = _packet.ReadString();
+        Debug.Log(_members);
+        string[] _memberList = _members.Split(',');
+        UIManagerInMultiPlayer.instance.memberNames.Clear();
+        for(int i = 0; i < _memberList.Length - 1; i++)
+        {
+            UIManagerInMultiPlayer.instance.memberNames.Add(_memberList[i]);
+            UIManagerInMultiPlayer.instance.SetMemberItem(i, _memberList[i]);
+        }
+    }
+
     public static void UDPTest(Packet _packet)
     {
         string _msg = _packet.ReadString();
@@ -99,12 +112,7 @@ public class ClientHandle : MonoBehaviour
         List<Vector3Int> _explodedPositions = new List<Vector3Int>();
         for(int i = 0; i < _arrLen; ++i) {
             Vector3 now = _packet.ReadVector3();
-            if(now.x < 0) {
-                _explodedPositions.Add(new Vector3Int((int)now.x - 1, (int)now.y - 1, (int)now.z));
-            }
-            else {
-                _explodedPositions.Add(new Vector3Int((int)now.x, (int)now.y - 1, (int)now.z));
-            }
+            _explodedPositions.Add(new Vector3Int((int)now.x, (int)now.y, (int)now.z));
         }
         if (GameManagerInServer.projectiles.TryGetValue(_projectileID, out ProjectileManager _projectile))
         {
@@ -182,6 +190,11 @@ public class ClientHandle : MonoBehaviour
         } else {
             Client.instance.roomId = _roomId;
         }
+    }
+
+    public static void MemberJoined(Packet _packet)
+    {
+
     }
 
     //public static void RoomList(Packet _packet)
