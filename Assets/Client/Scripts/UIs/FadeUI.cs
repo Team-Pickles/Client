@@ -11,7 +11,8 @@ public class FadeUI : MonoBehaviour
     private float fadeTime;
     [SerializeField]
     private AnimationCurve fadeCurve;
-    private Image image;
+    public Image screen;
+    public float colorChange = 0.0f;
     private FadeState fadeState;
 
     private IEnumerator Fade(float start, float end)
@@ -24,9 +25,11 @@ public class FadeUI : MonoBehaviour
             currentTime = Time.deltaTime;
             percent = currentTime / fadeTime;
 
-            Color color = image.color;
-            color.a = Mathf.Lerp(start, end, fadeCurve.Evaluate(percent));
-            image.color = color;
+            Color color = screen.color;
+            color.a = Mathf.Lerp(start, end, percent);
+            screen.color = color;
+            colorChange = screen.color.a;
+            screen.enabled = true;
 
             yield return null;
         }
@@ -51,24 +54,29 @@ public class FadeUI : MonoBehaviour
     }
     private IEnumerator PortalFade()
     {
-        bool enter = true;
-        while(enter)
+        while(true)
         {
             yield return StartCoroutine(Fade(1, 0));
+
             yield return StartCoroutine(Fade(0, 1));
-            enter = false;
+            break;
         }
     }
     // Start is called before the first frame update
     void Start()
     {
-        image = GetComponentInChildren<Image>();
+        screen.enabled = true;
         OnFade(FadeState.FadeOut);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Q))
+            OnFade(FadeState.FadeIn);
+        if (Input.GetKeyDown(KeyCode.W))
+            OnFade(FadeState.FadeOut);
+        if (Input.GetKeyDown(KeyCode.E))
+            OnFade(FadeState.PortalFade);
     }
 }
