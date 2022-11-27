@@ -108,5 +108,14 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
     }
-    //
+    
+    public static void MapIdUpdated(string _roomId, int map_id)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.mapIdSelected))
+        {
+            _packet.Write(_roomId);
+            _packet.Write(map_id);
+            SendTCPData(_packet);
+        }
+    }
 }

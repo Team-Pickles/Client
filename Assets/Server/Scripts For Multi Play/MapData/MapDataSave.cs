@@ -27,6 +27,7 @@ public class MapDataSave : MonoBehaviour
 
     [SerializeField] string filePath = "MapData/";
     [SerializeField] string fileName = "MyMap";
+    [SerializeField] string map_tag;
 
     Dictionary<Vector3, DataClass> infos;
     private string fullFilePath;
@@ -71,7 +72,7 @@ public class MapDataSave : MonoBehaviour
 
         SaveDataClass _forSend = new SaveDataClass();
         _forSend.map_info = toJson;
-        _forSend.map_tag = "test";
+        _forSend.map_tag = map_tag;
         _forSend.map_maker = "userId";
 
         string _forSendJson = JsonUtility.ToJson(_forSend);
