@@ -12218,7 +12218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5091156043021300391, guid: 0360358f1f549094a8d107cdfc3c8b9e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.2
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 5091156043021300391, guid: 0360358f1f549094a8d107cdfc3c8b9e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -15293,6 +15293,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss2Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 4609454281097621001, guid: 778b88f214778ea4fbe0e76828ae69b9, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5319187421836390944, guid: 778b88f214778ea4fbe0e76828ae69b9, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -15335,6 +15339,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5319187421836390944, guid: 778b88f214778ea4fbe0e76828ae69b9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8722097998968299695, guid: 778b88f214778ea4fbe0e76828ae69b9, type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

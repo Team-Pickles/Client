@@ -6,6 +6,8 @@ public enum BossState { IdleState = 0, MoveToPlayer = 1, Jumping = 2, GroundPoun
 
 public class BossMoveManager : MonoBehaviour
 {
+    public GameObject trashPrefab;
+
     private GameObject _grid;
     private MapManager _mm;
     private int _hp = 5;
@@ -13,12 +15,17 @@ public class BossMoveManager : MonoBehaviour
     private Vector3Int _bossPosition;
     private Vector3 _aimPosition;
     private BossState _bossState = BossState.IdleState;
-    private bool _onGround = false, _first = true, _isDead = false, _movement = true, _immortal = false;
-    private GameObject _trashPrefab;
+    private bool _onGround = false, _first = true, _movement = true, _immortal = true, _playerInSight = false;
+    
     public bool OnGround
     {
         get { return _onGround; }
         set { _onGround = value; }
+    }
+    public bool PlayerInSight
+    {
+        get { return _playerInSight; }
+        set { _playerInSight = value; }
     }
     // Start is called before the first frame update
     void Start()
@@ -26,7 +33,6 @@ public class BossMoveManager : MonoBehaviour
         _grid = GameObject.Find("Grid");
         _mm = _grid.GetComponent<MapManager>();
         _bossPosition = _mm.GetTopLeftBasePosition(transform.position);
-        _trashPrefab = (GameObject)Resources.Load("Prefabs/trash", typeof(GameObject));
     }
     public void ChangeState(BossState newState)
     {
@@ -85,8 +91,9 @@ public class BossMoveManager : MonoBehaviour
         Debug.Log("Boss::IdleState");
         while (true)
         {
-            if (_onGround)
+            if (_onGround && _playerInSight)
             {
+                _immortal = false;
                 yield return new WaitForSeconds(1.0f);
                 ChangeState(BossState.MoveToPlayer);
             }
@@ -173,8 +180,8 @@ public class BossMoveManager : MonoBehaviour
         while (true)
         {
             GameObject trashLeft, trashRight;
-            trashLeft = Object.Instantiate(_trashPrefab, new Vector3(transform.position.x - transform.localScale.x / 2.0f * 1.4f, transform.position.y + transform.localScale.y / 2.0f * 1.1f, 0), new Quaternion());
-            trashRight = Object.Instantiate(_trashPrefab, new Vector3(transform.position.x + transform.localScale.x / 2.0f * 1.4f, transform.position.y + transform.localScale.y / 2.0f * 1.1f, 0), new Quaternion());
+            trashLeft = Object.Instantiate(trashPrefab, new Vector3(transform.position.x - transform.localScale.x / 2.0f * 1.4f, transform.position.y + transform.localScale.y / 2.0f * 1.1f, 0), new Quaternion());
+            trashRight = Object.Instantiate(trashPrefab, new Vector3(transform.position.x + transform.localScale.x / 2.0f * 1.4f, transform.position.y + transform.localScale.y / 2.0f * 1.1f, 0), new Quaternion());
             trashLeft.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(-200.0f, 300.0f));
             trashRight.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(200.0f, 300.0f));
             yield return new WaitForSeconds(3.0f);
@@ -189,18 +196,26 @@ public class BossMoveManager : MonoBehaviour
             Destroy(collision.gameObject);
             StartCoroutine(Damaged());
             if (_hp == 0)
-            {
-                _isDead = true;
                 Destroy(gameObject);
-            }
         }
     }
-    
-    private void OnCollisionStay2D(Collision2D collision)
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.name == "Player" && !_isDead)
+        switch (collision.transform.tag)
         {
-            collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
+            case "player":
+                {
+                    collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
+                    break;
+                }
+            case "bullet":
+                {
+                    StartCoroutine(Damaged());
+                    if (_hp == 0)
+                        Destroy(gameObject);
+                    break;
+                }
         }
     }
 
