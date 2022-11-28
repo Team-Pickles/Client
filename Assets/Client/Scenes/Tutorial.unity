@@ -9883,7 +9883,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2801085281112348181, guid: 2e62f5363f842ca4f9a6db3d4eb609f1, type: 3}
       propertyPath: fadeTime
-      value: 0.1
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2801085281112348183, guid: 2e62f5363f842ca4f9a6db3d4eb609f1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7611570196196680503, guid: 2e62f5363f842ca4f9a6db3d4eb609f1, type: 3}
       propertyPath: m_Name
@@ -12749,7 +12753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8667835368694562382, guid: 0360358f1f549094a8d107cdfc3c8b9e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.18784
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0360358f1f549094a8d107cdfc3c8b9e, type: 3}

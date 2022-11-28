@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class Grenade : Skill
 {
-    GameObject _player;
+    GameObject _player, _firePoint;
     private GameObject _tilemapFragile, _tilemapBlock;
     private PlayerMoveManager _pmm;
     private SpellManager _sm;
@@ -15,6 +15,7 @@ public class Grenade : Skill
     public override void OnChange()
     {
         _player = GameObject.Find("Player");
+        _firePoint = GameObject.Find("FirePoint");
         _sm = _player.GetComponentInChildren<SpellManager>();
         _tilemapFragile = GameObject.Find("Tilemap_fragile");
         _tilemapBlock = GameObject.Find("Tilemap_block");
@@ -31,23 +32,14 @@ public class Grenade : Skill
     }
     public override IEnumerator OnFire()
     {
-        bool flip = _player.GetComponent<SpriteRenderer>().flipX;
         if (_pmm.GrenadeCount > 0)
         {
             _pmm.DecreaseGrenade();
             GameObject grenade;
-            if(!flip)
-            {
-                grenade = UnityEngine.Object.Instantiate(_pmm.grenadePrefab, new Vector3(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
-                grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(100.0f, 500.0f));
-                grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
-            }
-            else
-            {
-                grenade = UnityEngine.Object.Instantiate(_pmm.grenadePrefab, new Vector3(_player.transform.position.x - _player.transform.localScale.x / 2.0f * 1.1f, _player.transform.position.y, 0), new Quaternion());
-                grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100.0f, 500.0f));
-                grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
-            }
+            int isFliped = _player.GetComponent<SpriteRenderer>().flipX ? -1 : 1;
+            grenade = UnityEngine.Object.Instantiate(_pmm.grenadePrefab, _firePoint.transform.position, new Quaternion());
+            grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(100.0f * isFliped, 500.0f));
+            grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
 
             yield return new WaitForSeconds(5.0f);
 
