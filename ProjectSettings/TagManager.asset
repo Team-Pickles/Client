@@ -12,6 +12,7 @@ TagManager:
   - trash
   - rope
   - block
+  - stool
   layers:
   - Default
   - TransparentFX

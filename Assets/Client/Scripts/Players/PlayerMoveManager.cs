@@ -227,7 +227,7 @@ public class PlayerMoveManager : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity = new Vector2(_hPoint * _hSpeed, GetComponent<Rigidbody2D>().velocity.y + _vPoint * _vSpeed);
         _hPoint = _hPoint / (_xAxisDrag + 1.0f);
         _vPoint = 0.0f;
-        GetComponent<SpriteRenderer>().flipX = _flip;
+        //GetComponent<SpriteRenderer>().flipX = _flip;
     }
     void Update()
     {
@@ -251,6 +251,7 @@ public class PlayerMoveManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.D))
                 {
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
                     _vPoint = 1.2f;
                     _isHanging = false;
                 }
@@ -303,22 +304,28 @@ public class PlayerMoveManager : MonoBehaviour
 
             if (_hPoint > 0)
             {
-                if (_firePoint.transform.localPosition.x < 0)
-                    _firePoint.transform.localPosition = new Vector3(-_firePoint.transform.localPosition.x, _firePoint.transform.localPosition.y, 0.0f);
+                //if (_firePoint.transform.localPosition.x < 0)
+                //    _firePoint.transform.localPosition = new Vector3(-_firePoint.transform.localPosition.x, _firePoint.transform.localPosition.y, 0.0f);
 
-                Vector2 offset = GetComponent<BoxCollider2D>().offset;
-                offset.x = 0.06f;
-                GetComponent<BoxCollider2D>().offset = offset;
+                //Vector2 offset = GetComponent<BoxCollider2D>().offset;
+                //offset.x = 0.06f;
+                //GetComponent<BoxCollider2D>().offset = offset;
+                Vector2 playerScale = transform.localScale;
+                playerScale.x = Mathf.Abs(playerScale.x);
+                transform.localScale = playerScale;
                 _flip = false;
             }
             else if (_hPoint < 0)
             {
-                if (_firePoint.transform.localPosition.x > 0)
-                    _firePoint.transform.localPosition = new Vector3(-_firePoint.transform.localPosition.x, _firePoint.transform.localPosition.y, 0.0f);
+                //if (_firePoint.transform.localPosition.x > 0)
+                //    _firePoint.transform.localPosition = new Vector3(-_firePoint.transform.localPosition.x, _firePoint.transform.localPosition.y, 0.0f);
 
-                Vector2 offset = GetComponent<BoxCollider2D>().offset;
-                offset.x = -0.06f;
-                GetComponent<BoxCollider2D>().offset = offset;
+                //Vector2 offset = GetComponent<BoxCollider2D>().offset;
+                //offset.x = -0.06f;
+                //GetComponent<BoxCollider2D>().offset = offset;
+                Vector2 playerScale = transform.localScale;
+                playerScale.x = -Mathf.Abs(playerScale.x);
+                transform.localScale = playerScale;
                 _flip = true;
             }
         }
