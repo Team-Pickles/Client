@@ -62,7 +62,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         //주소가 여러개일 수 있어서 배열로 받음
         IPAddress ipAddr = ipHost.AddressList[0];
         //최종적인 주소
-        IPEndPoint endPoint = new IPEndPoint(ipAddr, 62525);
+        IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
         try
         {
@@ -378,6 +378,23 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             MapDataLoader.instance.Load(fromJson);
         }
         ClientSend.StartGame(Client.instance.roomId, Convert.ToInt32(RoomInfoUiTexts[0].text));
+    }
+
+    public void StartGameProcess(int map_id)
+    {
+        loadingScene.SetActive(false);
+        roomLobbyUI.SetActive(false);
+        int mapId = Convert.ToInt32(RoomInfoUiTexts[0].text);
+        if(mapId == 0)
+        {
+            string path = "MapData/MyMap.json";
+            if(File.Exists(path) == false){
+                Debug.LogError("Load failed. There is no file(MyMap.json).");
+                return;
+            }
+            string fromJson = File.ReadAllText(path);
+            MapDataLoader.instance.Load(fromJson);
+        }
     }
 
     public void RefreshRoomList()

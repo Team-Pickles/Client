@@ -35,6 +35,7 @@ public enum ServerPackets
     roomList,
     charactorFlip,
     ropeACK,
+    startGame
 }
 
 /// <summary>Sent from client to server.</summary>

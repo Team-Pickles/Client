@@ -251,4 +251,10 @@ public class ClientHandle : MonoBehaviour
             _enemy.Collide();
         }
     }
+
+    public static void StartGame(Packet _packet)
+    {
+        int _mapId = _packet.ReadInt();
+        UIManagerInMultiPlayer.instance.StartGameProcess(_mapId);
+    }
 }
