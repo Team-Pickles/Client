@@ -10,7 +10,7 @@ public class Fragile : MonoBehaviour
     private float _x, _y;
     private Vector3Int _position;
     private Tilemap _tilemap;
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.name == "Bullet(Clone)")
         {
@@ -18,7 +18,6 @@ public class Fragile : MonoBehaviour
             _y = collision.transform.position.y;
             _posX = (int)Math.Floor(_x);
             _posY = (int)Math.Floor(_y);
-            Destroy(collision.transform.gameObject);
             _tilemap = gameObject.GetComponent<Tilemap>();
             for (int i = -1; i < 2; i++)
             {
