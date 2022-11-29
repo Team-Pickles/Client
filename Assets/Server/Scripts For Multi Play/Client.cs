@@ -42,6 +42,11 @@ public class Client : MonoBehaviour
         Disconnect();
     }
 
+    public void RoomExit()
+    {
+        Disconnect();
+    }
+
     public void ConnectToServer()
     {
         tcp = new TCP();
@@ -85,6 +90,10 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.ItemPosition, ClientHandle.ItemPosition },
             { (int)ServerPackets.itemCollide, ClientHandle.ItemCollide },
             { (int)ServerPackets.roomJoined, ClientHandle.JoinRoomDone },
+            { (int)ServerPackets.mapIdSelected, ClientHandle.MapIdUpdated },
+            { (int)ServerPackets.spawnEnemy, ClientHandle.SpawnEnemy },
+            { (int)ServerPackets.enemyPosition, ClientHandle.EnemyPosition },
+            { (int)ServerPackets.enemyHealth, ClientHandle.EnemyCollide },
         };
         Debug.Log("Initiallized packets.");
     }

@@ -12,6 +12,7 @@ public class Data
 {
     public string ok;
     public Token[] tokens;
+    public string username;
 }
 
 [Serializable]
@@ -46,20 +47,22 @@ public class UIManager : MonoBehaviour
     User user = new User();
     SignUpData signUpData = new SignUpData();
     Data d;
-    Token token = new Token();
+
     public string authorization;
 
     public static UIManager instance;
 
     public GameObject startMenu;
-    public GameObject multiMenu;
+    
     public GameObject loginMenu;
     public GameObject signUpMenu;
     public GameObject signUpPanel;
     public GameObject logintestMenu;
-    public GameObject connectingMenu;
+
     public Button refreshButton;
-    public InputField usernameField;
+    public Button loginSubmitButton;
+    public GameObject logoutButton;
+    public GameObject[] inactiveButtons;
     public InputField idField;
     public InputField passwordField;
 
@@ -82,6 +85,15 @@ public class UIManager : MonoBehaviour
             Debug.Log("Instance already exists,destroying object!");
             Destroy(this);
         }
+        
+        if(UserDataManager.instance.isLogined)
+        {
+            logoutButton.SetActive(true);
+            foreach(GameObject _button in inactiveButtons)
+            {
+                _button.SetActive(false);
+            }
+        }
     }
 
     public void SinglePlayButtonClicked()
@@ -91,8 +103,7 @@ public class UIManager : MonoBehaviour
 
     public void MultyPlayButtonClicked()
     {
-        // startMenu.SetActive(false);
-        // multiMenu.SetActive(true);
+
         SceneManager.LoadScene("MultiplaySample");
     }
 
@@ -159,14 +170,25 @@ public class UIManager : MonoBehaviour
             yield return StartCoroutine(LoginProcess((_Tocken) =>
             {
                 d = JsonUtility.FromJson<Data>(_Tocken);
-                user.accessToken = d.tokens[0].accessToken;
-                user.refreshToken = d.tokens[0].refreshToken;
+                UserDataManager.instance.SetToken(d.tokens[0].accessToken, d.tokens[0].refreshToken);
+                UserDataManager.instance.SetUserName(d.username);
+                UserDataManager.instance.isLogined = true;
                 Debug.Log($"{d.tokens[0].accessToken},{d.tokens[0].refreshToken}");
                 loginMenu.SetActive(false);
-                logintestMenu.SetActive(true);
+                startMenu.SetActive(true);
+                idField.text = "";
+                passwordField.text = "";
+                logoutButton.SetActive(true);
+                foreach(GameObject _button in inactiveButtons)
+                {
+                    _button.SetActive(false);
+                }
                 isDone = true;
             }));
             if(isDone) loginCoroutine = null;
+            else {
+                Invoke("setLoginButtonEnable", 1.0f);
+            }
         }
 
         IEnumerator LoginProcess(Action<string> Tocken)
@@ -257,8 +279,10 @@ public class UIManager : MonoBehaviour
         for(int i = 0; i < dataCnt; ++i){
             InputField inputField;
             signUpPanel.transform.GetChild(i).gameObject.TryGetComponent<InputField>(out inputField);
-            if(inputField != null)
+            if(inputField != null) {
                 datas.Add(inputField.name, inputField.text);
+                inputField.text = "";
+            }
         }
 
         Debug.Log(datas.Count);
@@ -327,14 +351,13 @@ public class UIManager : MonoBehaviour
     {
         refreshButton.interactable = false;
 
-        string json = JsonUtility.ToJson(user);
+        // string json = JsonUtility.ToJson(user);
 
         if(refreshCoroutine == null) {
             refreshCoroutine = StartCoroutine(Refresh((_Tocken) =>
             {
                 d = JsonUtility.FromJson<Data>(_Tocken);
-                user.accessToken = d.tokens[0].accessToken;
-                user.refreshToken = d.tokens[0].refreshToken;
+                UserDataManager.instance.SetAccessToken(d.tokens[0].accessToken);
                 Debug.Log($"{d.tokens[0].accessToken},{d.tokens[0].refreshToken}");
             }));
             Invoke("setRefreshButtonEnable", 10f);
@@ -344,25 +367,20 @@ public class UIManager : MonoBehaviour
 
         IEnumerator Refresh(Action<string> Tocken)
         {
-            using (UnityWebRequest request = UnityWebRequest.Post("http://localhost:3001/api/auth/refresh", json))
+            using (UnityWebRequest request = UnityWebRequest.Post("http://localhost:3001/api/auth/refresh", ""))
             {
-                byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
-
-                request.uploadHandler.Dispose();
+                string _accessToken = UserDataManager.instance.accessToken;
+                string _refreshToken = UserDataManager.instance.refreshToken;
 
                 request.SetRequestHeader("Content-Type", "application/json");
-                request.SetRequestHeader("Authorization", "Bearer " + user.accessToken);
-
-                request.SetRequestHeader("refresh", user.refreshToken);
-
-                request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+                request.SetRequestHeader("Authorization", "Bearer " + _accessToken);
+                request.SetRequestHeader("refresh", _refreshToken);
                 request.downloadHandler = new DownloadHandlerBuffer();
 
                 yield return request.SendWebRequest();
                 authorization = request.downloadHandler.text;
                 string temp = authorization;
-                string json2 = JsonUtility.ToJson(temp);
-                //Tocken jsontemp = JsonUtility.FromJson<Tocken>(temp);
+
 
                 if (request.error != null)
                 {
@@ -374,8 +392,7 @@ public class UIManager : MonoBehaviour
                     Debug.Log(temp);
                     Tocken(temp);
                 }
-
-                request.uploadHandler.Dispose();
+                //
                 request.downloadHandler.Dispose();
                 request.Dispose();
             }
@@ -388,13 +405,16 @@ public class UIManager : MonoBehaviour
         if(logoutCoroutine == null) {
             logoutCoroutine = StartCoroutine(Logout((isLogout) =>
             {
-                user.accessToken = null;
-                user.refreshToken = null;
-                token.accessToken = null;
-                token.refreshToken = null;
+                if(isLogout) {
+                    UserDataManager.instance.Reset();
 
-                logintestMenu.SetActive(false);
-                startMenu.SetActive(true);
+                    logoutButton.SetActive(false);
+                    foreach(GameObject _button in inactiveButtons)
+                    {
+                        _button.SetActive(true);
+                    }
+                    startMenu.SetActive(true);
+                }
             }));
         }
 
@@ -402,22 +422,18 @@ public class UIManager : MonoBehaviour
         {
             using (UnityWebRequest request = UnityWebRequest.Delete("http://localhost:3001/api/auth/logout"))
             {
-                byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
-
-                
+                string _accessToken = UserDataManager.instance.accessToken;
                 request.SetRequestHeader("Content-Type", "application/json");
-                request.SetRequestHeader("Authorization", "Bearer " + user.accessToken);
+                request.SetRequestHeader("Authorization", "Bearer " + _accessToken);
                 Debug.Log(authorization);
-
-                request.uploadHandler = new UploadHandlerRaw(jsonToSend);
-
+                //
                 yield return request.SendWebRequest();
 
                 if (request.error != null)
                 {
                     Debug.Log("failed");
                     Debug.Log(request.error);
-                    isLogout(false);
+
                 }
                 else
                 {
@@ -427,7 +443,7 @@ public class UIManager : MonoBehaviour
 
                 
                 request.Dispose();
-                request.uploadHandler.Dispose();
+
                 logoutCoroutine = null;
             }
         }
@@ -436,6 +452,39 @@ public class UIManager : MonoBehaviour
     private void setRefreshButtonEnable() {
         refreshButton.interactable = true;
         refreshCoroutine = null;
+    }
+
+    private void setLoginButtonEnable() {
+        loginSubmitButton.interactable = true;
+        loginCoroutine = null;
+    }
+
+    private void OnApplicationQuit() {
+        if(UserDataManager.instance.isLogined)
+            LogOutButtonClicked();
+    }
+
+    public void BackToMainFromLogin() {
+        idField.text = "";
+        passwordField.text = "";
+        loginMenu.SetActive(false);
+        startMenu.SetActive(true);
+        loginCoroutine = null;
+    }
+
+    public void BackToMainFromSignUp() {
+        int dataCnt = signUpPanel.transform.childCount;
+        for(int i = 0; i < dataCnt; ++i){
+            InputField _inputField;
+            signUpPanel.transform.GetChild(i).gameObject.TryGetComponent<InputField>(out _inputField);
+            if(_inputField != null)
+            {
+                _inputField.text = "";
+            }
+        }
+        signUpMenu.SetActive(false);
+        startMenu.SetActive(true);
+        signUpCoroutine = null;
     }
 
     public void QuitButtonClicked()

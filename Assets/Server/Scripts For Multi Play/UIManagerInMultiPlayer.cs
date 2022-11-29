@@ -33,6 +33,8 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     public List<GameObject> MemberListUiTexts;
     public GameObject MapSelectPopUp;
     public List<GameObject> MapListUis;
+    public Button MapLeftPageButton;
+    public Button MapRightPageButton;
     public Button roomButtonPrefab;
     public Button MemberButtonPrefab;
 
@@ -65,7 +67,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         try
         {
             socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
+            socket.ReceiveTimeout = 10000;
             //연결 시도
             socket.Connect(endPoint);
             Debug.Log($"Connected To {socket.RemoteEndPoint.ToString()}");
@@ -120,8 +122,8 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         foreach(KeyValuePair<int, string> _roomData in roomDatas)
         {
             Button _btn = Instantiate<Button>(roomButtonPrefab, roomWrapper.transform);
-            _btn.name = _roomData.Key.ToString();
-            _btn.GetComponentInChildren<Text>().text = _roomData.Value;
+            _btn.name = _roomData.Key.ToString() + "_" + _roomData.Value.Split("-")[0];
+            _btn.GetComponentInChildren<Text>().text = _roomData.Value.Split("-")[1];
         }
 
         loadingScene.SetActive(false);
@@ -130,7 +132,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     public void CreateRoomButtonClicked(InputField _roomName)
     {
         Debug.Log("[CreateRoomButtonClicked]");
-        string temp = $"CreateRoom {_roomName.text}";
+        string temp = $"CreateRoom-{_roomName.text}";
         Debug.Log(temp);
         byte[] sendBuff = Encoding.UTF8.GetBytes(temp);
         Debug.Log(socket);
@@ -143,11 +145,11 @@ public class UIManagerInMultiPlayer : MonoBehaviour
                 string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
                 if(recvData != "None")
                 {
-                    string[] recvDatas = recvData.Split(' ');
+                    string[] recvDatas = recvData.Split('-');
                     Debug.Log($"[Room] {recvDatas[0]} {recvDatas[1]}");
                     JoinClicked(recvDatas[0]);
                     lobbyUI.SetActive(false);
-                    loadingScene.SetActive(true);
+
                 }
                 break;
 
@@ -157,36 +159,32 @@ public class UIManagerInMultiPlayer : MonoBehaviour
                     Debug.Log(_e.SocketErrorCode);
                     break;
                 } else {
-                    Debug.Log(errCnt);
+                    Debug.Log(_e.SocketErrorCode + "_" + errCnt);
                 }
             }
         }
     }
 
-    public void MapSelectButtonClicked()
+    public void MapSearchButtonClicked(InputField _mapTagField)
     {
-        MapSelectPopUp.SetActive(true);
+        string _mapTag = _mapTagField.text;
+        if(_mapTag == ""){
+            MapSelectButtonClicked();
+            return;
+        }
+        mapListItems.Clear();
+        nowMapItemStartNum = 0;
+        MapLeftPageButton.interactable = false;
         StartCoroutine(IneternetConnectCheck(isConnected => {
             if (isConnected)
             {
                 Debug.Log("Server Available!");
                 StartCoroutine(GetMapList(mapListItemCnt => {
-                    int nowMapItemNum = 0;
-                    foreach(MapListItem _item in mapListItems.Values)
-                    {
-                        GameObject nowListItem = MapListUis[nowMapItemNum-nowMapItemStartNum];
-                        nowListItem.SetActive(true);
-                        nowListItem.transform.GetChild(0).GetComponent<Text>().text = $"{_item.map_id}";
-                        nowListItem.transform.GetChild(1).GetComponent<Text>().text = _item.map_tag;
-                        nowListItem.transform.GetChild(2).GetComponent<Text>().text = $"{_item.map_grade}";
-                        nowListItem.transform.GetChild(3).GetComponent<Text>().text = $"{_item.map_difficulty}";
-                        nowListItem.transform.GetChild(4).GetComponent<Text>().text = $"{_item.map_maker}";
-                        nowMapItemNum++;
-                        if(nowMapItemNum == 4)
-                        {
-                            break;
-                        }
-                    }
+                    MapListSet();
+                    if(mapListItemCnt < 5)
+                        MapRightPageButton.interactable = false;
+                    else
+                        MapRightPageButton.interactable = true;
                 }));
             }
             else
@@ -194,58 +192,131 @@ public class UIManagerInMultiPlayer : MonoBehaviour
                 Debug.Log("Internet or server Not Available");
             }
         }));
+    }
 
-        IEnumerator GetMapList(Action<int> ResultHandler){
-            using ( UnityWebRequest request = UnityWebRequest.Get("http://localhost:3001/api/map/getAllList"))
+    public void MapSelectButtonClicked()
+    {
+        MapSelectPopUp.SetActive(true);
+        mapListItems.Clear();
+        nowMapItemStartNum = 0;
+        MapLeftPageButton.interactable = false;
+        StartCoroutine(IneternetConnectCheck(isConnected => {
+            if (isConnected)
             {
-                request.downloadHandler = new DownloadHandlerBuffer();
-
-                yield return request.SendWebRequest();
-                string _result = request.downloadHandler.text;
-                string _forparse = "{\"Items\":" + _result + "}";
-                MapDatas mapInfos = JsonUtility.FromJson<MapDatas>(_forparse);
-                foreach(MapDataClass _mapInfo in mapInfos.Items)
-                {
-                    MapListItem _item = new MapListItem();
-                    _item.map_id = _mapInfo.map_id;
-                    _item.map_tag = _mapInfo.map_tag;
-                    _item.map_info = _mapInfo.map_info;
-                    _item.map_grade = _mapInfo.map_grade;
-                    _item.map_difficulty = _mapInfo.map_difficulty;
-                    _item.map_maker = _mapInfo.map_maker;
-                    mapListItems.Add(_item.map_id, _item);
-                }
-
-                if (request.error != null)
-                {
-                    Debug.Log(request.error);
-                }
-                else
-                {
-                    ResultHandler(mapListItems.Count);
-                }
-                request.downloadHandler.Dispose();
-                request.Dispose();
+                Debug.Log("Server Available!");
+                StartCoroutine(GetMapList(mapListItemCnt => {
+                    MapListSet();
+                    if(mapListItemCnt < 5)
+                        MapRightPageButton.interactable = false;
+                    else
+                        MapRightPageButton.interactable = true;
+                }));
             }
-        }
-
-        IEnumerator IneternetConnectCheck(Action<bool> action)
-        {
-            using (UnityWebRequest request = new UnityWebRequest("http://localhost:3001/"))
+            else
             {
+                Debug.Log("Internet or server Not Available");
+            }
+        }));
+    }
 
-                request.downloadHandler = new DownloadHandlerBuffer();
-                yield return request.SendWebRequest();
-                if (request.error != null)
-                {
-                    action(false);
-                }
-                else
-                {
-                    action(true);
-                }
-                request.downloadHandler.Dispose();
-                request.Dispose();
+    public void MapLeftPageButtonClicked()
+    {
+        nowMapItemStartNum -= 5;
+        if(nowMapItemStartNum == 0)
+            MapLeftPageButton.interactable = false;
+        MapListSet();
+        MapRightPageButton.interactable = true;
+    }
+
+    public void MapRightPageButtonClicked()
+    {
+        nowMapItemStartNum += 5;
+        if(nowMapItemStartNum + 5 >= mapListItems.Count)
+            MapRightPageButton.interactable = false;
+        MapListSet();
+        MapLeftPageButton.interactable = true;
+    }
+
+    IEnumerator GetMapList(Action<int> ResultHandler){
+        using ( UnityWebRequest request = UnityWebRequest.Get("http://localhost:3001/api/map/getAllList"))
+        {
+            request.downloadHandler = new DownloadHandlerBuffer();
+
+            yield return request.SendWebRequest();
+            string _result = request.downloadHandler.text;
+            string _forparse = "{\"Items\":" + _result + "}";
+            MapDatas mapInfos = JsonUtility.FromJson<MapDatas>(_forparse);
+            foreach(MapDataClass _mapInfo in mapInfos.Items)
+            {
+                MapListItem _item = new MapListItem();
+                _item.map_id = _mapInfo.map_id;
+                _item.map_tag = _mapInfo.map_tag;
+                _item.map_info = _mapInfo.map_info;
+                _item.map_grade = _mapInfo.map_grade;
+                _item.map_difficulty = _mapInfo.map_difficulty;
+                _item.map_maker = _mapInfo.map_maker;
+                mapListItems.Add(_item.map_id, _item);
+            }
+
+            if (request.error != null)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                ResultHandler(mapListItems.Count);
+            }
+            request.downloadHandler.Dispose();
+            request.Dispose();
+        }
+    }
+
+    IEnumerator IneternetConnectCheck(Action<bool> action)
+    {
+        using (UnityWebRequest request = new UnityWebRequest("http://localhost:3001/"))
+        {
+
+            request.downloadHandler = new DownloadHandlerBuffer();
+            yield return request.SendWebRequest();
+            if (request.error != null)
+            {
+                action(false);
+            }
+            else
+            {
+                action(true);
+            }
+            request.downloadHandler.Dispose();
+            request.Dispose();
+        }
+    }
+
+    private void MapListUIOff()
+    {
+        foreach(GameObject MapUI in MapListUis)
+        {
+            MapUI.SetActive(false);
+        }
+    }
+
+    private void MapListSet()
+    {
+        MapListUIOff();
+        List<MapListItem> mapListItemsValues = new List<MapListItem>(mapListItems.Values);
+        for(int nowMapItemNum = nowMapItemStartNum; nowMapItemNum < mapListItemsValues.Count; nowMapItemNum++)
+        {
+            GameObject nowListItem = MapListUis[nowMapItemNum-nowMapItemStartNum];
+            MapListItem _item = mapListItemsValues[nowMapItemNum];
+            Debug.Log(_item.map_id);
+            nowListItem.SetActive(true);
+            nowListItem.transform.GetChild(0).GetComponent<Text>().text = $"{_item.map_id}";
+            nowListItem.transform.GetChild(1).GetComponent<Text>().text = _item.map_tag;
+            nowListItem.transform.GetChild(2).GetComponent<Text>().text = $"{_item.map_grade}";
+            nowListItem.transform.GetChild(3).GetComponent<Text>().text = $"{_item.map_difficulty}";
+            nowListItem.transform.GetChild(4).GetComponent<Text>().text = $"{_item.map_maker}";
+            if(nowMapItemNum-nowMapItemStartNum == 4)
+            {
+                break;
             }
         }
     }
@@ -256,6 +327,17 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         MapListItem _nowMap = mapListItems[_mapId];
         MapDataLoader.instance.Load(_nowMap.map_info);
         MapSelectPopUp.SetActive(false);
+        RoomInfoUiTexts[0].text = $"{_nowMap.map_id}";
+        RoomInfoUiTexts[1].text = _nowMap.map_maker;
+        RoomInfoUiTexts[2].text = $"{_nowMap.map_difficulty}";
+
+        ClientSend.MapIdUpdated(Client.instance.roomId, _mapId);
+    }
+
+    public void MapIdUpdated(int _mapId)
+    {
+        MapListItem _nowMap = mapListItems[_mapId];
+        MapDataLoader.instance.Load(_nowMap.map_info);
         RoomInfoUiTexts[0].text = $"{_nowMap.map_id}";
         RoomInfoUiTexts[1].text = _nowMap.map_maker;
         RoomInfoUiTexts[2].text = $"{_nowMap.map_difficulty}";
@@ -305,6 +387,14 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         MemberListUiTexts[_id].GetComponentInChildren<Text>().text = _username;
     }
 
+    public void ExitRoomButtonClicked()
+    {
+        Client.instance.RoomExit();
+        roomLobbyUI.SetActive(false);
+        loadingScene.SetActive(true);
+        BackToMain();
+    }
+
     public void JoinClicked(string _roomId)
     {
         string tempString = "JoinRoom" + _roomId;
@@ -321,6 +411,20 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             RefreshRoomList();
             Debug.Log($"This room({_roomId}) is destroyed.");
         } else {
+            loadingScene.SetActive(true);
+            StartCoroutine(IneternetConnectCheck(isConnected => {
+                if (isConnected)
+                {
+                    Debug.Log("Server Available!");
+                    StartCoroutine(GetMapList(mapListItemCnt => {
+                        Debug.Log("Map Loaded.");
+                    }));
+                }
+                else
+                {
+                    Debug.Log("Internet or server Not Available");
+                }
+            }));
             StartCoroutine(ConnectToServer(port, _roomId));
         }
     }

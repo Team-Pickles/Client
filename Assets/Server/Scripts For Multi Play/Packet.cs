@@ -29,7 +29,8 @@ public enum ServerPackets
     ItemPosition,
     spawnItem,
     itemCollide,
-    roomJoined
+    roomJoined,
+    mapIdSelected
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -44,6 +45,7 @@ public enum ClientPackets
     playerEndVacuume,
     ItemCollide,
     startGame,
+    mapIdSelected
 }
 
 public class Packet : IDisposable
