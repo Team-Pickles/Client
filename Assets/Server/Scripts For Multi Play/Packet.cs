@@ -35,7 +35,7 @@ public enum ServerPackets
     roomList,
     charactorFlip,
     ropeACK,
-
+    mapIdSelected
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -54,7 +54,8 @@ public enum ClientPackets
     startGame,
     roomList,
     playerJump,
-    playerRopeMove
+    playerRopeMove,
+    mapIdSelected
 }
 
 public class Packet : IDisposable

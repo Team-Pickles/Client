@@ -531,6 +531,8 @@ MonoBehaviour:
   - {fileID: 921065144}
   - {fileID: 404648869}
   - {fileID: 982366559}
+  MapLeftPageButton: {fileID: 733175268}
+  MapRightPageButton: {fileID: 1759624491}
   roomButtonPrefab: {fileID: 3184287030912844287, guid: 4059510947cd6df4bab9ae4ad67b4f3e, type: 3}
   MemberButtonPrefab: {fileID: 235784112}
   memberNames: []
@@ -4215,10 +4217,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1503166957}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 149483909}
+        m_TargetAssemblyTypeName: UIManagerInMultiPlayer, Assembly-CSharp
+        m_MethodName: MapLeftPageButtonClicked
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4428,7 +4430,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 792719187}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 149483909}
+        m_TargetAssemblyTypeName: UIManagerInMultiPlayer, Assembly-CSharp
+        m_MethodName: MapSearchButtonClicked
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 503677181}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.InputField, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &792719187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9240,7 +9254,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1197004657}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 149483909}
+        m_TargetAssemblyTypeName: UIManagerInMultiPlayer, Assembly-CSharp
+        m_MethodName: ExitRoomButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1197004657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10781,7 +10807,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 5091156043021300394, guid: 9d4c7b654e282054b8cdf54c351ec3db, type: 3}
   itemSpawnerPrefab: {fileID: 0}
   projectilePrefab: {fileID: 3305180255072280105, guid: d95340b9df0ea0a4fa5544e394c0cad4, type: 3}
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 5121378400887899133, guid: 755e1aa1cce69694cbe4897f7ecf3ce5, type: 3}
   bulletPrefab: {fileID: 8324424231299544829, guid: d7f560be4ab14364291129603590fdd8, type: 3}
   itemPrefab: {fileID: 8776486889826405664, guid: 4322894dc47fd9f4eb44ed937d8d1dd2, type: 3}
   camera: {fileID: 1090682075}
@@ -11345,10 +11371,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1503166957}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 149483909}
+        m_TargetAssemblyTypeName: UIManagerInMultiPlayer, Assembly-CSharp
+        m_MethodName: MapRightPageButtonClicked
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

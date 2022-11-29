@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class EnemyAction : MonoBehaviour
 {
+    [SerializeField] private bool isMove;
+    private GameObject _player;
+    private bool _onGround = false;
     private Color _tintColor = new Color(1.0f, 0.2f, 0.2f, 1.0f);
     private ParticleSystem _ps;
+    private Animator _animator;
+    public bool OnGround
+    {
+        get { return _onGround; }
+        set { _onGround = value; }
+    }
 
     IEnumerator HitAction()
     {
@@ -50,14 +59,71 @@ public class EnemyAction : MonoBehaviour
             }
         }
     }
-    void Start()
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        _ps = GetComponent<ParticleSystem>();
+        switch (collision.transform.tag)
+        {
+            case "player":
+            {
+                collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
+                break;
+            }
+            case "bullet":
+            {
+                StartCoroutine(HitAction());
+                break;
+            }
+        }
+    }
+    private bool DetectPlayer()
+    {
+        Vector2 diff = _player.transform.position - transform.position;
+        float distance = diff.magnitude;
+        return distance <= 8.0f;
+    }
+    private void MoveEnemy()
+    {
+        if (_onGround)
+        {
+            if (DetectPlayer())
+            {
+                _animator.SetBool("isMoving", true);
+
+                if (_player.transform.position.x < transform.position.x) // left
+                {
+                    Vector2 scale = transform.localScale;
+                    scale.x = scale.x > 0.0f ? scale.x : -scale.x;
+                    transform.localScale = scale;
+
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(-6.0f, 4.8f);
+                }
+                else // right
+                {
+                    Vector2 scale = transform.localScale;
+                    scale.x = scale.x > 0.0f ? -scale.x : scale.x;
+                    transform.localScale = scale;
+
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(6.0f, 4.8f);
+                }
+            }
+            else
+            {
+                _animator.SetBool("isMoving", false);
+                GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        _player = GameObject.Find("Player");
+        _ps = GetComponent<ParticleSystem>();
+        _animator = GetComponent<Animator>();
+    }
+
+    void FixedUpdate()
+    {
+        if (isMove)
+            MoveEnemy();
     }
 }

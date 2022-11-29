@@ -7263,7 +7263,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 4579290646859068467}
-  player: {fileID: 5091156043021300394, guid: 0360358f1f549094a8d107cdfc3c8b9e, type: 3}
 --- !u!1 &5328698446057086392
 GameObject:
   m_ObjectHideFlags: 0
@@ -8738,7 +8737,11 @@ CompositeCollider2D:
       - X: -330000000
         Y: -60000000
   m_CompositePaths:
-    m_Paths: []
+    m_Paths:
+    - - {x: 92.99997, y: -7}
+      - {x: 92.99997, y: -6}
+      - {x: -33, y: -6.000029}
+      - {x: -32.999973, y: -7}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
 --- !u!114 &1150568033800732233

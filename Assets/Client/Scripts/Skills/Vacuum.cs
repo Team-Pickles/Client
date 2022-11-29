@@ -17,7 +17,7 @@ public class Vacuum : Skill
     }
     public override void OnSkill()
     {
-        bool flip = _player.GetComponent<SpriteRenderer>().flipX;
+        bool flip = _player.transform.localScale.x > 0 ? false : true;//_player.GetComponent<SpriteRenderer>().flipX;
         Vector2 rayOrigin = _firePoint.transform.position;//new Vector2(_player.transform.position.x + _player.transform.localScale.x / 2.0f * 1.01f * (flip == false ? 1 : -1), _player.transform.position.y - _player.transform.localScale.y/4);
         
         float length = 8.0f;
@@ -47,7 +47,7 @@ public class Vacuum : Skill
             pmm.DecreaseBullet();
 
             GameObject bullet;
-            int isFliped = _player.GetComponent<SpriteRenderer>().flipX ? -1 : 1;
+            int isFliped = _player.transform.localScale.x > 0 ? 1 : -1;
             bullet = Object.Instantiate(pmm.bulletPrefab, _firePoint.transform.position, new Quaternion());
             bullet.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(500.0f * isFliped, 0.0f));
             bullet.transform.GetComponent<Rigidbody2D>().angularVelocity = 500.0f;

@@ -14,6 +14,7 @@ TagManager:
   - block
   - Item
   - GranadeItem
+  - stool
   layers:
   - Default
   - TransparentFX

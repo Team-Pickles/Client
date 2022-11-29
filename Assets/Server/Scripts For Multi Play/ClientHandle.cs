@@ -77,10 +77,11 @@ public class ClientHandle : MonoBehaviour
     public static void PlayerDisconnected(Packet _packet)
     {
         int _id = _packet.ReadInt();
-
-        Destroy(GameManagerInServer.players[_id].gameObject);
-        GameManagerInServer.players.Remove(_id);
-
+        if(GameManagerInServer.players.Count != 0) {
+            Destroy(GameManagerInServer.players[_id].gameObject);
+            GameManagerInServer.players.Remove(_id);
+        }
+        UIManagerInMultiPlayer.instance.MemberListUiTexts[_id].SetActive(false);
     }
 
     public static void spawnProjectile(Packet _packet)
@@ -191,7 +192,7 @@ public class ClientHandle : MonoBehaviour
             Client.instance.roomId = _roomId;
         }
     }
-
+    
     public static void CharactorFlip(Packet _packet)
     {
         int _id = _packet.ReadInt();
@@ -216,20 +217,38 @@ public class ClientHandle : MonoBehaviour
         }
             
     }
-
-    public static void MemberJoined(Packet _packet)
+    public static void MapIdUpdated(Packet _packet)
     {
-
+        int _mapId = _packet.ReadInt();
+        Debug.Log("MapIdUpdated_" + _mapId);
+        UIManagerInMultiPlayer.instance.MapIdUpdated(_mapId);
     }
 
-    //public static void RoomList(Packet _packet)
-    //{
-    //    int roomCount = _packet.ReadInt();
-    //    Dictionary<string, string> rooms = new Dictionary<string, string>();
-    //    for(int i = 0; i < roomCount; ++i)
-    //    {
-    //        rooms.Add(_packet.ReadString(), _packet.ReadString());
-    //    }
-    //    UIManagerInMultiPlayer.instance.setRoomList(rooms);
-    //}
+    public static void SpawnEnemy(Packet _packet)
+    {
+        int _enemyId = _packet.ReadInt();
+        Vector3 _enemyPos = _packet.ReadVector3();
+        GameManagerInServer.instance.SpawnEnemy(_enemyId, _enemyPos);
+    }
+
+    public static void EnemyPosition(Packet _packet)
+    {
+        int _enemyId = _packet.ReadInt();
+        Vector3 _enemyPos = _packet.ReadVector3();
+
+        if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
+        {
+            _enemy.transform.position = _enemyPos;
+        }
+    }
+
+    public static void EnemyCollide(Packet _packet)
+    {
+        int _enemyId = _packet.ReadInt();
+
+        if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
+        {
+            _enemy.Collide();
+        }
+    }
 }

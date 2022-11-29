@@ -12,6 +12,7 @@ public class GameManagerInServer : MonoBehaviour
     public static Dictionary<int, ProjectileManager> projectiles = new Dictionary<int, ProjectileManager>();
     public static Dictionary<int, BulletManager> bullets = new Dictionary<int, BulletManager>();
     public static Dictionary<int, ItemManager> items = new Dictionary<int, ItemManager>();
+    public static Dictionary<int, ServerEnemy> enemies = new Dictionary<int, ServerEnemy>();
     public Tilemap Tilemap; 
 
 
@@ -76,5 +77,12 @@ public class GameManagerInServer : MonoBehaviour
         GameObject _item = Instantiate(itemPrefab, _position, Quaternion.identity);
         _item.GetComponent<ItemManager>().Initialize(_itemId);
         items.Add(_itemId, _item.GetComponent<ItemManager>());
+    }
+
+    public void SpawnEnemy(int _enemyId, Vector3 _position)
+    {
+        GameObject _enemy = Instantiate(enemyPrefab, _position, Quaternion.identity);
+        _enemy.GetComponent<ServerEnemy>().Initialize(_enemyId);
+        enemies.Add(_enemyId, _enemy.GetComponent<ServerEnemy>());
     }
 }
