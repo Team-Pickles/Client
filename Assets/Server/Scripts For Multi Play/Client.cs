@@ -85,6 +85,9 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.ItemPosition, ClientHandle.ItemPosition },
             { (int)ServerPackets.itemCollide, ClientHandle.ItemCollide },
             { (int)ServerPackets.roomJoined, ClientHandle.JoinRoomDone },
+            { (int)ServerPackets.roomCreated, ClientHandle.RoomCreated },
+            { (int)ServerPackets.charactorFlip, ClientHandle.CharactorFlip },
+            { (int)ServerPackets.ropeACK, ClientHandle.RopeACK },
         };
         Debug.Log("Initiallized packets.");
     }

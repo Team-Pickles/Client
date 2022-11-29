@@ -40,7 +40,7 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void PlayerMovement(bool[] _inputs)
+    public static void PlayerMovement(bool[] _inputs, bool _isFlip)
     {
         using (Packet _packet = new Packet((int)ClientPackets.playerMovement))
         {
@@ -49,17 +49,8 @@ public class ClientSend : MonoBehaviour
                 _packet.Write(_input);
 
             _packet.Write(GameManagerInServer.players[Client.instance.myId].transform.rotation);
-
+            _packet.Write(_isFlip);
             SendUDPData(_packet);
-        }
-    }
-
-    public static void PlayerThrowGrenade(Vector3 _facing)
-    {
-        using (Packet _packet = new Packet((int)ClientPackets.playerThrowItem))
-        {
-            _packet.Write(_facing);
-            SendTCPData(_packet);
         }
     }
 
@@ -105,6 +96,30 @@ public class ClientSend : MonoBehaviour
         {
             _packet.Write(_roomId);
             _packet.Write(map_id);
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void RoomList()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.roomList))
+        {
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void PlayerJump()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.playerJump))
+        {
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void PlayerRopeMove()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.playerRopeMove))
+        {
             SendTCPData(_packet);
         }
     }
