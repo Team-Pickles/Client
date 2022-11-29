@@ -90,7 +90,7 @@ public class ClientHandle : MonoBehaviour
         Vector3 _position = _packet.ReadVector3();
         int _thrownByPlayer = _packet.ReadInt();
 
-        GameManagerInServer.instance.SpawnProjectile(_projectileID, _position);
+        GameManagerInServer.instance.SpawnProjectile(_projectileID, _position, _thrownByPlayer);
         //GameManagerInServer.players[_thrownByPlayer].itemCount--;
     }
 
@@ -101,7 +101,7 @@ public class ClientHandle : MonoBehaviour
 
         if (GameManagerInServer.projectiles.TryGetValue(_projectileID, out ProjectileManager _projectile))
         {
-            _projectile.transform.position = _position;
+            _projectile.transform.localPosition = _position;
         }
     }
 
@@ -127,7 +127,7 @@ public class ClientHandle : MonoBehaviour
         Vector3 _position = _packet.ReadVector3();
         int _thrownByPlayer = _packet.ReadInt();
 
-        GameManagerInServer.instance.SpawnBullet(_bulletID, _position);
+        GameManagerInServer.instance.SpawnBullet(_bulletID, _position,_thrownByPlayer);
         //GameManagerInServer.players[_thrownByPlayer].itemCount--;
     }
 
@@ -138,7 +138,7 @@ public class ClientHandle : MonoBehaviour
 
         if (GameManagerInServer.bullets.TryGetValue(_bulletID, out BulletManager _bullet))
         {
-            _bullet.transform.position = _position;
+            _bullet.transform.localPosition = _position;
         }
     }
 
@@ -192,7 +192,31 @@ public class ClientHandle : MonoBehaviour
             Client.instance.roomId = _roomId;
         }
     }
+    
+    public static void CharactorFlip(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        bool _isFlip = _packet.ReadBool();
 
+        if (GameManagerInServer.players.ContainsKey(_id))
+            GameManagerInServer.players[_id].GetComponent<SpriteRenderer>().flipX = _isFlip;
+    }
+
+    public static void RopeACK(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        bool _onRope = _packet.ReadBool();
+
+        if (GameManagerInServer.players.ContainsKey(_id))
+        {
+            GameManagerInServer.players[_id].onRope = _onRope;
+            if (_onRope)
+                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHaing", true);
+            else
+                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHaing", false);
+        }
+            
+    }
     public static void MapIdUpdated(Packet _packet)
     {
         int _mapId = _packet.ReadInt();

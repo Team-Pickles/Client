@@ -46,7 +46,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
 
     private void Awake()
     {
-        //Singleton ����
+        //Singleton 패턴
         if (instance == null)
         {
             instance = this;
@@ -62,36 +62,54 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         //주소가 여러개일 수 있어서 배열로 받음
         IPAddress ipAddr = ipHost.AddressList[0];
         //최종적인 주소
-        IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
+        IPEndPoint endPoint = new IPEndPoint(ipAddr, 62525);
 
         try
         {
             socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             socket.ReceiveTimeout = 10000;
             //연결 시도
-            socket.Connect(endPoint);
-            Debug.Log($"Connected To {socket.RemoteEndPoint.ToString()}");
+            IAsyncResult result = socket.BeginConnect(endPoint, null, null);
+            bool success = result.AsyncWaitHandle.WaitOne(1000, true);
 
-            byte[] recvBuff = new byte[1024];
-            int recvBytes = socket.Receive(recvBuff);
-            string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-            string[] split = recvData.Split(',');
-            Debug.Log($"[From Server] {split[0]}");
-            Dictionary<int, string> rooms = new Dictionary<int, string>();
-            for (int i=1; i< split.Length; i++)
+            if (success)
             {
-                rooms.Add(i, split[i]);
+                Debug.Log($"Connected To {socket.RemoteEndPoint.ToString()}");
+
+                byte[] recvBuff = new byte[1024];
+                int recvBytes = socket.Receive(recvBuff);
+                string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
+                string[] split = recvData.Split(',');
+                Debug.Log($"[From Server] {split[0]}");
+                Dictionary<int, string> rooms = new Dictionary<int, string>();
+                for (int i = 1; i < split.Length; i++)
+                {
+                    rooms.Add(i, split[i]);
+                }
+
+                setRoomList(rooms);
+            }
+            else
+            {
+                // NOTE, MUST CLOSE THE SOCKET
+
+                socket.Close();
+                throw new ApplicationException("Failed to connect server.");
             }
 
-            setRoomList(rooms);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
+            socket.Close();
+            throw new ApplicationException("Failed to connect server.");
             Debug.Log(e.ToString());
         }
 
-       
+
     }
+
+    public int TCPConnectTimeo(string hostname, string service, string nsec){return 1; }
+
 
     public void BackToMain()
     {
@@ -143,7 +161,8 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             try {
                 int recvBytes = socket.Receive(recvBuff);
                 string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-                if(recvData != "None")
+                Debug.Log($"[Room] {recvData}");
+                if (recvData != "None")
                 {
                     string[] recvDatas = recvData.Split('-');
                     Debug.Log($"[Room] {recvDatas[0]} {recvDatas[1]}");

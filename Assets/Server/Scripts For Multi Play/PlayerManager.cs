@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour
     public float maxHealth;
     public SpriteRenderer model;
     public float itemCount = 0;
+    public bool onRope = false;
 
     public void Initialize(int _id, string _username)
     {

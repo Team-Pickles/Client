@@ -55,16 +55,19 @@ public class GameManagerInServer : MonoBehaviour
 
     }
 
-    public void SpawnProjectile(int _projectileId, Vector3 _position)
+    public void SpawnProjectile(int _projectileId, Vector3 _position, int _thrownByPlayer)
     {
-        GameObject _projectile = Instantiate(projectilePrefab, _position, Quaternion.identity);
+        GameObject _projectile = Instantiate(projectilePrefab, players[_thrownByPlayer].transform);
+        _projectile.transform.localPosition = _position;
         _projectile.GetComponent<ProjectileManager>().Initialize(_projectileId);
         projectiles.Add(_projectileId, _projectile.GetComponent<ProjectileManager>());
     }
 
-    public void SpawnBullet(int _bulletId, Vector3 _position)
+    public void SpawnBullet(int _bulletId, Vector3 _position, int _thrownByPlayer)
     {
-        GameObject _bullet = Instantiate(bulletPrefab, _position, Quaternion.identity);
+        //GameObject _bullet = Instantiate(bulletPrefab, _position, Quaternion.identity);
+        GameObject _bullet = Instantiate(bulletPrefab, players[_thrownByPlayer].transform);
+        _bullet.transform.localPosition = _position;
         _bullet.GetComponent<BulletManager>().Initialize(_bulletId);
         bullets.Add(_bulletId, _bullet.GetComponent<BulletManager>());
     }
