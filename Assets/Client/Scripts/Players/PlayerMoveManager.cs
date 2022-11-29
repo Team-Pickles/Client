@@ -118,9 +118,11 @@ public class PlayerMoveManager : MonoBehaviour
         _state &= ~flag;
     }
 
-    public void IncreaseBullet()
+    public void IncreaseBullet(int amount)
     {
-        _bulletCount++;
+        _bulletCount += amount;
+        if (_bulletCount >= 100)
+            _bulletCount = 99;
     }
     public void DecreaseBullet()
     {
@@ -150,7 +152,8 @@ public class PlayerMoveManager : MonoBehaviour
     {
         if ((_state & PlayerStateFlags.Damaged) == 0)
         {
-            _hp--;
+            if (_hp > 0)
+                _hp--;
             SetPlayerStateFlags(PlayerStateFlags.Damaged);
             SetPlayerStateFlags(PlayerStateFlags.Stun);
             _hPoint = -0.7f * (_flip==false ? 1 : -1);
