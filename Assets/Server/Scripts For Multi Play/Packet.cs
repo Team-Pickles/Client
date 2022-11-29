@@ -35,7 +35,6 @@ public enum ServerPackets
     roomList,
     charactorFlip,
     ropeACK,
-    mapIdSelected
 }
 
 /// <summary>Sent from client to server.</summary>
