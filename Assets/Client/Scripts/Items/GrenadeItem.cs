@@ -39,7 +39,6 @@ public class GrenadeItem : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                sm.ChangeSkill(new Grenade());
                 _pmm.IncreaseGrenade(5);
                 Destroy(gameObject);
             }

@@ -67,7 +67,11 @@ public class SpellManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
-                StartCoroutine(currentSkill.OnFire());
+                StartCoroutine(currentSkill.OnBulletFire());
+            }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                StartCoroutine(currentSkill.OnGrenadeFire());
             }
         }
     }

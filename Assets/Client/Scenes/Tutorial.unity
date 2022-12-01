@@ -11264,7 +11264,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 726586293702196038, guid: 562d3fb751126924f860edadca5cace8, type: 3}
       propertyPath: m_Text
-      value: "Z\uD0A4\uB85C \uC544\uC774\uD15C \uC90D\uAE30\nS\uD0A4\uB85C \uACF5\uACA9\uD558\uAE30"
+      value: "Z\uD0A4\uB85C \uD3ED\uD0C4 \uC544\uC774\uD15C \uC90D\uAE30\nW\uD0A4\uB85C
+        \uD3ED\uD0C4 \uC0AC\uC6A9\uD558\uAE30"
       objectReference: {fileID: 0}
     - target: {fileID: 4796343173532736947, guid: 562d3fb751126924f860edadca5cace8, type: 3}
       propertyPath: m_RootOrder
