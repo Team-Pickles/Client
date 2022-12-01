@@ -22,8 +22,9 @@ public class ClientHandle : MonoBehaviour
 
     public static void JoinRoomDone(Packet _packet)
     {
+        int _mapId = _packet.ReadInt();
         string _members = _packet.ReadString();
-        Debug.Log(_members);
+        UIManagerInMultiPlayer.instance.RoomNameSetup(_packet.ReadString());
         string[] _memberList = _members.Split(',');
         UIManagerInMultiPlayer.instance.memberNames.Clear();
         for(int i = 0; i < _memberList.Length - 1; i++)
@@ -31,6 +32,11 @@ public class ClientHandle : MonoBehaviour
             UIManagerInMultiPlayer.instance.memberNames.Add(_memberList[i]);
             UIManagerInMultiPlayer.instance.SetMemberItem(i, _memberList[i]);
         }
+        MapListItem _item = UIManagerInMultiPlayer.instance.mapListItems[_mapId];
+        UIManagerInMultiPlayer.instance.RoomInfoUiTexts[0].text = $"{_mapId}";
+        UIManagerInMultiPlayer.instance.RoomInfoUiTexts[1].text = _item.map_tag;
+        UIManagerInMultiPlayer.instance.RoomInfoUiTexts[2].text = _item.map_maker;
+        UIManagerInMultiPlayer.instance.RoomInfoUiTexts[3].text = $"{_item.map_difficulty}";
     }
 
     public static void UDPTest(Packet _packet)
@@ -81,7 +87,16 @@ public class ClientHandle : MonoBehaviour
             Destroy(GameManagerInServer.players[_id].gameObject);
             GameManagerInServer.players.Remove(_id);
         }
-        UIManagerInMultiPlayer.instance.MemberListUiTexts[_id].SetActive(false);
+        string _members = _packet.ReadString();
+        string[] _memberList = _members.Split(',');
+        UIManagerInMultiPlayer.instance.MemberListUIOff();
+        UIManagerInMultiPlayer.instance.memberNames.Clear();
+        for(int i = 0; i < _memberList.Length - 1; i++)
+        {
+            UIManagerInMultiPlayer.instance.memberNames.Add(_memberList[i]);
+            UIManagerInMultiPlayer.instance.SetMemberItem(i, _memberList[i]);
+        }
+        Debug.Log(_id + " " + _members);
     }
 
     public static void spawnProjectile(Packet _packet)
@@ -181,18 +196,8 @@ public class ClientHandle : MonoBehaviour
             _item.Collide();
         }
     }
-
-    public static void RoomCreated(Packet _packet)
-    {
-        string _roomId = _packet.ReadString();
-        if(_roomId == "None")
-        {
-            Debug.Log("Room Name is duplicated");
-        } else {
-            Client.instance.roomId = _roomId;
-        }
-    }
     
+    //
     public static void CharactorFlip(Packet _packet)
     {
         int _id = _packet.ReadInt();
@@ -217,12 +222,7 @@ public class ClientHandle : MonoBehaviour
         }
             
     }
-    public static void MapIdUpdated(Packet _packet)
-    {
-        int _mapId = _packet.ReadInt();
-        Debug.Log("MapIdUpdated_" + _mapId);
-        UIManagerInMultiPlayer.instance.MapIdUpdated(_mapId);
-    }
+
 
     public static void SpawnEnemy(Packet _packet)
     {

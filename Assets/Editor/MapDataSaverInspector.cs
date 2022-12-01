@@ -13,7 +13,9 @@ public class MapDataSaverInspector : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        if(GUILayout.Button("Save"))
-            current.Save();
+        if(GUILayout.Button("Save(DB)"))
+            current.Save(false);
+        if(GUILayout.Button("Save(FILE)"))
+            current.Save(true);
     }
 }
