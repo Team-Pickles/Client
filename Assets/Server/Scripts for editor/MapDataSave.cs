@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.IO;
 using System.Linq;
+using UnityEngine.UI;
 using System;
 /*
     Made by limmon029 
@@ -54,9 +55,9 @@ public class MapDataSave : MonoBehaviour
         infos.Add(key, new DataClass((int)tileEnum / 100, new Vector3(0, 0, 0), (int)tileEnum));
     }
 
-    public void Save()
+    public void Save(InputField _mapName)
     {
-
+        fileName = _mapName.text;
         infos = new Dictionary<int, DataClass>();
         fullFilePath = filePath + fileName;
 
@@ -77,5 +78,13 @@ public class MapDataSave : MonoBehaviour
         File.WriteAllText(fullFilePath + ".json", toJson);
 
         Debug.Log("save done");
+    }
+
+    public void Share(InputField _mapName, InputField _mapTag, InputField _mapDifficulty)
+    {
+        Save(_mapName);
+        var map_data = Resources.Load(fullFilePath);
+        var map_tag = _mapTag.text;
+        var map_difficulty = _mapDifficulty.text;
     }
 }
