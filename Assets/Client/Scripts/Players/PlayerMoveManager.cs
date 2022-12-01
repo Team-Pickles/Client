@@ -17,18 +17,15 @@ public class PlayerMoveManager : MonoBehaviour
     private float _hPoint = 0, _vPoint = 0;
     private const float _hSpeed = 4.0f, _vSpeed = 5.0f;
     private bool _leftPressed = false, _rightPressed = false;
-    private bool _runState = false;
     private bool _flip = false;
     public PlayerStateFlags _state = PlayerStateFlags.Normal;
     private int _hp = 3;
     private int _bulletCount = 0;
     private int _grenadeCount = 0;
-    private int _glassBottleCount = 0;
     private GameObject _firePoint;
 
     public GameObject bulletPrefab;
     public GameObject grenadePrefab;
-    public GameObject glassbottlePrefab;
     public Animator animator;
 
     private Vector3 recentRopePosition;
@@ -70,7 +67,6 @@ public class PlayerMoveManager : MonoBehaviour
         _vPoint = 0;
         _leftPressed = false;
         _rightPressed = false;
-        _runState = false;
         _flip = false;
         _state = PlayerStateFlags.Normal;
         _hp = 3;
@@ -95,10 +91,6 @@ public class PlayerMoveManager : MonoBehaviour
     public int GrenadeCount
     {
         get { return _grenadeCount; }
-    }
-    public int GlassBottleCount
-    {
-        get { return _glassBottleCount; }
     }
     public void OnJumpSpringAction()
     {
@@ -137,16 +129,6 @@ public class PlayerMoveManager : MonoBehaviour
     public void DecreaseGrenade()
     {
         _grenadeCount--;
-    }
-    public void IncreaseGlassBottle(int amount)
-    {
-        _glassBottleCount += amount;
-        if (_glassBottleCount >= 100)
-            _glassBottleCount = 99;
-    }
-    public void DecreaseGlassBottle()
-    {
-        _glassBottleCount--;
     }
     private IEnumerator Damaged()
     {
@@ -287,11 +269,9 @@ public class PlayerMoveManager : MonoBehaviour
         // 좌우
         _leftPressed = Input.GetKey(KeyCode.LeftArrow);
         _rightPressed = Input.GetKey(KeyCode.RightArrow);
-        _runState = Input.GetKey(KeyCode.X);
         float speed = 1.5f;
         if (CanControl())
         {
-            speed += _runState == true ? 1 : 0;
             _hPoint = (_leftPressed == true ? -speed : 0) + (_rightPressed == true ? speed : 0);
             if (_isHanging)
                 _hPoint = 0.0f;
