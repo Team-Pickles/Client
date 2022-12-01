@@ -4,7 +4,7 @@ public class UserDataManager : MonoBehaviour
 {
     public static UserDataManager instance;
     //  { get; private set; }
-    public string username;
+    public string username = "Guest";
     public string accessToken;
     public string refreshToken;
     public bool isLogined = false;
@@ -25,7 +25,7 @@ public class UserDataManager : MonoBehaviour
     }
     
     public void Reset() {
-        username = "";
+        username = "Guest";
         accessToken = "";
         refreshToken = "";
         isLogined = false;

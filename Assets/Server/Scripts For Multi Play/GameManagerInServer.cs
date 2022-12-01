@@ -44,6 +44,7 @@ public class GameManagerInServer : MonoBehaviour
         if (_id == Client.instance.myId)
         {
             _player = Instantiate(localPlayerPrefab, _position, _rotaion);
+            camera.GetComponent<CameraMove>().gameObject.SetActive(true);
             camera.GetComponent<CameraMove>()._player = _player;
         }
         else
