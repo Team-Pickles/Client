@@ -46,7 +46,8 @@ public class MapDataSave : MonoBehaviour
         {
             var itemSprite = _item.GetComponent<SpriteRenderer>().sprite;
             Vector3 _pos = _item.transform.position;
-            infos.Add(_pos, new DataClass((int)InfoTypes.item, _pos, 100));
+            int spriteId = TileSpriteTypes.IndexOf(itemSprite.name) - TileSpriteTypes.IndexOf("Item") + (int)TileTypes.Item;
+            infos.Add(_pos, new DataClass((int)InfoTypes.item, _pos, spriteId));
         }
         foreach(GameObject _enemy in enemys)
         {
@@ -62,7 +63,7 @@ public class MapDataSave : MonoBehaviour
         }
     }
 
-    public void Save() {
+    public void Save(bool _forFile) {
         
         infos = new Dictionary<Vector3, DataClass>();
 
@@ -77,55 +78,57 @@ public class MapDataSave : MonoBehaviour
 
         string _forSendJson = JsonUtility.ToJson(_forSend);
 
-        StartCoroutine(MapSaveProcess(_result => {
-            if(_result)
-            {Debug.Log("SAVE");}
-        }));
+        if(_forFile) {
+            int num = 0;
+            fullFilePath = filePath + fileName;
 
-        IEnumerator MapSaveProcess(Action<bool> ResultHandler)
-        {
-            using (UnityWebRequest request = UnityWebRequest.Put("http://localhost:3001/api/map/apply", _forSendJson))
+            if (!Directory.Exists(filePath))
+                Directory.CreateDirectory(filePath);
+
+            while(File.Exists(fullFilePath + ".json")) {
+                fullFilePath = fullFilePath + "_" + num;
+            }
+
+            File.WriteAllText(fullFilePath + ".json", toJson);
+        } else {
+            StartCoroutine(MapSaveProcess(_result => {
+                if(_result)
+                {Debug.Log("SAVE");}
+            }));
+
+            IEnumerator MapSaveProcess(Action<bool> ResultHandler)
             {
-                byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(_forSendJson);
-
-                request.uploadHandler.Dispose();
-
-                request.SetRequestHeader("Content-Type", "application/json");
-
-                request.uploadHandler = new UploadHandlerRaw(jsonToSend);
-                request.downloadHandler = new DownloadHandlerBuffer();
-
-                yield return request.SendWebRequest();
-                string _result = request.downloadHandler.text;
-
-                if (request.error != null)
+                using (UnityWebRequest request = UnityWebRequest.Put("http://localhost:3001/api/map/apply", _forSendJson))
                 {
-                    Debug.Log(request.error);
-                }
-                else
-                {
-                    Debug.Log(_result);
-                    ResultHandler(true);
-                }
+                    byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(_forSendJson);
 
-                request.uploadHandler.Dispose();
-                request.downloadHandler.Dispose();
-                request.Dispose();
+                    request.uploadHandler.Dispose();
+
+                    request.SetRequestHeader("Content-Type", "application/json");
+
+                    request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+                    request.downloadHandler = new DownloadHandlerBuffer();
+
+                    yield return request.SendWebRequest();
+                    string _result = request.downloadHandler.text;
+
+                    if (request.error != null)
+                    {
+                        Debug.Log(request.error);
+                    }
+                    else
+                    {
+                        Debug.Log(_result);
+                        ResultHandler(true);
+                    }
+
+                    request.uploadHandler.Dispose();
+                    request.downloadHandler.Dispose();
+                    request.Dispose();
+                }
             }
         }
-
-        // int num = 0;
-        // fullFilePath = filePath + fileName;
-
-        // if (!Directory.Exists(filePath))
-        //     Directory.CreateDirectory(filePath);
-
-        // while(File.Exists(fullFilePath + ".json")) {
-        //     fullFilePath = fullFilePath + "_" + num;
-        // }
-
-        // File.WriteAllText(fullFilePath + ".json", toJson);
-
+        //
         Debug.Log("save done");
     }
 }

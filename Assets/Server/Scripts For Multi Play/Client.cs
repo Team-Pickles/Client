@@ -90,13 +90,14 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.ItemPosition, ClientHandle.ItemPosition },
             { (int)ServerPackets.itemCollide, ClientHandle.ItemCollide },
             { (int)ServerPackets.roomJoined, ClientHandle.JoinRoomDone },
-            { (int)ServerPackets.roomCreated, ClientHandle.RoomCreated },
+            
             { (int)ServerPackets.charactorFlip, ClientHandle.CharactorFlip },
             { (int)ServerPackets.ropeACK, ClientHandle.RopeACK },
-            { (int)ServerPackets.mapIdSelected, ClientHandle.MapIdUpdated },
+            
             { (int)ServerPackets.spawnEnemy, ClientHandle.SpawnEnemy },
             { (int)ServerPackets.enemyPosition, ClientHandle.EnemyPosition },
             { (int)ServerPackets.enemyHealth, ClientHandle.EnemyCollide },
+            { (int)ServerPackets.startGame, ClientHandle.StartGame}
         };
         Debug.Log("Initiallized packets.");
     }

@@ -31,18 +31,22 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     public GameObject roomLobbyUI;
     public List<Text> RoomInfoUiTexts;
     public List<GameObject> MemberListUiTexts;
-    public GameObject MapSelectPopUp;
+    public GameObject RoomCreatePopup;
     public List<GameObject> MapListUis;
     public Button MapLeftPageButton;
     public Button MapRightPageButton;
     public Button roomButtonPrefab;
-    public Button MemberButtonPrefab;
+    public List<Text> SelectedMapInfos;
+    public Text RoomNameText;
 
     public static Socket socket;
     public List<string> memberNames = new List<string>();
     public Dictionary<int, MapListItem> mapListItems = new Dictionary<int, MapListItem>();
 
     private int nowMapItemStartNum = 0;
+    private string roomName;
+    private int selectedMapId;
+    private string defaultMapJson;
 
     private void Awake()
     {
@@ -56,13 +60,20 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             Debug.Log("Instance already exists,destroying object!");
             Destroy(this);
         }
+        string path = "MapData/MyMap.json";
+        if(File.Exists(path) == false){
+            Debug.LogError("Load failed. There is no file(MyMap.json).");
+            return;
+        }
+        defaultMapJson = File.ReadAllText(path);
+        setDefaultMapInfo();
 
         string host = "127.0.0.1";
         IPHostEntry ipHost = Dns.GetHostEntry(host);
         //주소가 여러개일 수 있어서 배열로 받음
         IPAddress ipAddr = ipHost.AddressList[0];
         //최종적인 주소
-        IPEndPoint endPoint = new IPEndPoint(ipAddr, 62525);
+        IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
         try
         {
@@ -101,8 +112,9 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         catch (Exception e)
         {
             socket.Close();
-            throw new ApplicationException("Failed to connect server.");
             Debug.Log(e.ToString());
+            throw new ApplicationException("Failed to connect server.");
+
         }
 
 
@@ -150,7 +162,46 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     public void CreateRoomButtonClicked(InputField _roomName)
     {
         Debug.Log("[CreateRoomButtonClicked]");
-        string temp = $"CreateRoom-{_roomName.text}";
+        roomName = _roomName.text;
+        string temp = $"RoomNameCheck-{roomName}";
+        Debug.Log(temp);
+        byte[] sendBuff = Encoding.UTF8.GetBytes(temp);
+        Debug.Log(socket);
+        int sendBytes = socket.Send(sendBuff);
+        socket.ReceiveTimeout = 3000;
+        for(int errCnt = 0; errCnt < 5; ++errCnt){
+            byte[] recvBuff = new byte[1024];
+            try {
+                int recvBytes = socket.Receive(recvBuff);
+                string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
+                Debug.Log($"[RoomNameIsDuplicated] {recvData}");
+                if (recvData == "Ok")
+                {
+                    RoomCreatePopup.SetActive(true);
+                    selectedMapId = 0;
+                    SelectedMapInfos[0].text = $"{selectedMapId}";
+                    SelectedMapInfos[1].text = mapListItems[selectedMapId].map_tag;
+                    SelectedMapInfos[2].text = $"{mapListItems[selectedMapId].map_maker}";
+                    AllMapListLoad();
+                }
+                break;
+
+            } catch(SocketException _e) {
+                if(_e.SocketErrorCode.ToString() != "TimedOut")
+                {
+                    Debug.Log(_e.SocketErrorCode);
+                    break;
+                } else {
+                    Debug.Log(_e.SocketErrorCode + "_" + errCnt);
+                }
+            }
+        }
+    }
+
+    public void CreateRoomSubmitButtonClicked()
+    {
+        Debug.Log("[CreateRoomSubmitButtonClicked]");
+        string temp = $"CreateRoom-{roomName}-{SelectedMapInfos[0].text}";
         Debug.Log(temp);
         byte[] sendBuff = Encoding.UTF8.GetBytes(temp);
         Debug.Log(socket);
@@ -188,10 +239,17 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     {
         string _mapTag = _mapTagField.text;
         if(_mapTag == ""){
-            MapSelectButtonClicked();
+            AllMapListLoad();
             return;
         }
+        MapListLoadWithMapTag(_mapTag);
+    }
+
+    public void AllMapListLoad()
+    {
+
         mapListItems.Clear();
+        setDefaultMapInfo();
         nowMapItemStartNum = 0;
         MapLeftPageButton.interactable = false;
         StartCoroutine(IneternetConnectCheck(isConnected => {
@@ -204,7 +262,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
                         MapRightPageButton.interactable = false;
                     else
                         MapRightPageButton.interactable = true;
-                }));
+                }, "http://localhost:3001/api/map/getAllList"));
             }
             else
             {
@@ -213,10 +271,11 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         }));
     }
 
-    public void MapSelectButtonClicked()
+    public void MapListLoadWithMapTag(string _mapTag)
     {
-        MapSelectPopUp.SetActive(true);
+
         mapListItems.Clear();
+        setDefaultMapInfo();
         nowMapItemStartNum = 0;
         MapLeftPageButton.interactable = false;
         StartCoroutine(IneternetConnectCheck(isConnected => {
@@ -229,7 +288,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
                         MapRightPageButton.interactable = false;
                     else
                         MapRightPageButton.interactable = true;
-                }));
+                }, "http://localhost:3001/api/map/getListByTag/" + _mapTag));
             }
             else
             {
@@ -256,8 +315,8 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         MapLeftPageButton.interactable = true;
     }
 
-    IEnumerator GetMapList(Action<int> ResultHandler){
-        using ( UnityWebRequest request = UnityWebRequest.Get("http://localhost:3001/api/map/getAllList"))
+    IEnumerator GetMapList(Action<int> ResultHandler, string _url){
+        using ( UnityWebRequest request = UnityWebRequest.Get(_url))
         {
             request.downloadHandler = new DownloadHandlerBuffer();
 
@@ -318,6 +377,14 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         }
     }
 
+    public void MemberListUIOff()
+    {
+        foreach(GameObject memberUI in MemberListUiTexts)
+        {
+            memberUI.SetActive(false);
+        }
+    }
+
     private void MapListSet()
     {
         MapListUIOff();
@@ -344,40 +411,25 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     {
         int _mapId = Convert.ToInt32(_mapIdText.text);
         MapListItem _nowMap = mapListItems[_mapId];
-        MapDataLoader.instance.Load(_nowMap.map_info);
-        MapSelectPopUp.SetActive(false);
-        RoomInfoUiTexts[0].text = $"{_nowMap.map_id}";
-        RoomInfoUiTexts[1].text = _nowMap.map_maker;
-        RoomInfoUiTexts[2].text = $"{_nowMap.map_difficulty}";
-
-        ClientSend.MapIdUpdated(Client.instance.roomId, _mapId);
+        selectedMapId = _nowMap.map_id;
+        SelectedMapInfos[0].text = $"{_nowMap.map_id}";
+        SelectedMapInfos[1].text = _nowMap.map_tag;
+        SelectedMapInfos[2].text = $"{_nowMap.map_maker}";
     }
 
-    public void MapIdUpdated(int _mapId)
+    public void ReadyToStartGame()
     {
-        MapListItem _nowMap = mapListItems[_mapId];
-        MapDataLoader.instance.Load(_nowMap.map_info);
-        RoomInfoUiTexts[0].text = $"{_nowMap.map_id}";
-        RoomInfoUiTexts[1].text = _nowMap.map_maker;
-        RoomInfoUiTexts[2].text = $"{_nowMap.map_difficulty}";
+        //
+        int mapId = Convert.ToInt32(RoomInfoUiTexts[0].text);
+        ClientSend.ReadyToStartGame(Client.instance.roomId);
+        loadingScene.SetActive(true);
     }
 
-    public void StartGame()
+    public void StartGameProcess(int map_id)
     {
         loadingScene.SetActive(false);
         roomLobbyUI.SetActive(false);
-        int mapId = Convert.ToInt32(RoomInfoUiTexts[0].text);
-        if(mapId == 0)
-        {
-            string path = "MapData/MyMap.json";
-            if(File.Exists(path) == false){
-                Debug.LogError("Load failed. There is no file(MyMap.json).");
-                return;
-            }
-            string fromJson = File.ReadAllText(path);
-            MapDataLoader.instance.Load(fromJson);
-        }
-        ClientSend.StartGame(Client.instance.roomId, Convert.ToInt32(RoomInfoUiTexts[0].text));
+        MapDataLoader.instance.Load(mapListItems[map_id].map_info);
     }
 
     public void RefreshRoomList()
@@ -430,14 +482,15 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             RefreshRoomList();
             Debug.Log($"This room({_roomId}) is destroyed.");
         } else {
+            mapListItems.Clear();
+            setDefaultMapInfo();
             loadingScene.SetActive(true);
             StartCoroutine(IneternetConnectCheck(isConnected => {
                 if (isConnected)
                 {
                     Debug.Log("Server Available!");
                     StartCoroutine(GetMapList(mapListItemCnt => {
-                        Debug.Log("Map Loaded.");
-                    }));
+                    }, "http://localhost:3001/api/map/getAllList"));
                 }
                 else
                 {
@@ -457,5 +510,23 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         lobbyUI.SetActive(false);
         loadingScene.SetActive(false);
         roomLobbyUI.SetActive(true);
+    }
+
+    public void RoomNameSetup(string _roomName)
+    {
+        roomName = _roomName;
+        RoomNameText.text = roomName;
+    }
+
+    private void setDefaultMapInfo()
+    {
+        MapListItem _temp = new MapListItem();
+        _temp.map_id = 0;
+        _temp.map_maker = "pickles";
+        _temp.map_tag = "defaultMap";
+        _temp.map_info = defaultMapJson;
+        _temp.map_difficulty = 0;
+        _temp.map_grade = 0;
+        mapListItems.Add(0, _temp);
     }
 }
