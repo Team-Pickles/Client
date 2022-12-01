@@ -12,7 +12,7 @@ public enum TileType
     tiles_packed_56, tiles_packed_57, tiles_packed_58, tiles_packed_59,
     tiles_packed_60, tiles_packed_61, tiles_packed_62, tiles_packed_63,
     tiles_packed_80, tiles_packed_81, tiles_packed_82, tiles_packed_83,
-    tiles_packed_87, tiles_packed_88, tiles_packed_68, tiles_packed_112,tiles_packed_108,
+    tiles_packed_87, tiles_packed_88, tiles_packed_68, tiles_packed_112,
     PlatformerTiles_2, PlatformerTiles_0, PlatformerTiles_1,
    /*
     stickyTopAlone, stickyMidLeft, stickyMidCentor, stickyMidRight,
@@ -24,11 +24,24 @@ public enum TileType
     glass, rock, bricks,
    */
     Item =100,
-    tiles_packed_151, tiles_packed_44, Bullet,
-    Enemy=200,
-    Sprite_Boss,
+    Bullet,  tiles_packed_151, tiles_packed_44,  tiles_packed_108,
+
+    Enemy =200,
+    Boss,
+    
     Player = 300,
     Charactor_Sheet_0,
+    
+    BackGround = 400,
+    ArcadeGreyBackground,
+    BlueBackground,
+    BrickBackground,
+    DarkBackground,
+    DustyBackground,
+    FieldBackground,
+    GreenBackground,
+    SkyBackground,
+
 }
 
 public class Tile : MonoBehaviour
