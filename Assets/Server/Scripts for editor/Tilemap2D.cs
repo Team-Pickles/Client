@@ -1,23 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 using TMPro;
 
 public class Tilemap2D : MonoBehaviour
 {
     [SerializeField]
-    private GameObject tilePrefab;
+    private Tilemap tilemap;
 
     [SerializeField]
-    private TMP_InputField inputWidth;
+    private InputField inputWidth;
 
     [SerializeField]
-    private TMP_InputField inputHeight;
+    private InputField inputHeight;
+
+    [SerializeField]
+    private TileBase[] _tileBase;
 
     private MapData mapData;
 
     public int width { private set; get; } = 10;
     public int height { private set; get; } = 10;
+
 
 
     public List<Tile> tileList { private set; get; }
@@ -28,6 +34,7 @@ public class Tilemap2D : MonoBehaviour
 
         mapData = new MapData();
         tileList = new List<Tile>();
+
     }
 
     public void GenerateTilemap()
@@ -40,37 +47,40 @@ public class Tilemap2D : MonoBehaviour
         width = _width;
         height = _height;
 
-        for (int y=0; y<height; y++)
+        for (int y = 0; y < height; y++)
         {
-            for (int x=0; x<width; x++)
+            for (int x = 0; x < width; x++)
             {
-                Vector3 position = new Vector3((-width * 0.5f + 0.5f) + x, (height * 0.5f - 0.5f) - y, 0);
-
+                Vector3Int position = new Vector3Int((int)(-width * 0.5f) + x, (int)(height * 0.5f) - y, 0);
+                Debug.Log(position);
                 SpawnTile(TileType.Empty, position);
             }
         }
 
+        //타일맵 사이즈를 현재 소환된 타일맵의 경계의 크기 전환
+        tilemap.CompressBounds();
+
+        //tilemap.GetComponent<BoxCollider>().center = new Vector3((int)tilemap.cellBounds.center.x, (int)tilemap.cellBounds.center.y, 0) ;
+        Debug.Log($"{tilemap.cellBounds.xMin},{tilemap.cellBounds.xMax},{tilemap.cellBounds.center.x}");
+        tilemap.GetComponent<BoxCollider>().center = new Vector3(tilemap.cellBounds.center.x, tilemap.cellBounds.center.y, 0);
+        tilemap.GetComponent<BoxCollider>().size = new Vector3(width*1.5f, height*1.5f, 0);
+        
         mapData.mapSize.x = width;
         mapData.mapSize.y = height;
         mapData.mapData = new int[tileList.Count];
     }
 
-    private void SpawnTile(TileType _tileType, Vector3 _position)
+
+    private void SpawnTile(TileType _tileType, Vector3Int _position)
     {
-        GameObject clone = Instantiate(tilePrefab, _position, Quaternion.identity);
+        tilemap.GetComponent<Tilemap>().SetTile(_position, _tileBase[0]);
 
-        clone.name = "Tile";
-        clone.transform.SetParent(transform);
-
-        Tile _tile = clone.GetComponent<Tile>();
-        _tile.Setup(_tileType);
-
-        tileList.Add(_tile);
     }
+
 
     public MapData GetMapData()
     {
-        for (int i=0; i<tileList.Count; i++)
+        for (int i = 0; i < tileList.Count; i++)
         {
             if (tileList[i].TileType != TileType.Player)
             {
@@ -87,5 +97,6 @@ public class Tilemap2D : MonoBehaviour
         }
         return mapData;
     }
+
 
 }
