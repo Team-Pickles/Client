@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class ClearChapter : MonoBehaviour
 {
+    public string nextLevel;
     bool istouched = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -37,7 +38,7 @@ public class ClearChapter : MonoBehaviour
     {
         if (istouched && Input.GetKeyDown(KeyCode.UpArrow))
         {
-            SceneManager.LoadScene("LevelChange");
+            SceneManager.LoadScene(nextLevel);
             GameObject.Find("Player").transform.position = new Vector3(0.0f, 0.0f, 0.0f);
         }
     }

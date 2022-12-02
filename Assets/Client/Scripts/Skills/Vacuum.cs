@@ -53,7 +53,7 @@ public class Vacuum : Skill
             bullet.transform.GetComponent<Rigidbody2D>().angularVelocity = 500.0f;
 
             Vector3 scale = bullet.transform.GetComponent<Rigidbody2D>().transform.localScale;
-            bullet.transform.GetComponent<Rigidbody2D>().transform.localScale = new Vector3(isFliped * scale.x, scale.y, scale.z);
+            bullet.transform.GetComponent<Rigidbody2D>().transform.localScale = new Vector3(isFliped * scale.x, isFliped * scale.y, isFliped * scale.z);
             yield return new WaitForSeconds(2.0f);
             Object.Destroy(bullet);
         }

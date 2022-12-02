@@ -7,6 +7,7 @@ public class EnemyAction : MonoBehaviour
     [SerializeField] private bool isMove;
     private GameObject _player;
     private bool _onGround = false;
+    private bool _detectPlayer = false;
     private Color _tintColor = new Color(1.0f, 0.2f, 0.2f, 1.0f);
     private ParticleSystem _ps;
     private Animator _animator;
@@ -14,6 +15,16 @@ public class EnemyAction : MonoBehaviour
     {
         get { return _onGround; }
         set { _onGround = value; }
+    }
+    public bool DetectPlayer
+    {
+        get { return _detectPlayer; }
+        set { _detectPlayer = value; }
+    }
+    public GameObject DetectedPlayer
+    {
+        get { return _player; }
+        set { _player = value; }
     }
 
     IEnumerator HitAction()
@@ -31,17 +42,6 @@ public class EnemyAction : MonoBehaviour
         _ps.Play();
         yield return new WaitForSeconds(4.0f);
         Destroy(gameObject);
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        switch (collision.transform.tag)
-        {
-            case "bullet":
-            {
-                StartCoroutine(HitAction());
-                break;
-            }
-        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -75,17 +75,11 @@ public class EnemyAction : MonoBehaviour
             }
         }
     }
-    private bool DetectPlayer()
-    {
-        Vector2 diff = _player.transform.position - transform.position;
-        float distance = diff.magnitude;
-        return distance <= 8.0f;
-    }
     private void MoveEnemy()
     {
         if (_onGround)
         {
-            if (DetectPlayer())
+            if (_detectPlayer && _player != null)
             {
                 _animator.SetBool("isMoving", true);
 
@@ -116,7 +110,6 @@ public class EnemyAction : MonoBehaviour
 
     void Start()
     {
-        _player = GameObject.Find("Player");
         _ps = GetComponent<ParticleSystem>();
         _animator = GetComponent<Animator>();
     }

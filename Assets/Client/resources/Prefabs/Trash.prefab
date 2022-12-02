@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4750861222190012205}
   - component: {fileID: 4750861222190012369}
   m_Layer: 12
-  m_Name: trash 1
+  m_Name: Trash
   m_TagString: trash
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4750861222190012204}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.5914, y: -1.6214, z: 0}
   m_LocalScale: {x: 1.9869057, y: 1.9869057, z: 1.9869057}
   m_ConstrainProportionsScale: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0cda06ff7cb38144bbce4e47d63fa0ba, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a118a21bcd677c45ac7e8f3c2bdbb8a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

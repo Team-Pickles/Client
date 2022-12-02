@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Client/Scenes/LevelChange.unity
     guid: 44bb1078edc5b3046a0df30eee407711
+  - enabled: 1
+    path: Assets/Client/Scenes/YechanWorld/Level1.unity
+    guid: 1a16b1453b5bca14f86ca3c9357d0bf7
   m_configObjects: {}

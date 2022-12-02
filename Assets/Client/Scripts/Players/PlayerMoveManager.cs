@@ -107,6 +107,7 @@ public class PlayerMoveManager : MonoBehaviour
     }
     public void OnJumpAction()
     {
+        GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
         _vPoint = 1.2f;
     }
     public void SetPlayerStateFlags(PlayerStateFlags flag)
@@ -230,6 +231,7 @@ public class PlayerMoveManager : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity = new Vector2(_hPoint * _hSpeed, GetComponent<Rigidbody2D>().velocity.y + _vPoint * _vSpeed);
         _hPoint = _hPoint / (_xAxisDrag + 1.0f);
         _vPoint = 0.0f;
+
         //GetComponent<SpriteRenderer>().flipX = _flip;
     }
     void Update()
@@ -245,7 +247,7 @@ public class PlayerMoveManager : MonoBehaviour
         if (CanControl())
         {
             // 매달리기 시작
-            if (_onRope && Input.GetKeyDown(KeyCode.UpArrow))
+            if (_onRope && Input.GetKey(KeyCode.UpArrow))
             {
                 _isHanging = true;
                 transform.position = new Vector2(recentRopePosition.x, transform.position.y);
