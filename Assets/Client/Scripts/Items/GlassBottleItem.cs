@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrenadeItem : MonoBehaviour
+public class GlassBottleItem : MonoBehaviour
 {
     private GameObject _player;
     private PlayerMoveManager _pmm;
-    
+
     private bool touchItem = false;
     SpellManager sm;
     private void OnTriggerEnter2D(Collider2D collision)
@@ -29,7 +29,8 @@ public class GrenadeItem : MonoBehaviour
         _player = GameObject.Find("Player");
 
         _pmm = _player.GetComponent<PlayerMoveManager>();
-        sm = GameObject.Find(_player.name + "/SpellDummy").GetComponent<SpellManager>();
+
+        sm = GameObject.Find(_player.name+"/SpellDummy").GetComponent<SpellManager>();
     }
 
     // Update is called once per frame
@@ -39,8 +40,8 @@ public class GrenadeItem : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                sm.ChangeSkill(new Grenade());
-                _pmm.IncreaseGrenade(5);
+                sm.ChangeSkill(new GlassBottle());
+                _pmm.IncreaseGlassBottle(3);
                 Destroy(gameObject);
             }
         }
