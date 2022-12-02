@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System;
-
+using System.Text.RegularExpressions;
 
 [Serializable]
 public class Data
@@ -52,12 +52,16 @@ public class UIManager : MonoBehaviour
 
     public static UIManager instance;
 
+    public NoticeUI _noticeUI;
+
     public GameObject startMenu;
     
     public GameObject loginMenu;
     public GameObject signUpMenu;
     public GameObject signUpPanel;
     public GameObject logintestMenu;
+
+    public Button MultiPlayButton;
 
     public Button refreshButton;
     public Button loginSubmitButton;
@@ -71,7 +75,7 @@ public class UIManager : MonoBehaviour
     private Coroutine logoutCoroutine = null;
     private Coroutine signUpCoroutine = null;
 
-
+    private Regex emailRegression = new Regex(@"^([0-9a-zA-Z]+)@([0-9a-zA-Z]+)(\.[0-9a-zA-Z]+){1,}$");
 
     private void Awake()
     {
@@ -85,7 +89,7 @@ public class UIManager : MonoBehaviour
             Debug.Log("Instance already exists,destroying object!");
             Destroy(this);
         }
-        
+        MultiPlayButton.interactable = false;
         if(UserDataManager.instance.isLogined)
         {
             logoutButton.SetActive(true);
@@ -93,6 +97,7 @@ public class UIManager : MonoBehaviour
             {
                 _button.SetActive(false);
             }
+            MultiPlayButton.interactable = true;
         }
     }
 
@@ -183,10 +188,12 @@ public class UIManager : MonoBehaviour
                 {
                     _button.SetActive(false);
                 }
+                MultiPlayButton.interactable = true;
                 isDone = true;
             }));
             if(isDone) loginCoroutine = null;
             else {
+                _noticeUI.AlertBox("로그인 실패");
                 Invoke("setLoginButtonEnable", 1.0f);
             }
         }
@@ -237,6 +244,14 @@ public class UIManager : MonoBehaviour
 
     public void SignUpButtonClicked()
     {
+        int dataCnt = signUpPanel.transform.childCount;
+        for(int i = 0; i < dataCnt; ++i){
+            InputField inputField;
+            signUpPanel.transform.GetChild(i).gameObject.TryGetComponent<InputField>(out inputField);
+            if(inputField != null) {
+                inputField.text = "";
+            }
+        }
         StartCoroutine(IneternetConnectCheck(isConnected =>
         {
             if (isConnected)
@@ -279,16 +294,36 @@ public class UIManager : MonoBehaviour
         for(int i = 0; i < dataCnt; ++i){
             InputField inputField;
             signUpPanel.transform.GetChild(i).gameObject.TryGetComponent<InputField>(out inputField);
-            if(inputField != null) {
+            if(inputField != null)
                 datas.Add(inputField.name, inputField.text);
-                inputField.text = "";
-            }
+
         }
 
         Debug.Log(datas.Count);
-
-        if(datas["Id"] == "" || datas["Username"]  == "" || datas["Email"] == "" || datas["Password"] == "")
-            return;
+        foreach(KeyValuePair<string, string> _data in datas)
+        {
+            string _message = "OK";
+            switch(_data.Key) {
+                case "Id":
+                    _message = CheckIdOrUsername(_data.Value, "Id");
+                    break;
+                case "Username":
+                    _message = CheckIdOrUsername(_data.Value, "Username");
+                    break;
+                case "Email":
+                    if(!emailRegression.IsMatch(_data.Value))
+                        _message = "잘못된 이메일 형식입니다.";
+                    break;
+                case "Password":
+                    if(_data.Value == "")
+                        _message = "Password를 입력해주세요.";
+                    break;
+            }
+            if(_message != "OK") {
+                _noticeUI.AlertBox(_message);
+                return;
+            }
+        }
 
         signUpData.user_id = datas["Id"];
         signUpData.email = datas["Email"];
@@ -335,6 +370,7 @@ public class UIManager : MonoBehaviour
                 if (request.error != null)
                 {
                     Debug.Log(request.error);
+                    _noticeUI.AlertBox("이미 존재하는 아이디입니다.");
                 }
                 else
                 {
@@ -347,6 +383,19 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    private string CheckIdOrUsername(string _id, string _type)
+    {
+        string _msg = "";
+        if(_id == "") 
+            _msg = _type + "를 입력해주세요.";
+        else if(_id.Contains("-") || _id.Contains("_"))
+            _msg = _type + "에는 _ 또는 - 가 포함될 수 없습니다.";
+        else
+            _msg = "OK";
+        return _msg;
+    }
+
     public void RefreshButtonClicked()
     {
         refreshButton.interactable = false;
@@ -413,6 +462,7 @@ public class UIManager : MonoBehaviour
                     {
                         _button.SetActive(true);
                     }
+                    MultiPlayButton.interactable = false;
                     startMenu.SetActive(true);
                 }
             }));
@@ -486,7 +536,7 @@ public class UIManager : MonoBehaviour
         startMenu.SetActive(true);
         signUpCoroutine = null;
     }
-
+    
     public void QuitButtonClicked()
     {
 #if UNITY_EDITOR

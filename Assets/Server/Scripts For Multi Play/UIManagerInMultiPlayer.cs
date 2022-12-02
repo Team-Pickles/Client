@@ -38,6 +38,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     public Button roomButtonPrefab;
     public List<Text> SelectedMapInfos;
     public Text RoomNameText;
+    public NoticeUI _notice;
 
     public static Socket socket;
     public List<string> memberNames = new List<string>();
@@ -60,13 +61,19 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             Debug.Log("Instance already exists,destroying object!");
             Destroy(this);
         }
-        string path = "MapData/MyMap.json";
+        #if UNITY_EDITOR
+            string path = "MapData/MyMap.json";
+        #else
+            string path = Application.streamingAssetsPath + "/MyMap.json";
+        #endif
         if(File.Exists(path) == false){
             Debug.LogError("Load failed. There is no file(MyMap.json).");
             return;
         }
         defaultMapJson = File.ReadAllText(path);
+        mapListItems.Clear();
         setDefaultMapInfo();
+        _notice.AlertBox("AWAKE");
 
         string host = "127.0.0.1";
         IPHostEntry ipHost = Dns.GetHostEntry(host);
@@ -82,7 +89,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             //연결 시도
             IAsyncResult result = socket.BeginConnect(endPoint, null, null);
             bool success = result.AsyncWaitHandle.WaitOne(1000, true);
-
+            _notice.AlertBox(success.ToString());
             if (success)
             {
                 Debug.Log($"Connected To {socket.RemoteEndPoint.ToString()}");
@@ -152,8 +159,12 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         foreach(KeyValuePair<int, string> _roomData in roomDatas)
         {
             Button _btn = Instantiate<Button>(roomButtonPrefab, roomWrapper.transform);
-            _btn.name = _roomData.Key.ToString() + "_" + _roomData.Value.Split("-")[0];
-            _btn.GetComponentInChildren<Text>().text = _roomData.Value.Split("-")[1];
+            string[] splitData = _roomData.Value.Split("-");
+            _btn.name = _roomData.Key.ToString() + "_" + splitData[0];
+            _btn.GetComponentInChildren<Text>().text = splitData[1];
+            if(splitData[2] == "4") {
+                _btn.interactable = false;
+            }
         }
 
         loadingScene.SetActive(false);
@@ -163,6 +174,11 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     {
         Debug.Log("[CreateRoomButtonClicked]");
         roomName = _roomName.text;
+        if(roomName.Contains("-") || roomName.Contains("_"))
+        {
+            _notice.AlertBox("방이름에는 - 또는 _ 가 포함될 수 없습니다.");
+            return;
+        }
         string temp = $"RoomNameCheck-{roomName}";
         Debug.Log(temp);
         byte[] sendBuff = Encoding.UTF8.GetBytes(temp);
@@ -463,6 +479,8 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         Client.instance.RoomExit();
         roomLobbyUI.SetActive(false);
         loadingScene.SetActive(true);
+        socket.Close();
+        Awake();
         BackToMain();
     }
 
@@ -480,8 +498,14 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         if(port == -1)
         {
             RefreshRoomList();
-            Debug.Log($"This room({_roomId}) is destroyed.");
-        } else {
+            _notice.AlertBox($"This room({_roomId}) is destroyed.");
+        }
+        else if(port == -2)
+        {
+            RefreshRoomList();
+            _notice.AlertBox($"This room({_roomId}) is full.");
+        }
+        else {
             mapListItems.Clear();
             setDefaultMapInfo();
             loadingScene.SetActive(true);
@@ -528,5 +552,9 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         _temp.map_difficulty = 0;
         _temp.map_grade = 0;
         mapListItems.Add(0, _temp);
+    }
+    private void OnApplicationQuit() {
+        if(UserDataManager.instance.isLogined)
+            UIManager.instance.LogOutButtonClicked();
     }
 }
