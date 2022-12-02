@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class PlayerInfoUI : MonoBehaviour
 {
-    private int _healthCount, _bulletCount, _grenadeCount, _glassBottleCount, _tens, _ones;
+    private int _healthCount, _bulletCount, _grenadeCount, _tens, _ones;
     private GameObject _player;
     private PlayerMoveManager _pmm;
     public Sprite[] _numberDigit;
-    public Image heartTenDigit, heartOneDigit, bulletTenDigit, bulletOneDigit, grenadeTenDigit, grenadeOneDigit, glassBottleTenDigit, glassBottleOneDigit;
+    public Image heartTenDigit, heartOneDigit, bulletTenDigit, bulletOneDigit, grenadeTenDigit, grenadeOneDigit;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,16 +52,5 @@ public class PlayerInfoUI : MonoBehaviour
         else
             grenadeTenDigit.enabled = true;
         grenadeOneDigit.enabled = true;
-
-        _glassBottleCount = _pmm.GlassBottleCount;
-        _tens = _glassBottleCount / 10;
-        _ones = _glassBottleCount % 10;
-        glassBottleTenDigit.sprite = _numberDigit[_tens];
-        glassBottleOneDigit.sprite = _numberDigit[_ones];
-        if (_tens == 0)
-            glassBottleTenDigit.enabled = false;
-        else
-            glassBottleTenDigit.enabled = true;
-        glassBottleOneDigit.enabled = true;
     }
 }
