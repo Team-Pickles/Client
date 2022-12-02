@@ -17,7 +17,6 @@ public class PlayerMoveManager : MonoBehaviour
     private float _hPoint = 0, _vPoint = 0;
     private const float _hSpeed = 4.0f, _vSpeed = 5.0f;
     private bool _leftPressed = false, _rightPressed = false;
-    private bool _runState = false;
     private bool _flip = false;
     public PlayerStateFlags _state = PlayerStateFlags.Normal;
     private int _hp = 3;
@@ -70,7 +69,6 @@ public class PlayerMoveManager : MonoBehaviour
         _vPoint = 0;
         _leftPressed = false;
         _rightPressed = false;
-        _runState = false;
         _flip = false;
         _state = PlayerStateFlags.Normal;
         _hp = 3;
@@ -289,11 +287,9 @@ public class PlayerMoveManager : MonoBehaviour
         // 좌우
         _leftPressed = Input.GetKey(KeyCode.LeftArrow);
         _rightPressed = Input.GetKey(KeyCode.RightArrow);
-        _runState = Input.GetKey(KeyCode.X);
         float speed = 1.5f;
         if (CanControl())
         {
-            speed += _runState == true ? 1 : 0;
             _hPoint = (_leftPressed == true ? -speed : 0) + (_rightPressed == true ? speed : 0);
             if (_isHanging)
                 _hPoint = 0.0f;
