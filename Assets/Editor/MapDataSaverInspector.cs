@@ -10,12 +10,12 @@ public class MapDataSaverInspector : Editor
         }
     }
 
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        if(GUILayout.Button("Save(DB)"))
-            current.Save(false);
-        if(GUILayout.Button("Save(FILE)"))
-            current.Save(true);
-    }
+    //public override void OnInspectorGUI()
+    //{
+    //    DrawDefaultInspector();
+    //    if(GUILayout.Button("Save(DB)"))
+    //        current.Save(false);
+    //    if(GUILayout.Button("Save(FILE)"))
+    //        current.Save(true);
+    //}
 }
