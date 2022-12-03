@@ -30,7 +30,7 @@ public class MapDataLoader : MonoBehaviour
         Dictionary<Vector3, DataClass> loaded = JsonUtility.FromJson<Serialization<Vector3, DataClass>>(_fromJson).ToDictionary();
 
         foreach(DataClass data in loaded.Values) {
-            if(data.GetInfoType() == InfoTypes.tile) {
+            if(data.GetInfoType() == (int)TileTypes.Empty / 100) {
                 int tileType = data.GetAdditionalInfo();
                 try {
                     Vector3 _pos = data.GetPos();
@@ -45,12 +45,13 @@ public class MapDataLoader : MonoBehaviour
     }
 
     public void Refresh() {
-        List<GameObject> forDestroy = new List<GameObject>();
+        MapGrid.ClearAllTiles();
 
         // int itemCnt = ItemGroup.transform.childCount;
         // int enemyCnt = EnemyGroup.transform.childCount;
         // int playerCnt = PlayerGroup.transform.childCount;
-        MapGrid.ClearAllTiles();
+
+        // List<GameObject> forDestroy = new List<GameObject>();
         // for (int i = 0; i < itemCnt; ++i) {
         //     forDestroy.Add(ItemGroup.transform.GetChild(i).gameObject);
         // }
@@ -61,8 +62,8 @@ public class MapDataLoader : MonoBehaviour
         //     forDestroy.Add(PlayerGroup.transform.GetChild(i).gameObject);
         // }
 
-        foreach (GameObject obj in forDestroy) {
-            DestroyImmediate(obj);
-        }
+        // foreach (GameObject obj in forDestroy) {
+        //     DestroyImmediate(obj);
+        // }
     }
 }
