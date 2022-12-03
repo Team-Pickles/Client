@@ -1,27 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Boss1 : MonoBehaviour
 {
-    public GameObject rainStart;
-    public GameObject trash;
-    public GameObject enemy;
-    public GameObject barrior;
-
-    public GameObject player;
-    public GameObject clearPosition;
+    public GameObject attackRange;
+    public string nextLevel;
+    [HideInInspector] public GameObject trash;
+    [HideInInspector] public GameObject enemy;
+    [HideInInspector] public GameObject barrior;
 
     private Boss1State _state;
     private bool _immortal = false;
-    public int hp = 5;
-    private void OnTriggerEnter2D(Collider2D collision)
+    [HideInInspector] public int hp = 10;
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!_immortal && collision.name == "Bullet(Clone)")
+        if (!_immortal && collision.transform.name == "Bullet(Clone)")
         {
-            Destroy(collision.gameObject);
             StartCoroutine(Damaged());
+            if (hp == 0)
+            {
+                StartCoroutine(Clear());
+            }
         }
+    }
+    private IEnumerator Clear()
+    {
+        yield return new WaitForSeconds(3.0f);
+        SceneManager.LoadScene(nextLevel);
+        GameObject.Find("Player").transform.position = new Vector3(-10.0f, 2.0f, 0.0f);
     }
     private IEnumerator Damaged()
     {
@@ -58,11 +66,6 @@ public class Boss1 : MonoBehaviour
         _immortal = false;
         yield break;
     }
-    public void OnEnd()
-    {
-        player.GetComponent<Rigidbody2D>().position = (clearPosition.transform.position);
-        Destroy(gameObject);
-    }
     public void SetState(Boss1State state)
     {
         _state = state;
@@ -70,6 +73,8 @@ public class Boss1 : MonoBehaviour
     }
     private void Start()
     {
-        //SetState(new Boss1Idle(this));
+        trash = Resources.Load("Prefabs/Trash") as GameObject;
+        enemy = Resources.Load("Prefabs/Boss1/Boss1Enemy") as GameObject;
+        barrior = Resources.Load("Prefabs/Boss1/Boss1Barrior") as GameObject;
     }
 }

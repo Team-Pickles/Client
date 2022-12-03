@@ -21,9 +21,9 @@ EditorBuildSettings:
     path: Assets/Server/scene/MultiplaySample.unity
     guid: 992002b0c5c013a44be5d9e8866b5640
   - enabled: 1
-    path: Assets/Client/Scenes/LevelChange.unity
-    guid: 44bb1078edc5b3046a0df30eee407711
+    path: Assets/Client/Scenes/Chapters/Chapter1.unity
+    guid: fe99fdb19bd6a8d42b19ef9341cd3863
   - enabled: 1
-    path: Assets/Client/Scenes/YechanWorld/Level1.unity
-    guid: 1a16b1453b5bca14f86ca3c9357d0bf7
+    path: Assets/Client/Scenes/Chapters/Chapter2.unity
+    guid: 8c18ba6ff3ff81247b5286be8b071652
   m_configObjects: {}

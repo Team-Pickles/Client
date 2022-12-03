@@ -39,7 +39,7 @@ public class ClearChapter : MonoBehaviour
         if (istouched && Input.GetKeyDown(KeyCode.UpArrow))
         {
             SceneManager.LoadScene(nextLevel);
-            GameObject.Find("Player").transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+            GameObject.Find("Player").transform.position = new Vector3(-10.0f, 2.0f, 0.0f);
         }
     }
 }

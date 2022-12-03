@@ -13,7 +13,7 @@ public class Boss1Rain : Boss1State
     public override IEnumerator Start()
     {
         attackIndicator = Resources.Load("Prefabs/Boss1/AttackIndicator") as GameObject;
-        sr = _boss.rainStart.GetComponent<SpriteRenderer>();
+        sr = _boss.attackRange.GetComponent<SpriteRenderer>();
         yield return new WaitForSeconds(1.0f);
         yield return Skill();
     }
@@ -32,13 +32,6 @@ public class Boss1Rain : Boss1State
             cnt++;
             yield return new WaitForSeconds(1.0f);
         }
-
-        for (int i = 0; i < 5; i++)
-        {
-            x = Random.Range(sr.bounds.min.x, sr.bounds.max.x);
-            y = sr.bounds.max.y;
-            Object.Instantiate(_boss.trash, new Vector2(x, y), new Quaternion());
-        }
         // 3ÃÊ ½¬°í
         yield return new WaitForSeconds(3.0f);
         
@@ -50,9 +43,6 @@ public class Boss1Rain : Boss1State
     }
     public override IEnumerator End()
     {
-        GameObject player = GameObject.Find("Player");
-        GameObject lv2StartPoint = GameObject.Find("Lv2StartPoint");
-        player.transform.position = lv2StartPoint.transform.position;
         yield break;
     }
 }

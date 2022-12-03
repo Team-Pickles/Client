@@ -5,7 +5,7 @@ using UnityEngine;
 public class Boss1BarriorMove : MonoBehaviour
 {
     public GameObject boss;
-    public float radius = 1.0f;
+    public float radius = 1.8f;
 
     private Vector2 _position;
     private float _time = 0.0f;
