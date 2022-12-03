@@ -38,7 +38,7 @@ public class SpellManager : MonoBehaviour
                 }
                 case KeyPressed.ING:
                 {
-                    currentSkill.OnSkill();
+                    currentSkill.OnConsume();
                     break;
                 }
                 default:
@@ -68,6 +68,10 @@ public class SpellManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.S))
             {
                 StartCoroutine(currentSkill.OnFire());
+            }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                StartCoroutine(currentSkill.OnItemUse());
             }
         }
     }

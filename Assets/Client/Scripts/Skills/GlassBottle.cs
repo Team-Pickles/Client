@@ -20,10 +20,6 @@ public class GlassBottle : Skill
     {
 
     }
-    public override void OnSkill()
-    {
-
-    }
     public override IEnumerator OnFire()
     {
         bool flip = _player.GetComponent<SpriteRenderer>().flipX;

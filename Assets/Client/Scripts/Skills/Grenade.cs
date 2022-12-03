@@ -6,7 +6,6 @@ using UnityEngine.Tilemaps;
 
 public class Grenade : Skill
 {
-    GameObject _player, _firePoint;
     private GameObject _tilemapFragile, _tilemapBlock;
     private PlayerMoveManager _pmm;
     private SpellManager _sm;
@@ -14,23 +13,14 @@ public class Grenade : Skill
 
     public override void OnChange()
     {
-        _player = GameObject.Find("Player");
-        _firePoint = GameObject.Find("FirePoint");
+        //_player = GameObject.Find("Player");
+        //_firePoint = GameObject.Find("FirePoint");
         _sm = _player.GetComponentInChildren<SpellManager>();
         _tilemapFragile = GameObject.Find("Tilemap_fragile");
         _tilemapBlock = GameObject.Find("Tilemap_block");
         _pmm = _player.GetComponent<PlayerMoveManager>();
-        Debug.Log("Grenade equib");
     }
-    public override void OnStart()
-    {
-        
-    }
-    public override void OnSkill()
-    {
-        
-    }
-    public override IEnumerator OnFire()
+    public override IEnumerator OnItemUse()
     {
         if (_pmm.GrenadeCount > 0)
         {
@@ -60,9 +50,5 @@ public class Grenade : Skill
         if (_pmm.GrenadeCount == 0)
             _sm.ChangeSkill(new Vacuum());
         yield return 0;
-    }
-    public override void OnEnd()
-    {
-
     }
 }
