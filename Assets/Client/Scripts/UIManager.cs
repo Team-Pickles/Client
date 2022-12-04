@@ -533,7 +533,7 @@ public class UIManager : MonoBehaviour
         startMenu.SetActive(true);
         signUpCoroutine = null;
     }
-    
+
     public void QuitButtonClicked()
     {
 #if UNITY_EDITOR
