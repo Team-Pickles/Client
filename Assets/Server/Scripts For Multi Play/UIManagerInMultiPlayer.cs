@@ -74,57 +74,8 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         mapListItems.Clear();
         setDefaultMapInfo();
         _notice.AlertBox("AWAKE");
-
-        string host = "127.0.0.1";
-        IPHostEntry ipHost = Dns.GetHostEntry(host);
-        //주소가 여러개일 수 있어서 배열로 받음
-        IPAddress ipAddr = ipHost.AddressList[0];
-        //최종적인 주소
-        IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
-
-        try
-        {
-            socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            socket.ReceiveTimeout = 10000;
-            //연결 시도
-            IAsyncResult result = socket.BeginConnect(endPoint, null, null);
-            bool success = result.AsyncWaitHandle.WaitOne(1000, true);
-            _notice.AlertBox(success.ToString());
-            if (success)
-            {
-                Debug.Log($"Connected To {socket.RemoteEndPoint.ToString()}");
-
-                byte[] recvBuff = new byte[1024];
-                int recvBytes = socket.Receive(recvBuff);
-                string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-                string[] split = recvData.Split(',');
-                Debug.Log($"[From Server] {split[0]}");
-                Dictionary<int, string> rooms = new Dictionary<int, string>();
-                for (int i = 1; i < split.Length; i++)
-                {
-                    rooms.Add(i, split[i]);
-                }
-
-                setRoomList(rooms);
-            }
-            else
-            {
-                // NOTE, MUST CLOSE THE SOCKET
-
-                socket.Close();
-                throw new ApplicationException("Failed to connect server.");
-            }
-
-        }
-        catch (Exception e)
-        {
-            socket.Close();
-            Debug.Log(e.ToString());
-            throw new ApplicationException("Failed to connect server.");
-
-        }
-
-
+        socket = UserDataManager.instance.socket;
+        RefreshRoomList();
     }
 
     public int TCPConnectTimeo(string hostname, string service, string nsec){return 1; }
@@ -278,7 +229,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
                         MapRightPageButton.interactable = false;
                     else
                         MapRightPageButton.interactable = true;
-                }, "http://localhost:3001/api/map/getAllList"));
+                }, UserDataManager.instance.apiUrl + "api/map/getAllList"));
             }
             else
             {
@@ -304,7 +255,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
                         MapRightPageButton.interactable = false;
                     else
                         MapRightPageButton.interactable = true;
-                }, "http://localhost:3001/api/map/getListByTag/" + _mapTag));
+                }, UserDataManager.instance.apiUrl + "api/map/getListByTag/" + _mapTag));
             }
             else
             {
@@ -367,7 +318,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
 
     IEnumerator IneternetConnectCheck(Action<bool> action)
     {
-        using (UnityWebRequest request = new UnityWebRequest("http://localhost:3001/"))
+        using (UnityWebRequest request = new UnityWebRequest(UserDataManager.instance.apiUrl + ""))
         {
 
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -514,7 +465,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
                 {
                     Debug.Log("Server Available!");
                     StartCoroutine(GetMapList(mapListItemCnt => {
-                    }, "http://localhost:3001/api/map/getAllList"));
+                    }, UserDataManager.instance.apiUrl + "api/map/getAllList"));
                 }
                 else
                 {

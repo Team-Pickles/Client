@@ -133,7 +133,7 @@ public class UIManager : MonoBehaviour
 
         IEnumerator IneternetConnectCheck(Action<bool> action)
         {
-            using (UnityWebRequest request = new UnityWebRequest("http://localhost:3001/"))
+            using (UnityWebRequest request = new UnityWebRequest(UserDataManager.instance.apiUrl))
             {
 
                 request.downloadHandler = new DownloadHandlerBuffer();
@@ -178,6 +178,7 @@ public class UIManager : MonoBehaviour
                 UserDataManager.instance.SetToken(d.tokens[0].accessToken, d.tokens[0].refreshToken);
                 UserDataManager.instance.SetUserName(d.username);
                 UserDataManager.instance.isLogined = true;
+                UserDataManager.instance.SetSocket();
                 Debug.Log($"{d.tokens[0].accessToken},{d.tokens[0].refreshToken}");
                 loginMenu.SetActive(false);
                 startMenu.SetActive(true);
@@ -200,7 +201,7 @@ public class UIManager : MonoBehaviour
 
         IEnumerator LoginProcess(Action<string> Tocken)
         {
-            using ( UnityWebRequest request = UnityWebRequest.Post("http://localhost:3001/api/auth/login", json))
+            using ( UnityWebRequest request = UnityWebRequest.Post(UserDataManager.instance.apiUrl + "api/auth/login", json))
             {
                 byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
                 request.SetRequestHeader("Content-Type", "application/json");
@@ -266,7 +267,7 @@ public class UIManager : MonoBehaviour
 
         IEnumerator IneternetConnectCheck(Action<bool> action)
         {
-            using (UnityWebRequest request = new UnityWebRequest("http://localhost:3001/"))
+            using (UnityWebRequest request = new UnityWebRequest(UserDataManager.instance.apiUrl))
             {
                 request.downloadHandler = new DownloadHandlerBuffer();
 
@@ -350,7 +351,7 @@ public class UIManager : MonoBehaviour
 
         IEnumerator SignUpProcess(Action<bool> Result)
         {
-            using ( UnityWebRequest request = UnityWebRequest.Put("http://localhost:3001/api/user/apply", json))
+            using ( UnityWebRequest request = UnityWebRequest.Put(UserDataManager.instance.apiUrl + "api/user/apply", json))
             {
                 byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
                 request.SetRequestHeader("Content-Type", "application/json");
@@ -416,7 +417,7 @@ public class UIManager : MonoBehaviour
 
         IEnumerator Refresh(Action<string> Tocken)
         {
-            using (UnityWebRequest request = UnityWebRequest.Post("http://localhost:3001/api/auth/refresh", ""))
+            using (UnityWebRequest request = UnityWebRequest.Post(UserDataManager.instance.apiUrl + "api/auth/refresh", ""))
             {
                 string _accessToken = UserDataManager.instance.accessToken;
                 string _refreshToken = UserDataManager.instance.refreshToken;
@@ -470,7 +471,7 @@ public class UIManager : MonoBehaviour
 
         IEnumerator Logout(Action<bool> isLogout)
         {
-            using (UnityWebRequest request = UnityWebRequest.Delete("http://localhost:3001/api/auth/logout"))
+            using (UnityWebRequest request = UnityWebRequest.Delete(UserDataManager.instance.apiUrl + "api/auth/logout"))
             {
                 string _accessToken = UserDataManager.instance.accessToken;
                 request.SetRequestHeader("Content-Type", "application/json");
@@ -508,11 +509,7 @@ public class UIManager : MonoBehaviour
         loginSubmitButton.interactable = true;
         loginCoroutine = null;
     }
-
-    private void OnApplicationQuit() {
-        if(UserDataManager.instance.isLogined)
-            LogOutButtonClicked();
-    }
+//
 
     public void BackToMainFromLogin() {
         idField.text = "";
