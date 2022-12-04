@@ -10807,7 +10807,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 5091156043021300394, guid: 9d4c7b654e282054b8cdf54c351ec3db, type: 3}
   itemSpawnerPrefab: {fileID: 0}
   projectilePrefab: {fileID: 3305180255072280105, guid: d95340b9df0ea0a4fa5544e394c0cad4, type: 3}
-  enemyPrefab: {fileID: 5121378400887899133, guid: 755e1aa1cce69694cbe4897f7ecf3ce5, type: 3}
+  enemyPrefab: {fileID: 99511372075380570, guid: 0f5d32327b92d254980db07f88cb4f28, type: 3}
   bulletPrefab: {fileID: 8324424231299544829, guid: d7f560be4ab14364291129603590fdd8, type: 3}
   itemPrefab: {fileID: 8776486889826405664, guid: 4322894dc47fd9f4eb44ed937d8d1dd2, type: 3}
   camera: {fileID: 1090682075}
