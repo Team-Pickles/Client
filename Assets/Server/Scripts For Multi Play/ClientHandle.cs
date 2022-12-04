@@ -259,7 +259,7 @@ public class ClientHandle : MonoBehaviour
         int _enemyId = _packet.ReadInt();
         if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
         {
-            _enemy.EnemyD();
+            _enemy.DestroyEnemy();
         }
     }
 
