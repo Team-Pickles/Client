@@ -21,7 +21,7 @@ public enum ServerPackets
     projectileExploded,
     spawnEnemy,
     enemyPosition,
-    enemyHealth,
+    enemyHit,
     udpTest,
     spawnBullet,
     bulletPosition,
@@ -33,7 +33,9 @@ public enum ServerPackets
     
     charactorFlip,
     ropeACK,
-    startGame
+    startGame,
+
+    enemyDestroy
 }
 
 /// <summary>Sent from client to server.</summary>

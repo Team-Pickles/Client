@@ -52,12 +52,12 @@ public class Tilemap2D : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 Vector3Int position = new Vector3Int((int)(-width * 0.5f) + x, (int)(height * 0.5f) - y, 0);
-                Debug.Log(position);
+                //Debug.Log(position);
                 SpawnTile(TileType.Empty, position);
             }
         }
 
-        //타일맵 사이즈를 현재 소환된 타일맵의 경계의 크기 전환
+        //타일맵 사이즈를 현재 소환된 타일맵의 경계의 크기로 전환
         tilemap.CompressBounds();
 
         //tilemap.GetComponent<BoxCollider>().center = new Vector3((int)tilemap.cellBounds.center.x, (int)tilemap.cellBounds.center.y, 0) ;

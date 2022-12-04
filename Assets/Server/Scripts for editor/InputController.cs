@@ -28,6 +28,7 @@ public class InputController : MonoBehaviour
     private Tilemap tileMap;
 
     private TileType currentType = TileType.Empty;
+    public GameObject savePanel;
 
     [SerializeField]
     private CameraController cameraController;
@@ -117,7 +118,8 @@ public class InputController : MonoBehaviour
     {
         float _x = Input.GetAxisRaw("Horizontal");
         float _y = Input.GetAxisRaw("Vertical");
-        cameraController.SetPosition(_x, _y);
+        if(!savePanel.activeInHierarchy)
+            cameraController.SetPosition(_x, _y);
 
         if (Input.GetMouseButtonDown(2))
         {
