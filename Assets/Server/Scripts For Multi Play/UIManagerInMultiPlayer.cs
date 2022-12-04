@@ -73,7 +73,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         defaultMapJson = File.ReadAllText(path);
         mapListItems.Clear();
         setDefaultMapInfo();
-        _notice.AlertBox("AWAKE");
+
         socket = UserDataManager.instance.socket;
         RefreshRoomList();
     }
@@ -156,7 +156,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             } catch(SocketException _e) {
                 if(_e.SocketErrorCode.ToString() != "TimedOut")
                 {
-                    Debug.Log(_e.SocketErrorCode);
+                    Debug.Log(_e.SocketErrorCode + "_" + _e.Message);
                     break;
                 } else {
                     Debug.Log(_e.SocketErrorCode + "_" + errCnt);
@@ -408,15 +408,17 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         byte[] recvBuff = new byte[1024];
         int recvBytes = socket.Receive(recvBuff);
         string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-
-        string[] split = recvData.Split(',');
-        for (int i=1; i< split.Length; i++)
+        if(recvData != "None")
         {
+            string[] split = recvData.Split(',');
+            for (int i=1; i< split.Length; i++)
+            {
 
-            rooms.Add(i, split[i - 1]);
-        }
+                rooms.Add(i, split[i - 1]);
+            }
 
-        setRoomList(rooms);
+            setRoomList(rooms);
+        }  
     }
 
     public void SetMemberItem(int _id, string _username)
@@ -430,8 +432,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         Client.instance.RoomExit();
         roomLobbyUI.SetActive(false);
         loadingScene.SetActive(true);
-        socket.Close();
-        Awake();
+
         BackToMain();
     }
 
@@ -504,8 +505,5 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         _temp.map_grade = 0;
         mapListItems.Add(0, _temp);
     }
-    private void OnApplicationQuit() {
-        if(UserDataManager.instance.isLogined)
-            UIManager.instance.LogOutButtonClicked();
-    }
+    
 }
