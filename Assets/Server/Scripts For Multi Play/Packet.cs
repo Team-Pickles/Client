@@ -34,8 +34,6 @@ public enum ServerPackets
     charactorFlip,
     ropeACK,
     startGame,
-
-    enemyDestroy
 }
 
 /// <summary>Sent from client to server.</summary>
