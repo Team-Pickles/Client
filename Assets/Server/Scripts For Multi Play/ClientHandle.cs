@@ -216,9 +216,9 @@ public class ClientHandle : MonoBehaviour
         {
             GameManagerInServer.players[_id].onRope = _onRope;
             if (_onRope)
-                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHaing", true);
+                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHanging", true);
             else
-                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHaing", false);
+                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHanging", false);
         }
             
     }
@@ -235,22 +235,25 @@ public class ClientHandle : MonoBehaviour
     {
         int _enemyId = _packet.ReadInt();
         Vector3 _enemyPos = _packet.ReadVector3();
+        bool isMove = _packet.ReadBool();
 
         if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
         {
             _enemy.transform.position = _enemyPos;
+            _enemy._animator.SetBool("isMoving", isMove);
         }
     }
 
-    public static void EnemyCollide(Packet _packet)
+    public static void EnemyHit(Packet _packet)
     {
         int _enemyId = _packet.ReadInt();
 
         if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
         {
-            _enemy.Collide();
+            _enemy.EnemyHit();
         }
     }
+
 
     public static void StartGame(Packet _packet)
     {

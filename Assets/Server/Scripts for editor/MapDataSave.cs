@@ -5,9 +5,8 @@ using System.IO;
 using System.Linq;
 using UnityEngine.UI;
 using System;
-/*
-    Made by limmon029 
- */
+using UnityEngine.Networking;
+
 public class MapDataSave : MonoBehaviour
 {
     [SerializeField] GameObject tileMapGrid;
@@ -58,13 +57,15 @@ public class MapDataSave : MonoBehaviour
     public void Save(InputField _mapName)
     {
         fileName = _mapName.text;
-        infos = new Dictionary<int, DataClass>();
+        filePath = Application.streamingAssetsPath + "/";
         fullFilePath = filePath + fileName;
+        infos = new Dictionary<int, DataClass>();
 
         GetMapInfo();
         key = 0;
         string toJson = JsonUtility.ToJson(new Serialization<int, DataClass>(infos));
         int num = 0;
+
 
         Debug.Log($"{filePath}");
 
@@ -80,11 +81,59 @@ public class MapDataSave : MonoBehaviour
         Debug.Log("save done");
     }
 
-    public void Share(InputField _mapName, InputField _mapTag, InputField _mapDifficulty)
+
+    public void Share(GameObject _infoObject)
     {
+        var _mapName = _infoObject.transform.GetChild(0).GetComponent<InputField>();
         Save(_mapName);
-        var map_data = Resources.Load(fullFilePath);
-        var map_tag = _mapTag.text;
-        var map_difficulty = _mapDifficulty.text;
+        var map_info = JsonUtility.ToJson(Resources.Load(fullFilePath));
+        var map_tag = _infoObject.transform.GetChild(1).GetComponent<InputField>().text;
+        var map_difficulty = _infoObject.transform.GetChild(2).GetComponent<InputField>().text;
+
+        SaveDataClass _forSend = new SaveDataClass();
+        _forSend.map_info = map_info;
+        _forSend.map_tag = map_tag;
+        _forSend.map_difficulty = Int32.Parse(map_difficulty);
+        _forSend.map_maker = UserDataManager.instance.username;
+
+        string _forSendJson = JsonUtility.ToJson(_forSend);
+
+        StartCoroutine(MapShareProcess(_result =>
+        {
+            if (_result)
+            { Debug.Log("SAVE"); }
+        }));
+
+
+        System.Collections.IEnumerator MapShareProcess(Action<bool> ResultHandler)
+        {
+            using (UnityWebRequest request = UnityWebRequest.Put(UserDataManager.instance.apiUrl + "api/map/apply", _forSendJson))
+            {
+                byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(_forSendJson);
+                request.SetRequestHeader("Content-Type", "application/json");
+
+                request.uploadHandler.Dispose();
+
+                request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+                request.downloadHandler = new DownloadHandlerBuffer();
+
+                yield return request.SendWebRequest();
+                string _result = request.downloadHandler.text;
+
+                if (request.error != null)
+                {
+                    Debug.Log(request.error);
+                }
+                else
+                {
+                    Debug.Log(_result);
+                    ResultHandler(true);
+                }
+
+                request.uploadHandler.Dispose();
+                request.downloadHandler.Dispose();
+                request.Dispose();
+            }
+        }
     }
 }
