@@ -14,6 +14,7 @@ public class UserDataManager : MonoBehaviour
     public string refreshToken;
     public bool isLogined = false;
     public string apiUrl { get; private set; }
+    public string userId { get; private set; }
 
     private void Awake() {
         if (instance == null)
@@ -52,6 +53,11 @@ public class UserDataManager : MonoBehaviour
 
     public void SetUserName(string _username) {
         username = _username;
+    }
+
+    public void SetUserId(string _userId)
+    {
+        userId = _userId;
     }
 
     public void SetSocket()

@@ -185,6 +185,7 @@ public class UIManager : MonoBehaviour
                 d = JsonUtility.FromJson<Data>(_Tocken);
                 UserDataManager.instance.SetToken(d.tokens[0].accessToken, d.tokens[0].refreshToken);
                 UserDataManager.instance.SetUserName(d.username);
+                UserDataManager.instance.SetUserId(user.user_id);
                 UserDataManager.instance.isLogined = true;
                 UserDataManager.instance.SetSocket();
                 Debug.Log($"{d.tokens[0].accessToken},{d.tokens[0].refreshToken}");

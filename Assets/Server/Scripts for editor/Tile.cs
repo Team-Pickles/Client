@@ -24,10 +24,10 @@ public enum TileType
     glass, rock, bricks,
    */
     Item =100,
-    Bullet,  tiles_packed_151, tiles_packed_44,  tiles_packed_108,
+    trash,  tiles_packed_151, tiles_packed_44,  tiles_packed_108,
 
     Enemy =200,
-    Boss,
+    Boss, can_stand_Sheet_0,
     
     Player = 300,
     Charactor_Sheet_0,
