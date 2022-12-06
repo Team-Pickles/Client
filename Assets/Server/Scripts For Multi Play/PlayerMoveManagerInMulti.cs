@@ -25,6 +25,15 @@ public class PlayerMoveManagerInMulti : MonoBehaviour
 
     }
 
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("trash") && isPressed)
+        {
+            ItemManager im = other.gameObject.GetComponent<ItemManager>();
+            im.Collide();
+            ClientSend.ItemCollide(im.id);
+        }
+    }
+
     private void SendInputToServer()
     {
         bool[] _inputs = new bool[]

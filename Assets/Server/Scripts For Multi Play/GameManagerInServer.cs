@@ -22,7 +22,7 @@ public class GameManagerInServer : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject enemyPrefab;
     public GameObject bulletPrefab;
-    public GameObject itemPrefab;
+    public GameObject[] itemPrefabs;
     public GameObject camera;
 
     private void Awake()
@@ -44,6 +44,7 @@ public class GameManagerInServer : MonoBehaviour
         if (_id == Client.instance.myId)
         {
             _player = Instantiate(localPlayerPrefab, _position, _rotaion);
+            _player.GetComponent<PlayerMoveManagerInMulti>().camTransform = camera.transform;
             camera.GetComponent<CameraMove>().gameObject.SetActive(true);
             camera.GetComponent<CameraMove>()._player = _player;
         }
@@ -73,9 +74,9 @@ public class GameManagerInServer : MonoBehaviour
         bullets.Add(_bulletId, _bullet.GetComponent<BulletManager>());
     }
 
-    public void SpawnItem(int _itemId, Vector3 _position)
+    public void SpawnItem(int _itemId, Vector3 _position, int _itemType)
     {
-        GameObject _item = Instantiate(itemPrefab, _position, Quaternion.identity);
+        GameObject _item = Instantiate(itemPrefabs[_itemType - (int)TileTypes.Item - 1], _position, Quaternion.identity);
         _item.GetComponent<ItemManager>().Initialize(_itemId);
         items.Add(_itemId, _item.GetComponent<ItemManager>());
     }
