@@ -35,19 +35,19 @@ public class DataClass {
         string datatype;
         string addInfo = "";
         switch(infoType) {
-            case (int)TileTypes.Empty / 100:
+            case (int)TileType.Empty / 100:
                 datatype = "Tile";
                 addInfo = " - TileType: [" + additionalInfo + "]";
                 break;
-            case (int)TileTypes.Enemy / 100:
+            case (int)TileType.Enemy / 100:
                 datatype = "Enemy";
                 addInfo = " - EnemyType: [" + additionalInfo + "]";
                 break;
-            case (int)TileTypes.Item / 100:
+            case (int)TileType.Item / 100:
                 datatype = "Item";
                 addInfo = " - ItemType: [" + additionalInfo + "]";
                 break;
-            case (int)TileTypes.Player / 100:
+            case (int)TileType.Player / 100:
                 datatype = "Player";
                 addInfo = " - PlayerType: [" + additionalInfo + "]";
                 break;

@@ -42,7 +42,7 @@ public class LocalMapDataSaver : MonoBehaviour
 
             var tile = tileMap.GetTile<TileBase>(_pos);
             var tileSprite = tileMap.GetSprite(_pos);
-            tileEnum = Enum.Parse(typeof(TileTypes), tileSprite.name);
+            tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
             infos.Add(key, new DataClass((int)tileEnum / 100, _pos, (int)tileEnum));
             ++key;
         }
@@ -50,7 +50,7 @@ public class LocalMapDataSaver : MonoBehaviour
         {
             var itemSprite = _item.GetComponent<SpriteRenderer>().sprite;
             Vector3 _pos = _item.transform.position;
-            tileEnum = Enum.Parse(typeof(TileTypes), itemSprite.name);
+            tileEnum = Enum.Parse(typeof(TileType), itemSprite.name);
             infos.Add(key, new DataClass((int)tileEnum / 100, _pos, (int)tileEnum));
             ++key;
         }
@@ -58,7 +58,7 @@ public class LocalMapDataSaver : MonoBehaviour
         {
             var enemySprite = _enemy.GetComponent<SpriteRenderer>().sprite;
             Vector3 _pos = _enemy.transform.position;
-            tileEnum = TileTypes.Enemy + 1;
+            tileEnum = TileType.Enemy + 1;
             infos.Add(key, new DataClass((int)tileEnum / 100, _pos, (int)tileEnum));
             ++key;
         }
@@ -66,13 +66,13 @@ public class LocalMapDataSaver : MonoBehaviour
         {
             var playerSprite = _player.GetComponent<SpriteRenderer>().sprite;
             Vector3 _pos = _player.transform.position;
-            tileEnum = TileTypes.Charactor_Sheet_0;
+            tileEnum = TileType.Charactor_Sheet_0;
             infos.Add(key, new DataClass((int)tileEnum / 100, _pos, (int)tileEnum));
             ++key;
         }
         if(backGround != null) {
             var backGroundName = backGround.GetComponent<SpriteRenderer>().sprite.name;
-            tileEnum = Enum.Parse(typeof(TileTypes), backGroundName);
+            tileEnum = Enum.Parse(typeof(TileType), backGroundName);
             infos.Add(key, new DataClass((int)tileEnum / 100, new Vector3(0, 0, 0), (int)tileEnum));
         }
     }

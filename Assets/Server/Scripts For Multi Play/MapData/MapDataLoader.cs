@@ -30,7 +30,7 @@ public class MapDataLoader : MonoBehaviour
         Dictionary<Vector3, DataClass> loaded = JsonUtility.FromJson<Serialization<Vector3, DataClass>>(_fromJson).ToDictionary();
 
         foreach(DataClass data in loaded.Values) {
-            if(data.GetInfoType() == (int)TileTypes.Empty / 100) {
+            if(data.GetInfoType() == (int)TileType.Empty / 100) {
                 int tileType = data.GetAdditionalInfo();
                 try {
                     Vector3 _pos = data.GetPos();
