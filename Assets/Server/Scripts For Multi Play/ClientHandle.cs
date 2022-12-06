@@ -80,6 +80,13 @@ public class ClientHandle : MonoBehaviour
             GameManagerInServer.players[_id].transform.rotation = _rotation;
     }
 
+    public static void PlayerDamaged(Packet _packet)
+    {
+        int _playerId = _packet.ReadInt();
+        int _health = _packet.ReadInt();
+        GameManagerInServer.players[_playerId].setHealth(_health);
+    }
+
     public static void PlayerDisconnected(Packet _packet)
     {
         int _id = _packet.ReadInt();
@@ -153,7 +160,8 @@ public class ClientHandle : MonoBehaviour
 
         if (GameManagerInServer.bullets.TryGetValue(_bulletID, out BulletManager _bullet))
         {
-            _bullet.transform.localPosition = _position;
+            if(_bullet != null)
+                _bullet.transform.localPosition = _position;
         }
     }
 
@@ -163,7 +171,8 @@ public class ClientHandle : MonoBehaviour
         int _bulletID = _packet.ReadInt();
         if (GameManagerInServer.bullets.TryGetValue(_bulletID, out BulletManager _bullet))
         {
-            _bullet.Collide();
+            if(_bullet != null)
+                _bullet.Collide();
         }
     }
 
@@ -171,8 +180,9 @@ public class ClientHandle : MonoBehaviour
     {
         int _itemID = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
+        int _itemType = _packet.ReadInt();
 
-        GameManagerInServer.instance.SpawnItem(_itemID, _position);
+        GameManagerInServer.instance.SpawnItem(_itemID, _position, _itemType);
         //GameManagerInServer.players[_thrownByPlayer].itemCount--;
     }
 

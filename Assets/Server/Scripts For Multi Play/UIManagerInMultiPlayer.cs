@@ -61,11 +61,9 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             Debug.Log("Instance already exists,destroying object!");
             Destroy(this);
         }
-        #if UNITY_EDITOR
-            string path = "MapData/MyMap.json";
-        #else
-            string path = Application.streamingAssetsPath + "/MyMap.json";
-        #endif
+
+        string path = Application.streamingAssetsPath + "/MyMap.json";
+        Debug.Log(path);
         if(File.Exists(path) == false){
             Debug.LogError("Load failed. There is no file(MyMap.json).");
             return;

@@ -32,6 +32,7 @@ public class LocalMapDataSaver : MonoBehaviour
 
     Dictionary<int, DataClass> infos;
     private string fullFilePath;
+    private string apiUrl = "http://localhost:3001/";
     private int key;
     private void GetInfos() {
         key = 1;
@@ -58,7 +59,14 @@ public class LocalMapDataSaver : MonoBehaviour
         {
             var enemySprite = _enemy.GetComponent<SpriteRenderer>().sprite;
             Vector3 _pos = _enemy.transform.position;
-            tileEnum = TileTypes.Enemy + 1;
+            if(enemySprite.name.Contains("can"))
+            {
+                tileEnum = TileTypes.can;
+            }
+            else
+            {
+                tileEnum = TileTypes.Enemy + 1;
+            }
             infos.Add(key, new DataClass((int)tileEnum / 100, _pos, (int)tileEnum));
             ++key;
         }
@@ -74,7 +82,11 @@ public class LocalMapDataSaver : MonoBehaviour
             var backGroundName = backGround.GetComponent<SpriteRenderer>().sprite.name;
             tileEnum = Enum.Parse(typeof(TileTypes), backGroundName);
             infos.Add(key, new DataClass((int)tileEnum / 100, new Vector3(0, 0, 0), (int)tileEnum));
+            ++key;
         }
+        infos.Add(key, new DataClass((int)TileTypes.MapSize / 100, new Vector3(tileMap.cellBounds.xMin, tileMap.cellBounds.yMin, 0), (int)TileTypes.minSize));
+        ++key;
+        infos.Add(key, new DataClass((int)TileTypes.MapSize / 100, new Vector3(tileMap.cellBounds.xMax, tileMap.cellBounds.yMax, 0), (int)TileTypes.maxSize));
     }
 
     public void Save(bool _forFile) {
@@ -105,6 +117,7 @@ public class LocalMapDataSaver : MonoBehaviour
             }
             
             File.WriteAllText(fullFilePath + ".json", toJson);
+            Debug.Log("save done");
         } else {
             StartCoroutine(MapSaveProcess(_result => {
                 if(_result)
@@ -113,7 +126,7 @@ public class LocalMapDataSaver : MonoBehaviour
 
             IEnumerator MapSaveProcess(Action<bool> ResultHandler)
             {
-                using (UnityWebRequest request = UnityWebRequest.Put(UserDataManager.instance.apiUrl + "api/map/apply", _forSendJson))
+                using (UnityWebRequest request = UnityWebRequest.Put(apiUrl + "api/map/apply", _forSendJson))
                 {
                     byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(_forSendJson);
 
@@ -144,6 +157,6 @@ public class LocalMapDataSaver : MonoBehaviour
             }
         }
         //
-        Debug.Log("save done");
+        //
     }
 }

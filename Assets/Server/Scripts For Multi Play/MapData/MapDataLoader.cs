@@ -6,7 +6,9 @@ using System.IO;
 public class MapDataLoader : MonoBehaviour
 {
     [SerializeField] Tilemap MapGrid;
+    public GameObject background;
     public TileBase[] TileBases;
+    public Sprite[] Backgrounds;
 
     public static MapDataLoader instance;
 
@@ -27,17 +29,26 @@ public class MapDataLoader : MonoBehaviour
     public void Load(string _fromJson) {
         Refresh();
 
-        Dictionary<Vector3, DataClass> loaded = JsonUtility.FromJson<Serialization<Vector3, DataClass>>(_fromJson).ToDictionary();
-
+        Dictionary<int, DataClass> loaded = JsonUtility.FromJson<Serialization<int, DataClass>>(_fromJson).ToDictionary();
+        int[] _deathZone = new int[4];
         foreach(DataClass data in loaded.Values) {
             if(data.GetInfoType() == (int)TileTypes.Empty / 100) {
                 int tileType = data.GetAdditionalInfo();
                 try {
                     Vector3 _pos = data.GetPos();
                     Vector3Int _intPos = new Vector3Int((int)_pos.x, (int)_pos.y, (int)_pos.z);
-                    MapGrid.SetTile(_intPos, TileBases[tileType]);
+                    MapGrid.SetTile(_intPos, TileBases[tileType - 1]);
                 } catch {
                     Debug.Log(tileType);
+                }
+            }
+            else if (data.GetInfoType() == (int)TileTypes.BackGround / 100)
+            {
+                int backgroundType = data.GetAdditionalInfo();
+                try {
+                    background.GetComponent<SpriteRenderer>().sprite = Backgrounds[backgroundType - 1];
+                } catch {
+                    Debug.Log(backgroundType);
                 }
             }
         }

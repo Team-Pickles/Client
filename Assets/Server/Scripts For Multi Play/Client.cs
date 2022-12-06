@@ -93,7 +93,7 @@ public class Client : MonoBehaviour
             
             { (int)ServerPackets.charactorFlip, ClientHandle.CharactorFlip },
             { (int)ServerPackets.ropeACK, ClientHandle.RopeACK },
-            
+            { (int)ServerPackets.playerHealth, ClientHandle.PlayerDamaged},
             { (int)ServerPackets.spawnEnemy, ClientHandle.SpawnEnemy },
             { (int)ServerPackets.enemyPosition, ClientHandle.EnemyPosition },
             { (int)ServerPackets.enemyHit, ClientHandle.EnemyHit },
