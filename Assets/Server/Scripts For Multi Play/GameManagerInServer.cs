@@ -76,7 +76,7 @@ public class GameManagerInServer : MonoBehaviour
 
     public void SpawnItem(int _itemId, Vector3 _position, int _itemType)
     {
-        GameObject _item = Instantiate(itemPrefabs[_itemType - (int)TileTypes.Item - 1], _position, Quaternion.identity);
+        GameObject _item = Instantiate(itemPrefabs[_itemType - (int)TileType.Item - 1], _position, Quaternion.identity);
         _item.GetComponent<ItemManager>().Initialize(_itemId);
         items.Add(_itemId, _item.GetComponent<ItemManager>());
     }

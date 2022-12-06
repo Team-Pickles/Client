@@ -32,7 +32,7 @@ public class MapDataLoader : MonoBehaviour
         Dictionary<int, DataClass> loaded = JsonUtility.FromJson<Serialization<int, DataClass>>(_fromJson).ToDictionary();
         int[] _deathZone = new int[4];
         foreach(DataClass data in loaded.Values) {
-            if(data.GetInfoType() == (int)TileTypes.Empty / 100) {
+            if(data.GetInfoType() == (int)TileType.Empty / 100) {
                 int tileType = data.GetAdditionalInfo();
                 try {
                     Vector3 _pos = data.GetPos();
@@ -42,7 +42,7 @@ public class MapDataLoader : MonoBehaviour
                     Debug.Log(tileType);
                 }
             }
-            else if (data.GetInfoType() == (int)TileTypes.BackGround / 100)
+            else if (data.GetInfoType() == (int)TileType.BackGround / 100)
             {
                 int backgroundType = data.GetAdditionalInfo();
                 try {
