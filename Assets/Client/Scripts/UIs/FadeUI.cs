@@ -3,80 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum FadeState { FadeIn = 0, FadeOut, PortalFade}
 public class FadeUI : MonoBehaviour
 {
-    [SerializeField]
-    [Range(0.01f, 10.0f)]
-    private float fadeTime;
-    [SerializeField]
-    private AnimationCurve fadeCurve;
-    public Image screen;
-    public float colorChange = 0.0f;
-    private FadeState fadeState;
-
-    private IEnumerator Fade(float start, float end)
+	private Image _image;
+	public void FadeIn(float fadeTime)
     {
-        float currentTime = 0.0f;
-        float percent = 0.0f;
-
-        while(percent < 1)
-        {
-            currentTime = Time.deltaTime;
-            percent = currentTime / fadeTime;
-
-            Color color = screen.color;
-            color.a = Mathf.Lerp(start, end, percent);
-            screen.color = color;
-            colorChange = screen.color.a;
-            screen.enabled = true;
-
-            yield return null;
-        }
+        StartCoroutine(CoFadeIn(fadeTime));
     }
-
-    public void OnFade(FadeState state)
+    public void FadeOut(float fadeTime)
     {
-        fadeState = state;
+		StartCoroutine(CoFadeOut(fadeTime));
+    }
+	private IEnumerator CoFadeIn(float fadeTime)
+	{
+		Color tempColor = _image.color;
+		while (tempColor.a < 1f)
+		{
+			tempColor.a += Time.deltaTime / fadeTime;
+			_image.color = tempColor;
 
-        switch(fadeState)
-        {
-            case FadeState.FadeIn:
-                StartCoroutine(Fade(1, 0));
-                break;
-            case FadeState.FadeOut:
-                StartCoroutine(Fade(0, 1));
-                break;
-            case FadeState.PortalFade:
-                StartCoroutine(PortalFade());
-                break;
-        }
-    }
-    private IEnumerator PortalFade()
-    {
-        while(true)
-        {
-            yield return StartCoroutine(Fade(1, 0));
+			if (tempColor.a >= 1f) tempColor.a = 1f;
 
-            yield return StartCoroutine(Fade(0, 1));
-            break;
-        }
-    }
-    // Start is called before the first frame update
-    void Start()
+			yield return null;
+		}
+
+		_image.color = tempColor;
+	}
+	private IEnumerator CoFadeOut(float fadeTime)
+	{
+		Color tempColor = _image.color;
+		while (tempColor.a > 0f)
+		{
+			tempColor.a -= Time.deltaTime / fadeTime;
+			_image.color = tempColor;
+
+			if (tempColor.a <= 0f) tempColor.a = 0f;
+
+			yield return null;
+		}
+		_image.color = tempColor;
+	}
+	// Start is called before the first frame update
+	void Start()
     {
-        screen.enabled = true;
-        OnFade(FadeState.FadeOut);
-    }
+		_image = GetComponentInChildren<Image>();
+	}
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-            OnFade(FadeState.FadeIn);
-        if (Input.GetKeyDown(KeyCode.W))
-            OnFade(FadeState.FadeOut);
-        if (Input.GetKeyDown(KeyCode.E))
-            OnFade(FadeState.PortalFade);
+
     }
 }
