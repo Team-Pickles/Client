@@ -19,7 +19,7 @@ public enum TileType
     
     Item =100,
     trash,  tiles_packed_151, tiles_packed_44,  Spring_Sheet_0, grenade2,
-    rope_long, rope_short, barricade,
+    rope_long, rope_short, barricade, rope,
     Enemy =200,
     Boss, can_stand_Sheet_2,
     
