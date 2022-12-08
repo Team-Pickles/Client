@@ -3056,6 +3056,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapGrid: {fileID: 661184228}
+  FragileGrid: {fileID: 177604616}
+  BlockGrid: {fileID: 864704372}
   background: {fileID: 838506394}
   TileBases:
   - {fileID: 11400000, guid: b2c95ed0020b63441b42189d65144f3e, type: 2}
@@ -10840,7 +10842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e74181e523ac1fb40a2c0afef5e39e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileMap: {fileID: 0}
+  tileMaps: []
   items: []
   players: []
   enemys: []

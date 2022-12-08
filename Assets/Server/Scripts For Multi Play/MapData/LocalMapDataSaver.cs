@@ -19,7 +19,7 @@ public class SaveDataClass
 
 public class LocalMapDataSaver : MonoBehaviour
 {
-    [SerializeField] Tilemap tileMap;
+    [SerializeField] Tilemap[] tileMaps;
     [SerializeField] GameObject[] items;
     [SerializeField] GameObject[] players;
     [SerializeField] GameObject[] enemys;
@@ -37,16 +37,31 @@ public class LocalMapDataSaver : MonoBehaviour
     private void GetInfos() {
         key = 1;
         object tileEnum;
-        foreach (Vector3Int _pos in tileMap.cellBounds.allPositionsWithin) {
-            if(!tileMap.HasTile(_pos))
-                continue;
+        Dictionary<string, Vector3> _size = new Dictionary<string, Vector3>();
+        foreach(Tilemap _now in tileMaps)
+        {
+            foreach (Vector3Int _pos in _now.cellBounds.allPositionsWithin)
+            {
+                if(!_now.HasTile(_pos))
+                    continue;
 
-            var tile = tileMap.GetTile<TileBase>(_pos);
-            var tileSprite = tileMap.GetSprite(_pos);
-            tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
-            infos.Add(key, new DataClass((int)tileEnum / 100, _pos, (int)tileEnum));
-            ++key;
+                var tile = _now.GetTile<TileBase>(_pos);
+                var tileSprite = _now.GetSprite(_pos);
+                tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
+                infos.Add(key, new DataClass((int)tileEnum / 100, _pos, (int)tileEnum));
+                ++key;
+            }
+            if(_size.TryAdd("MIN", new Vector3(_now.cellBounds.xMin, _now.cellBounds.yMin, 0)))
+            {
+                _size.Add("MAX", new Vector3(_now.cellBounds.xMax, _now.cellBounds.yMax, 0));
+            }
+            else
+            {
+                _size["MIN"] = new Vector3(Math.Min(_size["MIN"].x, _now.cellBounds.xMin), Math.Min(_size["MIN"].y, _now.cellBounds.yMin));
+                _size["MAX"] = new Vector3(Math.Max(_size["MAX"].x, _now.cellBounds.xMax), Math.Max(_size["MAX"].y, _now.cellBounds.yMax));
+            }
         }
+        
         foreach(GameObject _item in items)
         {
             var itemSprite = _item.GetComponent<SpriteRenderer>().sprite;
@@ -84,9 +99,9 @@ public class LocalMapDataSaver : MonoBehaviour
             infos.Add(key, new DataClass((int)tileEnum / 100, new Vector3(0, 0, 0), (int)tileEnum));
             ++key;
         }
-        infos.Add(key, new DataClass((int)TileType.MapSize / 100, new Vector3(tileMap.cellBounds.xMin, tileMap.cellBounds.yMin, 0), (int)TileType.minSize));
+        infos.Add(key, new DataClass((int)TileType.MapSize / 100, _size["MIN"], (int)TileType.minSize));
         ++key;
-        infos.Add(key, new DataClass((int)TileType.MapSize / 100, new Vector3(tileMap.cellBounds.xMax, tileMap.cellBounds.yMax, 0), (int)TileType.maxSize));
+        infos.Add(key, new DataClass((int)TileType.MapSize / 100, _size["MAX"], (int)TileType.maxSize));
     }
 
     public void Save(bool _forFile) {
