@@ -76,7 +76,7 @@ public class LocalMapDataSaver : MonoBehaviour
             Vector3 _pos = _enemy.transform.position;
             if(enemySprite.name.Contains("can"))
             {
-                tileEnum = TileType.can_stand_Sheet_2;
+                tileEnum = TileType.can_stand_Sheet_0;
             }
             else
             {
@@ -89,7 +89,7 @@ public class LocalMapDataSaver : MonoBehaviour
         {
             var playerSprite = _player.GetComponent<SpriteRenderer>().sprite;
             Vector3 _pos = _player.transform.position;
-            tileEnum = TileType.Charactor_Sheet_0;
+            tileEnum = TileType.walk_Sheet_2_0;
             infos.Add(key, new DataClass((int)tileEnum / 100, _pos, (int)tileEnum));
             ++key;
         }

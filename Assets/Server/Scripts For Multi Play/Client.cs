@@ -99,6 +99,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.enemyPosition, ClientHandle.EnemyPosition },
             { (int)ServerPackets.enemyHit, ClientHandle.EnemyHit },
             { (int)ServerPackets.startGame, ClientHandle.StartGame},
+            { (int)ServerPackets.springColorChange, ClientHandle.SpringColorChange},
             { (int)ServerPackets.allSpawned, ClientHandle.allSpawned},
         };
         Debug.Log("Initiallized packets.");

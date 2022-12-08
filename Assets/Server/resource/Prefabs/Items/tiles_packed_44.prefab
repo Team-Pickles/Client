@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7269334975357566383}
   - component: {fileID: 7269334975357566382}
   - component: {fileID: 32514505473301544}
-  - component: {fileID: -4321483802726877777}
+  - component: {fileID: 1224965639742230167}
   m_Layer: 13
   m_Name: tiles_packed_44
   m_TagString: Item
@@ -124,7 +124,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &-4321483802726877777
+--- !u!114 &1224965639742230167
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

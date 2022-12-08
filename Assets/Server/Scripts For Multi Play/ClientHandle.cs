@@ -84,7 +84,7 @@ public class ClientHandle : MonoBehaviour
     {
         int _playerId = _packet.ReadInt();
         int _health = _packet.ReadInt();
-        Debug.Log(_health);
+        GameManagerInServer.players[_playerId].OnDamaged();
         GameManagerInServer.players[_playerId].setHealth(_health);
     }
 
@@ -207,6 +207,15 @@ public class ClientHandle : MonoBehaviour
         if (GameManagerInServer.items.TryGetValue(_itemID, out ItemManager _item))
         {
             _item.Collide();
+        }
+    }
+
+    public static void SpringColorChange(Packet _packet)
+    {
+        int _itemID = _packet.ReadInt();
+        if (GameManagerInServer.items.TryGetValue(_itemID, out ItemManager _item))
+        {
+            _item.SpringColorChange();
         }
     }
 

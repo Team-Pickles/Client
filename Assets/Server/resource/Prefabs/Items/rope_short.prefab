@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4740775085839822781}
   - component: {fileID: 4740775085839822771}
   - component: {fileID: 4740775085839822770}
+  - component: {fileID: 3370660012740475942}
   m_Layer: 14
   m_Name: rope_short
   m_TagString: rope
@@ -114,3 +115,16 @@ PolygonCollider2D:
       - {x: -0.10632956, y: -1.9520208}
       - {x: 0.105274856, y: -1.9528439}
       - {x: 0.11173496, y: 2.1562138}
+--- !u!114 &3370660012740475942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4740775085839822780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d22e0cbd9aed5745be77395fdf5a725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
