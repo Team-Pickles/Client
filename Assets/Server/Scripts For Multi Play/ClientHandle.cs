@@ -84,6 +84,7 @@ public class ClientHandle : MonoBehaviour
     {
         int _playerId = _packet.ReadInt();
         int _health = _packet.ReadInt();
+        Debug.Log(_health);
         GameManagerInServer.players[_playerId].setHealth(_health);
     }
 
@@ -111,9 +112,10 @@ public class ClientHandle : MonoBehaviour
         int _projectileID = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
         int _thrownByPlayer = _packet.ReadInt();
+        int _projectileCount = _packet.ReadInt();
 
         GameManagerInServer.instance.SpawnProjectile(_projectileID, _position, _thrownByPlayer);
-        //GameManagerInServer.players[_thrownByPlayer].itemCount--;
+        GameManagerInServer.players[_thrownByPlayer].GrenadeCount = _projectileCount;
     }
 
     public static void projectilePosition(Packet _packet)
@@ -148,9 +150,10 @@ public class ClientHandle : MonoBehaviour
         int _bulletID = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
         int _thrownByPlayer = _packet.ReadInt();
+        int _bulletCount = _packet.ReadInt();
 
         GameManagerInServer.instance.SpawnBullet(_bulletID, _position,_thrownByPlayer);
-        //GameManagerInServer.players[_thrownByPlayer].itemCount--;
+        GameManagerInServer.players[_thrownByPlayer].BulletCount = _bulletCount;
     }
 
     public static void BulletPosition(Packet _packet)
@@ -204,6 +207,22 @@ public class ClientHandle : MonoBehaviour
         if (GameManagerInServer.items.TryGetValue(_itemID, out ItemManager _item))
         {
             _item.Collide();
+        }
+    }
+
+    public static void ItemPickedUp(Packet _packet)
+    {
+        int _itemType = _packet.ReadInt();
+        int _itemCnt = _packet.ReadInt();
+        int _id = _packet.ReadInt();
+
+        if(_itemType == (int)TileType.trash)
+        {
+            GameManagerInServer.players[_id].BulletCount = _itemCnt;
+        }
+        else if(_itemType == (int)TileType.grenade2)
+        {
+            GameManagerInServer.players[_id].GrenadeCount = _itemCnt;
         }
     }
     
@@ -269,5 +288,11 @@ public class ClientHandle : MonoBehaviour
     {
         int _mapId = _packet.ReadInt();
         UIManagerInMultiPlayer.instance.StartGameProcess(_mapId);
+    }
+
+    public static void allSpawned(Packet _packet)
+    {
+        bool _done = _packet.ReadBool();
+        UIManagerInMultiPlayer.instance.SetPlayerInfo();
     }
 }

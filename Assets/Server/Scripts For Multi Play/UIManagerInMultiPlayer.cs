@@ -25,7 +25,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
 {
     public static UIManagerInMultiPlayer instance;
 
-
+    public GameObject playerInfoUI;
     public GameObject loadingScene;
     public GameObject lobbyUI;
     public GameObject roomLobbyUI;
@@ -395,6 +395,12 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         loadingScene.SetActive(false);
         roomLobbyUI.SetActive(false);
         MapDataLoader.instance.Load(mapListItems[map_id].map_info);
+    }
+
+    public void SetPlayerInfo()
+    {
+        playerInfoUI.SetActive(true);
+        playerInfoUI.GetComponent<PlayerInfoUiInServer>().Initialize(GameManagerInServer.players[Client.instance.myId]);
     }
 
     public void RefreshRoomList()

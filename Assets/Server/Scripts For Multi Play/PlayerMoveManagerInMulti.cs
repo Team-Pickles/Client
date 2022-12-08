@@ -16,7 +16,7 @@ public class PlayerMoveManagerInMulti : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Item") && isPressed)
+        if (collision.gameObject.CompareTag("Item") || collision.gameObject.CompareTag("trash") && isPressed)
         {
             ItemManager im = collision.gameObject.GetComponent<ItemManager>();
             im.Collide();
@@ -26,6 +26,7 @@ public class PlayerMoveManagerInMulti : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
+        Debug.Log(other.gameObject.tag);
         if (other.gameObject.CompareTag("trash") && isPressed)
         {
             ItemManager im = other.gameObject.GetComponent<ItemManager>();

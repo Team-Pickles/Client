@@ -228,7 +228,8 @@ MonoBehaviour:
   health: 0
   maxHealth: 0
   model: {fileID: 0}
-  itemCount: 0
+  BulletCount: 0
+  GrenadeCount: 0
   onRope: 0
 --- !u!61 &3829866102656874030
 BoxCollider2D:

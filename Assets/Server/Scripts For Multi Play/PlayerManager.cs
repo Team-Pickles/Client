@@ -6,21 +6,23 @@ public class PlayerManager : MonoBehaviour
 {
     public int id;
     public string username;
-    public float health;
-    public float maxHealth;
+    public int health;
+    public int maxHealth = 3;
     public SpriteRenderer model;
-    public float itemCount = 0;
+    public int BulletCount = 0;
+    public int GrenadeCount = 0;
     public bool onRope = false;
 
     public void Initialize(int _id, string _username)
     {
+        maxHealth = 3;
         id = _id;
         username = _username;
         health = maxHealth;
 
     }
 
-    public void setHealth(float _health)
+    public void setHealth(int _health)
     {
         health = _health;
 
