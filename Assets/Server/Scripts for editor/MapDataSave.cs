@@ -38,7 +38,7 @@ public class MapDataSave : MonoBehaviour
             Tilemap tileMap = tileMapGrid.transform.GetChild(i).gameObject.GetComponent<Tilemap>();
             foreach (Vector3Int _pos in tileMap.cellBounds.allPositionsWithin)
             {
-                Vector3 pos = _pos + new Vector3(0.5f, 0.5f, 0);
+                Vector3 pos = _pos;
 
                 if (!tileMap.HasTile(_pos))
                     continue;
@@ -58,6 +58,10 @@ public class MapDataSave : MonoBehaviour
                 else
                 {
                     tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
+                }
+                if((int)tileEnum >= (int)TileType.Item)
+                {
+                    pos += new Vector3(0.5f, 0.5f, 0);
                 }
                 infos.Add(key, new DataClass((int)tileEnum / 100, pos, (int)tileEnum));
                 ++key;
