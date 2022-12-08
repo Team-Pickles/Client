@@ -21,10 +21,10 @@ public enum TileType
     trash,  tiles_packed_151, tiles_packed_44,  Spring_Sheet_0, grenade2,
     rope_long, rope_short, barricade, rope,
     Enemy =200,
-    Boss, can_stand_Sheet_2,
+    Boss, can_stand_Sheet_0,
     
     Player = 300,
-    Charactor_Sheet_0,
+    walk_Sheet_2_0,
     
     BackGround = 400,
     ArcadeGreyBackground,
