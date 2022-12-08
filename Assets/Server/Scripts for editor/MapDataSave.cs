@@ -47,18 +47,9 @@ public class MapDataSave : MonoBehaviour
                 var tileSprite = tileMap.GetSprite(_pos);
                 if(tileSprite.name == "Empty")
                     continue;
-                if(tileSprite.name.Contains("can_stand_Sheet"))
-                {
-                    tileEnum = TileType.can_stand_Sheet_2;
-                }
-                else if(tileSprite.name == "walk_Sheet_2_0")
-                {
-                    tileEnum = TileType.Charactor_Sheet_0;
-                }
-                else
-                {
-                    tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
-                }
+
+                tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
+                
                 if((int)tileEnum >= (int)TileType.Item)
                 {
                     pos += new Vector3(0.5f, 0.5f, 0);
