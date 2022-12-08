@@ -6,6 +6,8 @@ using System.IO;
 public class MapDataLoader : MonoBehaviour
 {
     [SerializeField] Tilemap MapGrid;
+    [SerializeField] Tilemap FragileGrid;
+    [SerializeField] Tilemap BlockGrid;
     public GameObject background;
     public TileBase[] TileBases;
     public Sprite[] Backgrounds;
@@ -37,7 +39,19 @@ public class MapDataLoader : MonoBehaviour
                 try {
                     Vector3 _pos = data.GetPos();
                     Vector3Int _intPos = new Vector3Int((int)_pos.x, (int)_pos.y, (int)_pos.z);
-                    MapGrid.SetTile(_intPos, TileBases[tileType - 1]);
+                    if(tileType == (int)TileType.PlatformerTiles_1)
+                    {
+                        BlockGrid.SetTile(_intPos, TileBases[tileType - 1]);
+                    }
+                    else if(tileType == (int)TileType.PlatformerTiles_2)
+                    {
+                        FragileGrid.SetTile(_intPos, TileBases[tileType - 1]);
+                    }
+                    else
+                    {
+                        MapGrid.SetTile(_intPos, TileBases[tileType - 1]);
+                    }
+                    
                 } catch {
                     Debug.Log(tileType);
                 }

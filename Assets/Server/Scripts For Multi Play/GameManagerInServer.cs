@@ -77,8 +77,13 @@ public class GameManagerInServer : MonoBehaviour
     {
         Debug.Log(_itemType);
         GameObject _item = Instantiate(itemPrefabs[_itemType - (int)TileType.Item - 1], _position, Quaternion.identity);
-        _item.GetComponent<ItemManager>().Initialize(_itemId);
-        items.Add(_itemId, _item.GetComponent<ItemManager>());
+        ItemManager _itemManager;
+        _item.TryGetComponent<ItemManager>(out _itemManager);
+        if(_itemManager != null)
+        {
+            _itemManager.Initialize(_itemId);
+            items.Add(_itemId, _itemManager);
+        }
     }
 
     public void SpawnEnemy(int _enemyId, Vector3 _position)

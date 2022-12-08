@@ -89,6 +89,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnItem, ClientHandle.SpawnItem},
             { (int)ServerPackets.ItemPosition, ClientHandle.ItemPosition },
             { (int)ServerPackets.itemCollide, ClientHandle.ItemCollide },
+            { (int)ServerPackets.itemPickedUp, ClientHandle.ItemPickedUp},
             { (int)ServerPackets.roomJoined, ClientHandle.JoinRoomDone },
             
             { (int)ServerPackets.charactorFlip, ClientHandle.CharactorFlip },
@@ -99,6 +100,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.enemyHit, ClientHandle.EnemyHit },
             { (int)ServerPackets.startGame, ClientHandle.StartGame},
             { (int)ServerPackets.springColorChange, ClientHandle.SpringColorChange},
+            { (int)ServerPackets.allSpawned, ClientHandle.allSpawned},
         };
         Debug.Log("Initiallized packets.");
     }

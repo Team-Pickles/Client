@@ -32,26 +32,57 @@ public class MapDataSave : MonoBehaviour
         key = 1;
         object tileEnum;
         int tileMapCnt = tileMapGrid.transform.childCount;
+        Dictionary<string, Vector3> _size = new Dictionary<string, Vector3>();
         for (int i = 0; i < tileMapCnt; ++i)
         {
             Tilemap tileMap = tileMapGrid.transform.GetChild(i).gameObject.GetComponent<Tilemap>();
             foreach (Vector3Int _pos in tileMap.cellBounds.allPositionsWithin)
             {
-                Vector3 pos = _pos + new Vector3(0.5f, 0.5f, 0);
+                Vector3 pos = _pos;
 
                 if (!tileMap.HasTile(_pos))
                     continue;
 
                 var tile = tileMap.GetTile<TileBase>(_pos);
                 var tileSprite = tileMap.GetSprite(_pos);
-                tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
+                if(tileSprite.name == "Empty")
+                    continue;
+                if(tileSprite.name.Contains("can_stand_Sheet"))
+                {
+                    tileEnum = TileType.can_stand_Sheet_2;
+                }
+                else if(tileSprite.name == "walk_Sheet_2_0")
+                {
+                    tileEnum = TileType.Charactor_Sheet_0;
+                }
+                else
+                {
+                    tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
+                }
+                if((int)tileEnum >= (int)TileType.Item)
+                {
+                    pos += new Vector3(0.5f, 0.5f, 0);
+                }
                 infos.Add(key, new DataClass((int)tileEnum / 100, pos, (int)tileEnum));
                 ++key;
+                if(_size.TryAdd("MIN", new Vector3(tileMap.cellBounds.xMin, tileMap.cellBounds.yMin, 0)))
+                {
+                    _size.Add("MAX", new Vector3(tileMap.cellBounds.xMax, tileMap.cellBounds.yMax, 0));
+                }
+                else
+                {
+                    _size["MIN"] = new Vector3(Math.Min(_size["MIN"].x, tileMap.cellBounds.xMin), Math.Min(_size["MIN"].y, tileMap.cellBounds.yMin));
+                    _size["MAX"] = new Vector3(Math.Max(_size["MAX"].x, tileMap.cellBounds.xMax), Math.Max(_size["MAX"].y, tileMap.cellBounds.yMax));
+                }
             }
         }
         var backGroundName = backGround.GetComponent<SpriteRenderer>().sprite.name;
         tileEnum = Enum.Parse(typeof(TileType), backGroundName);
         infos.Add(key, new DataClass((int)tileEnum / 100, new Vector3(0, 0, 0), (int)tileEnum));
+        ++key;
+        infos.Add(key, new DataClass((int)TileType.MapSize / 100, _size["MIN"], (int)TileType.minSize));
+        ++key;
+        infos.Add(key, new DataClass((int)TileType.MapSize / 100, _size["MAX"], (int)TileType.maxSize));
     }
 
     public void Save(InputField _mapName)
@@ -86,7 +117,13 @@ public class MapDataSave : MonoBehaviour
     {
         var _mapName = _infoObject.transform.GetChild(0).GetComponent<InputField>();
         Save(_mapName);
-        var map_info = File.ReadAllText(fullFilePath + ".json");
+
+        if(File.Exists(fullFilePath + ".json") == false){
+            Debug.LogError("Load failed. There is no file.");
+            return;
+        }
+        string map_info = File.ReadAllText(fullFilePath + ".json");
+
         var map_tag = _infoObject.transform.GetChild(1).GetComponent<InputField>().text;
         var map_difficulty = _infoObject.transform.GetChild(2).GetComponent<InputField>().text;
 
