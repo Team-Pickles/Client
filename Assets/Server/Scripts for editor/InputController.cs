@@ -22,7 +22,10 @@ public class InputController : MonoBehaviour
     [SerializeField]
     public Sprite[] backGroundBase;
     [SerializeField]
+    public TileBase[] doorBase;
+    [SerializeField]
     private Sprite EmptySprite;
+
 
     [SerializeField]
     private Tilemap tileMap;
@@ -103,9 +106,13 @@ public class InputController : MonoBehaviour
             tileMap.SetTile(_tilePose, enemyBase[(int)(currentType-1) - (int)TileType.Enemy]);
         }
 
-        else if ((int)currentType >= (int)TileType.Player)
+        else if ((int)currentType < (int)TileType.BackGround)
         {
             tileMap.SetTile(_tilePose, playerBase[(int)(currentType - 1) - (int)TileType.Player]);
+        }
+        else if ((int)currentType >= (int)TileType.door)
+        {
+            tileMap.SetTile(_tilePose, doorBase[(int)(currentType - 1) - (int)TileType.door]);
         }
     }
 
