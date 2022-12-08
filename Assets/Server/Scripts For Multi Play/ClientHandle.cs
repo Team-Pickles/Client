@@ -84,6 +84,7 @@ public class ClientHandle : MonoBehaviour
     {
         int _playerId = _packet.ReadInt();
         int _health = _packet.ReadInt();
+        GameManagerInServer.players[_playerId].OnDamaged();
         GameManagerInServer.players[_playerId].setHealth(_health);
     }
 
