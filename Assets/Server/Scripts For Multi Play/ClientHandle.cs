@@ -207,7 +207,16 @@ public class ClientHandle : MonoBehaviour
             _item.Collide();
         }
     }
-    
+
+    public static void SpringColorChange(Packet _packet)
+    {
+        int _itemID = _packet.ReadInt();
+        if (GameManagerInServer.items.TryGetValue(_itemID, out ItemManager _item))
+        {
+            _item.SpringColorChange();
+        }
+    }
+
     //
     public static void CharactorFlip(Packet _packet)
     {
