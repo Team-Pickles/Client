@@ -45,8 +45,7 @@ public class GameManagerInServer : MonoBehaviour
         {
             _player = Instantiate(localPlayerPrefab, _position, _rotaion);
             _player.GetComponent<PlayerMoveManagerInMulti>().camTransform = camera.transform;
-            camera.GetComponent<CameraMove>().gameObject.SetActive(true);
-            camera.GetComponent<CameraMove>()._player = _player;
+            camera.GetComponent<Camera>().gameObject.SetActive(true);
         }
         else
         {
@@ -76,6 +75,7 @@ public class GameManagerInServer : MonoBehaviour
 
     public void SpawnItem(int _itemId, Vector3 _position, int _itemType)
     {
+        Debug.Log(_itemType);
         GameObject _item = Instantiate(itemPrefabs[_itemType - (int)TileType.Item - 1], _position, Quaternion.identity);
         _item.GetComponent<ItemManager>().Initialize(_itemId);
         items.Add(_itemId, _item.GetComponent<ItemManager>());

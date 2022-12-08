@@ -86,7 +86,7 @@ public class MapDataSave : MonoBehaviour
     {
         var _mapName = _infoObject.transform.GetChild(0).GetComponent<InputField>();
         Save(_mapName);
-        var map_info = JsonUtility.ToJson(Resources.Load(fullFilePath));
+        var map_info = File.ReadAllText(fullFilePath + ".json");
         var map_tag = _infoObject.transform.GetChild(1).GetComponent<InputField>().text;
         var map_difficulty = _infoObject.transform.GetChild(2).GetComponent<InputField>().text;
 

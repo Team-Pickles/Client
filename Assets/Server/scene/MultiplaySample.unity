@@ -2935,7 +2935,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapGrid: {fileID: 661184228}
-  DeathZone: {fileID: 0}
   background: {fileID: 838506394}
   TileBases:
   - {fileID: 11400000, guid: 406bf06d06692914c84eaa7a04471d6a, type: 2}
@@ -8361,7 +8360,6 @@ GameObject:
   - component: {fileID: 1090682080}
   - component: {fileID: 1090682079}
   - component: {fileID: 1090682078}
-  - component: {fileID: 1090682077}
   - component: {fileID: 1090682076}
   m_Layer: 0
   m_Name: Main Camera
@@ -8403,25 +8401,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!114 &1090682077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1090682075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e94b80b699ff1604a918407ce07ca80c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _player: {fileID: 0}
-  curve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!81 &1090682078
 AudioListener:
   m_ObjectHideFlags: 0
@@ -10938,11 +10917,14 @@ MonoBehaviour:
   enemyPrefab: {fileID: 99511372075380570, guid: 0f5d32327b92d254980db07f88cb4f28, type: 3}
   bulletPrefab: {fileID: 8324424231299544829, guid: d7f560be4ab14364291129603590fdd8, type: 3}
   itemPrefabs:
-  - {fileID: 8776486889826405664, guid: 4322894dc47fd9f4eb44ed937d8d1dd2, type: 3}
-  - {fileID: 7389048374384852592, guid: 6323f949cda664b4382cb5533945d17a, type: 3}
-  - {fileID: 5274091309869659539, guid: 38666584d6f94ba499e301b83069fc4c, type: 3}
   - {fileID: 4750861222190012204, guid: 95d577e5d276f914bb90fd03d95f51e0, type: 3}
-  - {fileID: 3305180255072280105, guid: 8968040f9b5337c4780744d1424ed49e, type: 3}
+  - {fileID: 8776486889826405664, guid: 4322894dc47fd9f4eb44ed937d8d1dd2, type: 3}
+  - {fileID: 7269334975357566379, guid: 1582ec89c3a34d6409142bcc70e664a1, type: 3}
+  - {fileID: 2099721584905147228, guid: 2869f5459f484054d8afd62caff47323, type: 3}
+  - {fileID: 3145263508006757812, guid: 057161e54029f85439ee88eef5d2b65c, type: 3}
+  - {fileID: 4740775085839822780, guid: 5b6f1d18e9b30894480325b4f0e5a4c1, type: 3}
+  - {fileID: 4740775085839822780, guid: 6e7ccd3f26772294e8a486b7fd52d2d9, type: 3}
+  - {fileID: 2099721584905147228, guid: d5b2c93ae97c0c1499cf92d36fbc61b1, type: 3}
   camera: {fileID: 1090682075}
 --- !u!1 &1610807602
 GameObject:
