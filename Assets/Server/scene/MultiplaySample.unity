@@ -597,9 +597,9 @@ GameObject:
   - component: {fileID: 177604614}
   - component: {fileID: 177604616}
   - component: {fileID: 177604615}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fragile
-  m_TagString: Untagged
+  m_TagString: floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4285,9 +4285,9 @@ GameObject:
   - component: {fileID: 864704370}
   - component: {fileID: 864704372}
   - component: {fileID: 864704371}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Block
-  m_TagString: Untagged
+  m_TagString: floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10870,7 +10870,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc56a25eeb7bb6947bf82cdc12e23687, type: 2}
   - {fileID: 11400000, guid: a2700122c52369446a0c62f26f073ed9, type: 2}
   backGround: {fileID: 0}
-  filePath: MapData/
+  filePath: C:/Users/limon/Desktop/Pickles/Workspace/Client/Assets/StreamingAssets/
   fileName: MyMap
   map_tag: 
 --- !u!4 &1527524284
