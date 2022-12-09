@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4740775085839822771}
   - component: {fileID: 4740775085839822770}
   - component: {fileID: 1019695414216535880}
+
   m_Layer: 14
   m_Name: rope_long
   m_TagString: rope
@@ -115,6 +116,7 @@ PolygonCollider2D:
       - {x: -0.10632956, y: -1.9520208}
       - {x: 0.105274856, y: -1.9528439}
       - {x: 0.11173496, y: 2.1562138}
+
 --- !u!114 &1019695414216535880
 MonoBehaviour:
   m_ObjectHideFlags: 0
