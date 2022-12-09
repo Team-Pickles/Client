@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4467742433145558996}
   m_Layer: 11
   m_Name: Barricade
-  m_TagString: stool
+  m_TagString: barricade
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

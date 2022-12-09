@@ -14,7 +14,7 @@ TagManager:
   - block
   - Item
   - GranadeItem
-  - stool
+  - barricade
   layers:
   - Default
   - TransparentFX

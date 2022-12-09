@@ -26,7 +26,7 @@ public class Grenade : Skill
         {
             _pmm.DecreaseGrenade();
             GameObject grenade;
-            int isFliped = _player.GetComponent<SpriteRenderer>().flipX ? -1 : 1;
+            int isFliped = _player.transform.localScale.x > 0 ? 1 : -1;
             grenade = UnityEngine.Object.Instantiate(_pmm.grenadePrefab, _firePoint.transform.position, new Quaternion());
             grenade.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(100.0f * isFliped, 500.0f));
             grenade.transform.GetComponent<Rigidbody2D>().angularVelocity = 300.0f;
