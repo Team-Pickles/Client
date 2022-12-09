@@ -101,6 +101,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.startGame, ClientHandle.StartGame},
             { (int)ServerPackets.springColorChange, ClientHandle.SpringColorChange},
             { (int)ServerPackets.allSpawned, ClientHandle.allSpawned},
+            { (int)ServerPackets.spawnDoor, ClientHandle.SpawnDoor},
         };
         Debug.Log("Initiallized packets.");
     }

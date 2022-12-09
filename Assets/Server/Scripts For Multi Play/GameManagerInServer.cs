@@ -13,6 +13,7 @@ public class GameManagerInServer : MonoBehaviour
     public static Dictionary<int, BulletManager> bullets = new Dictionary<int, BulletManager>();
     public static Dictionary<int, ItemManager> items = new Dictionary<int, ItemManager>();
     public static Dictionary<int, ServerEnemy> enemies = new Dictionary<int, ServerEnemy>();
+    public static Dictionary<int, DoorAction> doors = new Dictionary<int, DoorAction>();
     public Tilemap Tilemap; 
 
 
@@ -23,6 +24,7 @@ public class GameManagerInServer : MonoBehaviour
     public GameObject enemyPrefab;
     public GameObject bulletPrefab;
     public GameObject[] itemPrefabs;
+    public GameObject[] doorPrefabs;
     public GameObject camera;
 
     private void Awake()
@@ -91,5 +93,14 @@ public class GameManagerInServer : MonoBehaviour
         GameObject _enemy = Instantiate(enemyPrefab, _position, Quaternion.identity);
         _enemy.GetComponent<ServerEnemy>().Initialize(_enemyId);
         enemies.Add(_enemyId, _enemy.GetComponent<ServerEnemy>());
+    }
+
+    public void SpawnDoor(int _doorId, Vector3 _position, bool _isIndoor)
+    {
+        int prefabId = _isIndoor ? 0 : 1;
+        
+        GameObject _door = Instantiate(doorPrefabs[prefabId], _position, Quaternion.identity);
+        _door.GetComponent<DoorAction>().Initialize(_doorId, _isIndoor);
+        doors.Add(_doorId, _door.GetComponent<DoorAction>());
     }
 }

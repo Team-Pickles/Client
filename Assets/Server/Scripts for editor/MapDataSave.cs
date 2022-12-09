@@ -47,6 +47,9 @@ public class MapDataSave : MonoBehaviour
                 var tileSprite = tileMap.GetSprite(_pos);
                 if(tileSprite.name == "Empty")
                     continue;
+                
+                if(tileSprite.name.Contains("door"))
+                    continue;
 
                 tileEnum = Enum.Parse(typeof(TileType), tileSprite.name);
                 
@@ -66,6 +69,12 @@ public class MapDataSave : MonoBehaviour
                     _size["MAX"] = new Vector3(Math.Max(_size["MAX"].x, tileMap.cellBounds.xMax), Math.Max(_size["MAX"].y, tileMap.cellBounds.yMax));
                 }
             }
+        }
+        foreach(KeyValuePair<Vector3Int, int> door in InputController.doors)
+        {
+            Vector3 _tempPos = new Vector3(door.Key.x + 0.5f, door.Key.y + 0.5f, door.Key.z);
+            infos.Add(key, new DataClass((int)TileType.door, _tempPos, door.Value));
+            ++key;
         }
         var backGroundName = backGround.GetComponent<SpriteRenderer>().sprite.name;
         tileEnum = Enum.Parse(typeof(TileType), backGroundName);

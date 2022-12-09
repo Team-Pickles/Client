@@ -292,6 +292,13 @@ public class ClientHandle : MonoBehaviour
         }
     }
 
+    public static void SpawnDoor(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        Vector3 _pos = _packet.ReadVector3();
+        bool _isIndoor = _packet.ReadBool();
+        GameManagerInServer.instance.SpawnDoor(_id, _pos, _isIndoor);
+    }
 
     public static void StartGame(Packet _packet)
     {

@@ -15,6 +15,7 @@ TagManager:
   - Item
   - GranadeItem
   - stool
+  - spring
   layers:
   - Default
   - TransparentFX
