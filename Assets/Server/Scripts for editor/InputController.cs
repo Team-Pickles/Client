@@ -22,17 +22,26 @@ public class InputController : MonoBehaviour
     [SerializeField]
     public Sprite[] backGroundBase;
     [SerializeField]
+    public TileBase[] doorBase;
+    [SerializeField]
     private Sprite EmptySprite;
+
 
     [SerializeField]
     private Tilemap tileMap;
 
     private TileType currentType = TileType.Empty;
+    public GameObject savePanel;
 
     [SerializeField]
     private CameraController cameraController;
     private Vector2 previousMousePosition;
     private Vector2 currentMousePosition;
+
+    private int doorId = 1;
+    private bool isIndoorSet = false;
+    private Vector3Int prevIndoorPos;
+    public static Dictionary<Vector3Int, int> doors = new Dictionary<Vector3Int, int>();
 
     // Update is called once per frame
     void Update()
@@ -63,7 +72,30 @@ public class InputController : MonoBehaviour
                         changeTile(_tilePose);
 
                 if (isNull != null && currentType == TileType.Empty)
-                    changeTile(_tilePose);
+                {
+                    if(_tileMap.GetSprite(_tilePose).name.Contains("door")) {
+                        int doorNum = -1;
+                        doors.TryGetValue(_tilePose, out doorNum);
+                        if(doorNum != -1 && doors.Count > 0) {
+                            doorNum = doors[_tilePose]/ 1000;
+                            changeTile(_tilePose);
+                            doors.Remove(_tilePose);
+                            foreach(KeyValuePair<Vector3Int, int> _door in doors)
+                            {
+                                if(_door.Value/1000 == doorNum)
+                                {
+                                    changeTile(_door.Key);
+                                    doors.Remove(_door.Key);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        changeTile(_tilePose);
+                    }
+                }
             }
         }
     }
@@ -74,8 +106,17 @@ public class InputController : MonoBehaviour
             currentType = (TileType)_tileType;
             currnetButton.GetComponent<Image>().sprite = EmptySprite; 
             return;
-        }       
-
+        }
+        
+        if(isIndoorSet && _tileType != (int)TileType.outdoor)
+        {
+            tileMap.SetTile(prevIndoorPos, tileBase[(int)TileType.Empty]);
+            isIndoorSet = false;
+        }
+        if(!isIndoorSet && _tileType == (int)TileType.outdoor)
+        {
+            return;
+        }
         currentType = (TileType)_tileType;
         GameObject clickObject = EventSystem.current.currentSelectedGameObject;
         Image image = clickObject.GetComponent<Image>();
@@ -102,9 +143,23 @@ public class InputController : MonoBehaviour
             tileMap.SetTile(_tilePose, enemyBase[(int)(currentType-1) - (int)TileType.Enemy]);
         }
 
-        else if ((int)currentType >= (int)TileType.Player)
+        else if ((int)currentType < (int)TileType.BackGround)
         {
             tileMap.SetTile(_tilePose, playerBase[(int)(currentType - 1) - (int)TileType.Player]);
+        }
+        else if((int)currentType == (int)TileType.indoor && !isIndoorSet)
+        {
+            prevIndoorPos = _tilePose;
+            tileMap.SetTile(_tilePose, doorBase[(int)(currentType - 1) - (int)TileType.door]);
+            isIndoorSet = true;
+        }
+        else if((int)currentType == (int)TileType.outdoor && isIndoorSet)
+        {
+            doors.Add(prevIndoorPos, 1000 * doorId + (int)TileType.indoor);
+            doors.Add(_tilePose, 1000 * doorId + (int)TileType.outdoor);
+            tileMap.SetTile(_tilePose, doorBase[(int)(currentType - 1) - (int)TileType.door]);
+            ++doorId;
+            isIndoorSet = false;
         }
     }
 
@@ -117,7 +172,8 @@ public class InputController : MonoBehaviour
     {
         float _x = Input.GetAxisRaw("Horizontal");
         float _y = Input.GetAxisRaw("Vertical");
-        cameraController.SetPosition(_x, _y);
+        if(!savePanel.activeInHierarchy)
+            cameraController.SetPosition(_x, _y);
 
         if (Input.GetMouseButtonDown(2))
         {

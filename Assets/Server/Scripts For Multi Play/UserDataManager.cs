@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Text;
 using System.Net.Sockets;
+using UnityEngine.SceneManagement;
 
 public class UserDataManager : MonoBehaviour
 {
@@ -25,9 +26,33 @@ public class UserDataManager : MonoBehaviour
             Destroy(this);
         }
         apiUrl = "http://localhost:3001/";
+        // apiUrl = "http://35.77.214.110:3001/";
 
         Reset();
         DontDestroyOnLoad(gameObject);
+        SceneManager.LoadScene("MainMenu");
+    }
+    
+    public void Reset() {
+        username = "Guest";
+        accessToken = "";
+        refreshToken = "";
+        isLogined = false;
+    }
+
+    public void SetAccessToken(string _accessToken)
+    {
+        accessToken = _accessToken;
+    }
+
+    public void SetToken(string _accessToken, string _refreshToken)
+    {
+        accessToken = _accessToken;
+        refreshToken = _refreshToken;
+    }
+
+    public void SetUserName(string _username) {
+        username = _username;
     }
 
     public void SetSocket()
@@ -58,45 +83,25 @@ public class UserDataManager : MonoBehaviour
             else
             {
                 // NOTE, MUST CLOSE THE SOCKET
+                socket.Shutdown(SocketShutdown.Both);
                 socket.Close();
                 throw new ApplicationException("Failed to connect server.");
             }
         }
         catch (Exception e)
         {
+            socket.Shutdown(SocketShutdown.Both);
             socket.Close();
             Debug.Log(e.ToString());
             throw new ApplicationException("Failed to connect server.");
 
         }
     }
-    
-    public void Reset() {
-        username = "Guest";
-        accessToken = "";
-        refreshToken = "";
-        isLogined = false;
-    }
-
-    public void SetAccessToken(string _accessToken)
-    {
-        accessToken = _accessToken;
-    }
-
-    public void SetToken(string _accessToken, string _refreshToken)
-    {
-        accessToken = _accessToken;
-        refreshToken = _refreshToken;
-    }
-
-    public void SetUserName(string _username) {
-        username = _username;
-    }
-
+    //
     private void OnApplicationQuit() {
-        if(isLogined) {
+        if(UserDataManager.instance.isLogined) {
             string temp = $"Logout-";
-            temp += accessToken;
+            temp += UserDataManager.instance.accessToken;
             byte[] sendBuff = Encoding.UTF8.GetBytes(temp);
             int sendBytes = socket.Send(sendBuff);
             socket.Close();

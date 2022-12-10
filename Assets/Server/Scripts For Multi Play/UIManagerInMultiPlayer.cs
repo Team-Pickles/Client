@@ -25,7 +25,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
 {
     public static UIManagerInMultiPlayer instance;
 
-
+    public GameObject playerInfoUI;
     public GameObject loadingScene;
     public GameObject lobbyUI;
     public GameObject roomLobbyUI;
@@ -61,11 +61,9 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             Debug.Log("Instance already exists,destroying object!");
             Destroy(this);
         }
-        #if UNITY_EDITOR
-            string path = "MapData/MyMap.json";
-        #else
-            string path = Application.streamingAssetsPath + "/MyMap.json";
-        #endif
+
+        string path = Application.streamingAssetsPath + "/MyMap.json";
+        Debug.Log(path);
         if(File.Exists(path) == false){
             Debug.LogError("Load failed. There is no file(MyMap.json).");
             return;
@@ -73,7 +71,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         defaultMapJson = File.ReadAllText(path);
         mapListItems.Clear();
         setDefaultMapInfo();
-        _notice.AlertBox("AWAKE");
+
         socket = UserDataManager.instance.socket;
         RefreshRoomList();
     }
@@ -156,7 +154,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             } catch(SocketException _e) {
                 if(_e.SocketErrorCode.ToString() != "TimedOut")
                 {
-                    Debug.Log(_e.SocketErrorCode);
+                    Debug.Log(_e.SocketErrorCode + "_" + _e.Message);
                     break;
                 } else {
                     Debug.Log(_e.SocketErrorCode + "_" + errCnt);
@@ -399,6 +397,12 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         MapDataLoader.instance.Load(mapListItems[map_id].map_info);
     }
 
+    public void SetPlayerInfo()
+    {
+        playerInfoUI.SetActive(true);
+        playerInfoUI.GetComponent<PlayerInfoUiInServer>().Initialize(GameManagerInServer.players[Client.instance.myId]);
+    }
+
     public void RefreshRoomList()
     {
         Dictionary<int, string> rooms = new Dictionary<int, string>();
@@ -408,15 +412,17 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         byte[] recvBuff = new byte[1024];
         int recvBytes = socket.Receive(recvBuff);
         string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-
-        string[] split = recvData.Split(',');
-        for (int i=1; i< split.Length; i++)
+        if(recvData != "None")
         {
+            string[] split = recvData.Split(',');
+            for (int i=1; i< split.Length; i++)
+            {
 
-            rooms.Add(i, split[i - 1]);
-        }
+                rooms.Add(i, split[i - 1]);
+            }
 
-        setRoomList(rooms);
+            setRoomList(rooms);
+        }  
     }
 
     public void SetMemberItem(int _id, string _username)
@@ -430,8 +436,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         Client.instance.RoomExit();
         roomLobbyUI.SetActive(false);
         loadingScene.SetActive(true);
-        socket.Close();
-        Awake();
+
         BackToMain();
     }
 
@@ -504,8 +509,5 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         _temp.map_grade = 0;
         mapListItems.Add(0, _temp);
     }
-    private void OnApplicationQuit() {
-        if(UserDataManager.instance.isLogined)
-            UIManager.instance.LogOutButtonClicked();
-    }
+    
 }

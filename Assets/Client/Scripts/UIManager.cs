@@ -62,6 +62,7 @@ public class UIManager : MonoBehaviour
     public GameObject logintestMenu;
 
     public Button MultiPlayButton;
+    public Button EditorButton;
 
     public Button refreshButton;
     public Button loginSubmitButton;
@@ -90,6 +91,7 @@ public class UIManager : MonoBehaviour
             Destroy(this);
         }
         MultiPlayButton.interactable = false;
+        EditorButton.interactable = false;
         if(UserDataManager.instance.isLogined)
         {
             logoutButton.SetActive(true);
@@ -98,6 +100,7 @@ public class UIManager : MonoBehaviour
                 _button.SetActive(false);
             }
             MultiPlayButton.interactable = true;
+            EditorButton.interactable = true;
         }
     }
 
@@ -110,6 +113,11 @@ public class UIManager : MonoBehaviour
     {
 
         SceneManager.LoadScene("MultiplaySample");
+    }
+
+    public void EditorButtonClicked()
+    {
+        SceneManager.LoadScene("MapEditor");
     }
 
     public void SubmitButtonClicked()
@@ -190,6 +198,7 @@ public class UIManager : MonoBehaviour
                     _button.SetActive(false);
                 }
                 MultiPlayButton.interactable = true;
+                EditorButton.interactable = true;
                 isDone = true;
             }));
             if(isDone) loginCoroutine = null;
@@ -464,6 +473,7 @@ public class UIManager : MonoBehaviour
                         _button.SetActive(true);
                     }
                     MultiPlayButton.interactable = false;
+                    EditorButton.interactable = false;
                     startMenu.SetActive(true);
                 }
             }));
@@ -533,7 +543,7 @@ public class UIManager : MonoBehaviour
         startMenu.SetActive(true);
         signUpCoroutine = null;
     }
-    
+
     public void QuitButtonClicked()
     {
 #if UNITY_EDITOR

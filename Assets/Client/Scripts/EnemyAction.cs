@@ -6,6 +6,7 @@ public class EnemyAction : MonoBehaviour
 {
     [SerializeField] private bool isMove;
     private GameObject _player;
+    private float _xSpeed = 5.0f;
     private bool _onGround = false;
     private bool _detectPlayer = false;
     private Color _tintColor = new Color(1.0f, 0.2f, 0.2f, 1.0f);
@@ -89,7 +90,7 @@ public class EnemyAction : MonoBehaviour
                     scale.x = scale.x > 0.0f ? scale.x : -scale.x;
                     transform.localScale = scale;
 
-                    GetComponent<Rigidbody2D>().velocity = new Vector2(-6.0f, 4.8f);
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(-_xSpeed, 4.8f);
                 }
                 else // right
                 {
@@ -97,7 +98,7 @@ public class EnemyAction : MonoBehaviour
                     scale.x = scale.x > 0.0f ? -scale.x : scale.x;
                     transform.localScale = scale;
 
-                    GetComponent<Rigidbody2D>().velocity = new Vector2(6.0f, 4.8f);
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(_xSpeed, 4.8f);
                 }
             }
             else

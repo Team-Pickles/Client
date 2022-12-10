@@ -35,7 +35,7 @@ public class CameraMove : MonoBehaviour
                 elapsedTime = 0.0f;
             }
         }
-        else
+        else if(_player != null)
         {
             transform.position = _player.transform.position + _offset;
         }
