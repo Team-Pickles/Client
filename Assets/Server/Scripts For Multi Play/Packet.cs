@@ -44,7 +44,8 @@ public enum ClientPackets
 {
     TCPConnenctinCheckReceived = 1,
     playerMovement,
-    playerShoot,
+    playerShootBullet,
+    playerShootGrenade,
     playerThrowItem,
     udpTestReceive,
     playerStartVacuume,
