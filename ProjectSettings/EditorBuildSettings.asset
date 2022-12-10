@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Server/scene/DontDestroyScene.unity
     guid: ef6565926b3479b48a14d0ec48873d24
   - enabled: 1
-    path: Assets/Server/scene/MapEditor.unity
+    path: Assets/Client/Scenes/MapEditor.unity
     guid: 2a9c3541bd5e2a74c833ea03e93715b6
   - enabled: 1
     path: Assets/Client/Scenes/MainMenu.unity
