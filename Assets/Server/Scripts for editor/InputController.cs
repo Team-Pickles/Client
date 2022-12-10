@@ -25,7 +25,7 @@ public class InputController : MonoBehaviour
     public TileBase[] doorBase;
     [SerializeField]
     private Sprite EmptySprite;
-
+    public NoticeUI _noticeUI;
 
     [SerializeField]
     private Tilemap tileMap;
@@ -69,7 +69,13 @@ public class InputController : MonoBehaviour
 
                 if (isNull != null)
                     if (_tileMap.GetSprite(_tilePose).name == "Empty")
-                        changeTile(_tilePose);
+                    {
+                        if ((int)currentType == (int)TileType.barricade && _tileMap.GetSprite(_tilePose + new Vector3Int(0, 1, 0)).name != "Empty")
+                            _noticeUI.AlertBox("barricade 는 세로로 2칸을 필요로 합니다!");
+                        else
+                            changeTile(_tilePose);
+                    }
+                        
 
                 if (isNull != null && currentType == TileType.Empty)
                 {
@@ -90,6 +96,11 @@ public class InputController : MonoBehaviour
                                 }
                             }
                         }
+                    }
+                    else if (_tileMap.GetSprite(_tilePose).name.Contains("barricade"))
+                    {
+                        changeTile(_tilePose + new Vector3Int(0,1,0));
+                        changeTile(_tilePose);
                     }
                     else
                     {
@@ -120,7 +131,6 @@ public class InputController : MonoBehaviour
         currentType = (TileType)_tileType;
         GameObject clickObject = EventSystem.current.currentSelectedGameObject;
         Image image = clickObject.GetComponent<Image>();
-        Debug.Log($"{image}");
         currnetButton.GetComponent<Image>().sprite =  image.sprite;
     }
 
@@ -134,6 +144,9 @@ public class InputController : MonoBehaviour
         // 100 <= , <200
         else if ((int)currentType < (int)TileType.Enemy)
         {
+            if ((int)currentType == (int)TileType.barricade)
+                tileMap.SetTile(_tilePose+new Vector3Int(0,1,0), null);
+            
             tileMap.SetTile(_tilePose, itemBase[(int)(currentType - 1) - (int)TileType.Item]);
         }
 

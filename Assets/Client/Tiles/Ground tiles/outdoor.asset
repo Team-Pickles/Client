@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: outdoor
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 78bdfe39c63ada846a279607abbf14da, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.43596476, g: 0.49938613, b: 0.9528302, a: 1}
   m_Transform:
     e00: 1
     e01: 0
