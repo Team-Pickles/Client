@@ -27,6 +27,10 @@ public class BossMoveManager : MonoBehaviour
         get { return _playerInSight; }
         set { _playerInSight = value; }
     }
+    public int Hp
+    {
+        get { return _hp; }
+    }
     // Start is called before the first frame update
     void Start()
     {
