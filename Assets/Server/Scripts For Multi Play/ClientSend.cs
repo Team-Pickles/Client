@@ -127,4 +127,14 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
     }
+
+    public static void ReadyToRestart(bool _sayYes)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.readyToRestart))
+        {
+            _packet.Write(Client.instance.roomId);
+            _packet.Write(_sayYes);
+            SendTCPData(_packet);
+        }
+    }
 }
