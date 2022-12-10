@@ -12,7 +12,6 @@ public class PlayerManager : MonoBehaviour
     public int BulletCount = 0;
     public int GrenadeCount = 0;
     public bool onRope = false;
-    public bool isDead = false;
 
     public void Initialize(int _id, string _username)
     {
@@ -20,14 +19,14 @@ public class PlayerManager : MonoBehaviour
         id = _id;
         username = _username;
         health = maxHealth;
-        model = GetComponent<SpriteRenderer>();
+
     }
 
     public void setHealth(int _health)
     {
         health = _health;
 
-        if (health <= 0 && !isDead)
+        if (health <= 0)
         {
             Die();
         }
@@ -74,11 +73,6 @@ public class PlayerManager : MonoBehaviour
     public void Die()
     {
         model.enabled = false;
-        gameObject.transform.Find("Circle").GetComponent<SpriteRenderer>().enabled = false;
-        isDead = true;
-        GameManagerInServer.playerCamera[id].enabled = false;
-        GameManagerInServer.instance.UpdateMyCamera(id);
-        UIManagerInMultiPlayer.instance._notice.AlertBox("Press \"SPACE BAR\" to change the view.");
     }
 
     public void Respawn()

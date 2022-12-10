@@ -39,9 +39,6 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     public List<Text> SelectedMapInfos;
     public Text RoomNameText;
     public NoticeUI _notice;
-    public GameObject AskRestartUiForKey;
-    public GameObject AskRestartUiForServer;
-    public GameObject ReadyToRestartUi;
 
     public static Socket socket;
     public List<string> memberNames = new List<string>();
@@ -397,67 +394,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     {
         loadingScene.SetActive(false);
         roomLobbyUI.SetActive(false);
-        foreach(GameObject _obj in GameManagerInServer.instance.allObjects)
-        {
-            Destroy(_obj);
-        }
-        GameManagerInServer.playerCamera.Clear();
-        GameManagerInServer.players.Clear();
-        GameManagerInServer.projectiles.Clear();
-        GameManagerInServer.bullets.Clear();
-        GameManagerInServer.items.Clear();
-        GameManagerInServer.enemies.Clear();
-        GameManagerInServer.doors.Clear();
         MapDataLoader.instance.Load(mapListItems[map_id].map_info);
-    }
-
-    public void YesForRestart(bool _byKey)
-    {
-        Debug.Log(_byKey);
-        if(_byKey)
-            AskRestartUiForKey.SetActive(false);
-        else
-            AskRestartUiForServer.SetActive(false);
-        ReadyToRestartUi.SetActive(true);
-        ClientSend.ReadyToRestart(true);
-    }
-
-    public void NoForRestart(bool _byKey)
-    {
-        if(_byKey)
-        {
-            AskRestartUiForKey.SetActive(false);
-            GameManagerInServer.instance.isStoppedByEsc = false;
-            Time.timeScale = 1;
-        }
-        else
-        {
-            AskRestartUiForServer.SetActive(false);
-            ClientSend.ReadyToRestart(false);
-            RestartResult(false);
-        }
-    }
-
-    public void AskToRestartByKey()
-    {
-        AskRestartUiForKey.SetActive(true);
-        Time.timeScale = 0;
-    }
-
-    public void AskToRestartByServer()
-    {
-        Debug.Log("FromServer");
-        AskRestartUiForServer.SetActive(true);
-        Time.timeScale = 0;
-    }
-
-    public void RestartResult(bool _isSuccess)
-    {
-        ReadyToRestartUi.SetActive(false);
-        Time.timeScale = 1;
-        GameManagerInServer.instance.isStoppedByEsc = false;
-        if(!_isSuccess)
-            _notice.AlertBox("Can not restart");
     }
 
     public void SetPlayerInfo()
