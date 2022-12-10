@@ -13,9 +13,9 @@ TagManager:
   - rope
   - block
   - Item
-  - GranadeItem
   - stool
   - spring
+  - GrenadeItem
   layers:
   - Default
   - TransparentFX
