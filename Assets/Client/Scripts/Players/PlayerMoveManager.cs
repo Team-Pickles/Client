@@ -234,12 +234,19 @@ public class PlayerMoveManager : MonoBehaviour
     }
     void Update()
     {
+        _leftPressed = Input.GetKey(KeyCode.LeftArrow);
+        _rightPressed = Input.GetKey(KeyCode.RightArrow);
         // 점프
         if (_onGround && Input.GetKeyDown(KeyCode.D) && CanControl())
         {
             OnJumpAction();
             if (_isHanging)
-                _isHanging = false;
+            {
+                if (_leftPressed || _rightPressed)
+                {
+                    _isHanging = false;
+                }
+            }
         }
         // 위 (로프)
         if (CanControl())
@@ -254,9 +261,12 @@ public class PlayerMoveManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.D))
                 {
-                    GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
-                    _vPoint = 1.2f;
-                    _isHanging = false;
+                    if (_leftPressed || _rightPressed)
+                    {
+                        GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
+                        _vPoint = 1.2f;
+                        _isHanging = false;
+                    }
                 }
                 else if (Input.GetKey(KeyCode.UpArrow))
                 {
@@ -285,8 +295,6 @@ public class PlayerMoveManager : MonoBehaviour
             animator.SetBool("isHanging", false);
         }
         // 좌우
-        _leftPressed = Input.GetKey(KeyCode.LeftArrow);
-        _rightPressed = Input.GetKey(KeyCode.RightArrow);
         float speed = 1.5f;
         if (CanControl())
         {

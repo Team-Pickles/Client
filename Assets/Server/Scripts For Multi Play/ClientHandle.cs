@@ -80,6 +80,14 @@ public class ClientHandle : MonoBehaviour
             GameManagerInServer.players[_id].transform.rotation = _rotation;
     }
 
+    public static void PlayerDamaged(Packet _packet)
+    {
+        int _playerId = _packet.ReadInt();
+        int _health = _packet.ReadInt();
+        GameManagerInServer.players[_playerId].OnDamaged();
+        GameManagerInServer.players[_playerId].setHealth(_health);
+    }
+
     public static void PlayerDisconnected(Packet _packet)
     {
         int _id = _packet.ReadInt();
@@ -104,9 +112,10 @@ public class ClientHandle : MonoBehaviour
         int _projectileID = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
         int _thrownByPlayer = _packet.ReadInt();
+        int _projectileCount = _packet.ReadInt();
 
         GameManagerInServer.instance.SpawnProjectile(_projectileID, _position, _thrownByPlayer);
-        //GameManagerInServer.players[_thrownByPlayer].itemCount--;
+        GameManagerInServer.players[_thrownByPlayer].GrenadeCount = _projectileCount;
     }
 
     public static void projectilePosition(Packet _packet)
@@ -141,9 +150,10 @@ public class ClientHandle : MonoBehaviour
         int _bulletID = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
         int _thrownByPlayer = _packet.ReadInt();
+        int _bulletCount = _packet.ReadInt();
 
         GameManagerInServer.instance.SpawnBullet(_bulletID, _position,_thrownByPlayer);
-        //GameManagerInServer.players[_thrownByPlayer].itemCount--;
+        GameManagerInServer.players[_thrownByPlayer].BulletCount = _bulletCount;
     }
 
     public static void BulletPosition(Packet _packet)
@@ -153,7 +163,8 @@ public class ClientHandle : MonoBehaviour
 
         if (GameManagerInServer.bullets.TryGetValue(_bulletID, out BulletManager _bullet))
         {
-            _bullet.transform.localPosition = _position;
+            if(_bullet != null)
+                _bullet.transform.localPosition = _position;
         }
     }
 
@@ -163,7 +174,8 @@ public class ClientHandle : MonoBehaviour
         int _bulletID = _packet.ReadInt();
         if (GameManagerInServer.bullets.TryGetValue(_bulletID, out BulletManager _bullet))
         {
-            _bullet.Collide();
+            if(_bullet != null)
+                _bullet.Collide();
         }
     }
 
@@ -171,8 +183,9 @@ public class ClientHandle : MonoBehaviour
     {
         int _itemID = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
+        int _itemType = _packet.ReadInt();
 
-        GameManagerInServer.instance.SpawnItem(_itemID, _position);
+        GameManagerInServer.instance.SpawnItem(_itemID, _position, _itemType);
         //GameManagerInServer.players[_thrownByPlayer].itemCount--;
     }
 
@@ -196,6 +209,31 @@ public class ClientHandle : MonoBehaviour
             _item.Collide();
         }
     }
+
+    public static void SpringColorChange(Packet _packet)
+    {
+        int _itemID = _packet.ReadInt();
+        if (GameManagerInServer.items.TryGetValue(_itemID, out ItemManager _item))
+        {
+            _item.SpringColorChange();
+        }
+    }
+
+    public static void ItemPickedUp(Packet _packet)
+    {
+        int _itemType = _packet.ReadInt();
+        int _itemCnt = _packet.ReadInt();
+        int _id = _packet.ReadInt();
+
+        if(_itemType == (int)TileType.trash)
+        {
+            GameManagerInServer.players[_id].BulletCount = _itemCnt;
+        }
+        else if(_itemType == (int)TileType.grenade2)
+        {
+            GameManagerInServer.players[_id].GrenadeCount = _itemCnt;
+        }
+    }
     
     //
     public static void CharactorFlip(Packet _packet)
@@ -216,9 +254,9 @@ public class ClientHandle : MonoBehaviour
         {
             GameManagerInServer.players[_id].onRope = _onRope;
             if (_onRope)
-                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHaing", true);
+                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHanging", true);
             else
-                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHaing", false);
+                GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isHanging", false);
         }
             
     }
@@ -235,26 +273,42 @@ public class ClientHandle : MonoBehaviour
     {
         int _enemyId = _packet.ReadInt();
         Vector3 _enemyPos = _packet.ReadVector3();
+        bool isMove = _packet.ReadBool();
 
         if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
         {
             _enemy.transform.position = _enemyPos;
+            _enemy._animator.SetBool("isMoving", isMove);
         }
     }
 
-    public static void EnemyCollide(Packet _packet)
+    public static void EnemyHit(Packet _packet)
     {
         int _enemyId = _packet.ReadInt();
 
         if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
         {
-            _enemy.Collide();
+            _enemy.EnemyHit();
         }
+    }
+
+    public static void SpawnDoor(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+        Vector3 _pos = _packet.ReadVector3();
+        bool _isIndoor = _packet.ReadBool();
+        GameManagerInServer.instance.SpawnDoor(_id, _pos, _isIndoor);
     }
 
     public static void StartGame(Packet _packet)
     {
         int _mapId = _packet.ReadInt();
         UIManagerInMultiPlayer.instance.StartGameProcess(_mapId);
+    }
+
+    public static void allSpawned(Packet _packet)
+    {
+        bool _done = _packet.ReadBool();
+        UIManagerInMultiPlayer.instance.SetPlayerInfo();
     }
 }

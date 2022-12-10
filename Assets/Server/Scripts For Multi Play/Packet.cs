@@ -21,7 +21,7 @@ public enum ServerPackets
     projectileExploded,
     spawnEnemy,
     enemyPosition,
-    enemyHealth,
+    enemyHit,
     udpTest,
     spawnBullet,
     bulletPosition,
@@ -33,7 +33,10 @@ public enum ServerPackets
     
     charactorFlip,
     ropeACK,
-    startGame
+    startGame,
+    springColorChange,
+    allSpawned,
+    spawnDoor
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -50,7 +53,7 @@ public enum ClientPackets
     readyToStartGame,
     playerJump,
     playerRopeMove,
-    
+    goToNextPortal,
 }
 
 public class Packet : IDisposable
