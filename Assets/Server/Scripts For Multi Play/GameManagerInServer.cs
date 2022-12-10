@@ -14,6 +14,7 @@ public class GameManagerInServer : MonoBehaviour
     public static Dictionary<int, ItemManager> items = new Dictionary<int, ItemManager>();
     public static Dictionary<int, ServerEnemy> enemies = new Dictionary<int, ServerEnemy>();
     public static Dictionary<int, DoorAction> doors = new Dictionary<int, DoorAction>();
+    public static Dictionary<int, Camera> playerCamera = new Dictionary<int, Camera>();
     public Tilemap Tilemap; 
 
 
@@ -25,7 +26,9 @@ public class GameManagerInServer : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject[] itemPrefabs;
     public GameObject[] doorPrefabs;
-    public GameObject camera;
+    public List<GameObject> allObjects = new List<GameObject>();
+    public int nowCamId;
+    public bool isStoppedByEsc = false;
 
     private void Awake()
     {
@@ -40,22 +43,68 @@ public class GameManagerInServer : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        if(Client.instance.myId != 0 && players.Count != 0)
+        {
+            PlayerManager _player;
+            if(players.TryGetValue(Client.instance.myId, out _player) && players.TryGetValue(nowCamId, out _player))
+            {
+                if(Input.GetKeyDown(KeyCode.Space))
+                {
+                    if(players[Client.instance.myId].health <= 0 && players[nowCamId].health > 0)
+                    {
+                        UpdateMyCamera(nowCamId);
+                    }
+                }
+            }
+
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                if(isStoppedByEsc)
+                {
+                    isStoppedByEsc = false;
+                    UIManagerInMultiPlayer.instance.NoForRestart(true);
+                }
+                else
+                {
+                    isStoppedByEsc = true;
+                    UIManagerInMultiPlayer.instance.AskToRestartByKey();
+                }
+            }
+        }
+    }
+
+    public void UpdateMyCamera(int camKey)
+    {
+        foreach(KeyValuePair<int, Camera> _camPair in GameManagerInServer.playerCamera)
+        {
+            if(_camPair.Key == camKey || GameManagerInServer.players[_camPair.Key].health <= 0)
+                continue;
+            GameManagerInServer.playerCamera[camKey].enabled = false;
+            _camPair.Value.enabled = true;
+            nowCamId = _camPair.Key;
+            break;
+        }
+        Debug.Log(nowCamId);
+    }
+
     public void SpawnPlayer(int _id, string _username, Vector2 _position, Quaternion _rotaion)
     {
         GameObject _player;
         if (_id == Client.instance.myId)
         {
             _player = Instantiate(localPlayerPrefab, _position, _rotaion);
-            _player.GetComponent<PlayerMoveManagerInMulti>().camTransform = camera.transform;
-            camera.GetComponent<Camera>().gameObject.SetActive(true);
+            nowCamId = _id;
         }
         else
         {
             _player = Instantiate(playerPrefab, _position, _rotaion);
         }
         _player.GetComponent<PlayerManager>().Initialize(_id, _username);
+        playerCamera.Add(_id, _player.GetComponentInChildren<Camera>());
         players.Add(_id, _player.GetComponent<PlayerManager>());
-
+        allObjects.Add(_player);
     }
 
     public void SpawnProjectile(int _projectileId, Vector3 _position, int _thrownByPlayer)
@@ -86,6 +135,7 @@ public class GameManagerInServer : MonoBehaviour
             _itemManager.Initialize(_itemId);
             items.Add(_itemId, _itemManager);
         }
+        allObjects.Add(_item);
     }
 
     public void SpawnEnemy(int _enemyId, Vector3 _position)
@@ -93,6 +143,7 @@ public class GameManagerInServer : MonoBehaviour
         GameObject _enemy = Instantiate(enemyPrefab, _position, Quaternion.identity);
         _enemy.GetComponent<ServerEnemy>().Initialize(_enemyId);
         enemies.Add(_enemyId, _enemy.GetComponent<ServerEnemy>());
+        allObjects.Add(_enemy);
     }
 
     public void SpawnDoor(int _doorId, Vector3 _position, bool _isIndoor)
@@ -102,5 +153,6 @@ public class GameManagerInServer : MonoBehaviour
         GameObject _door = Instantiate(doorPrefabs[prefabId], _position, Quaternion.identity);
         _door.GetComponent<DoorAction>().Initialize(_doorId, _isIndoor);
         doors.Add(_doorId, _door.GetComponent<DoorAction>());
+        allObjects.Add(_door);
     }
 }
