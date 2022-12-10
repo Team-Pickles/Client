@@ -11229,6 +11229,9 @@ MonoBehaviour:
   - {fileID: 4740775085839822780, guid: 5b6f1d18e9b30894480325b4f0e5a4c1, type: 3}
   - {fileID: 4740775085839822780, guid: 6e7ccd3f26772294e8a486b7fd52d2d9, type: 3}
   - {fileID: 2099721584905147228, guid: d5b2c93ae97c0c1499cf92d36fbc61b1, type: 3}
+  doorPrefabs:
+  - {fileID: 368282167205530508, guid: 45e73221a81aba343bdedacd9c910068, type: 3}
+  - {fileID: 368282167205530508, guid: 7d5dfe8ac2c72e14a9b3b044427ccca7, type: 3}
   camera: {fileID: 1090682075}
 --- !u!1 &1610807602
 GameObject:

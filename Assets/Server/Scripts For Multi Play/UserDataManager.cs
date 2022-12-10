@@ -26,6 +26,7 @@ public class UserDataManager : MonoBehaviour
             Destroy(this);
         }
         apiUrl = "http://localhost:3001/";
+        // apiUrl = "http://35.77.214.110:3001/";
 
         Reset();
         DontDestroyOnLoad(gameObject);

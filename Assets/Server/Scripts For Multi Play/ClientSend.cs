@@ -117,6 +117,14 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
     }
-    //
-    //
+
+    public static void GoToNextPortal(int _doorId)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.goToNextPortal))
+        {
+            _packet.Write(Client.instance.roomId);
+            _packet.Write(_doorId);
+            SendTCPData(_packet);
+        }
+    }
 }
