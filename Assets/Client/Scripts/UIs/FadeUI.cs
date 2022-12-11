@@ -5,48 +5,53 @@ using UnityEngine.UI;
 
 public class FadeUI : MonoBehaviour
 {
+	private Color _tempColor;
 	private Image _image;
 	public void FadeIn(float fadeTime)
     {
         StartCoroutine(CoFadeIn(fadeTime));
+		StopCoroutine(CoFadeIn(fadeTime));
     }
-    public void FadeOut(float fadeTime)
-    {
+	public void FadeOut(float fadeTime)
+	{
 		StartCoroutine(CoFadeOut(fadeTime));
-    }
-	private IEnumerator CoFadeIn(float fadeTime)
-	{
-		Color tempColor = _image.color;
-		while (tempColor.a < 1f)
-		{
-			tempColor.a += Time.deltaTime / fadeTime;
-			_image.color = tempColor;
-
-			if (tempColor.a >= 1f) tempColor.a = 1f;
-
-			yield return null;
-		}
-
-		_image.color = tempColor;
+		StopCoroutine(CoFadeOut(fadeTime));
 	}
-	private IEnumerator CoFadeOut(float fadeTime)
+	public IEnumerator CoFadeIn(float fadeTime)
 	{
-		Color tempColor = _image.color;
-		while (tempColor.a > 0f)
+		_image = GetComponentInChildren<Image>();
+		_tempColor = _image.color;
+		_tempColor.a = 0f;
+		while (_tempColor.a < 1f)
 		{
-			tempColor.a -= Time.deltaTime / fadeTime;
-			_image.color = tempColor;
+			_tempColor.a += Time.deltaTime / fadeTime;
+			_image.color = _tempColor;
 
-			if (tempColor.a <= 0f) tempColor.a = 0f;
+			if (_tempColor.a >= 1f) _tempColor.a = 1f;
 
 			yield return null;
 		}
-		_image.color = tempColor;
+		_image.color = _tempColor;
+	}
+	public IEnumerator CoFadeOut(float fadeTime)
+	{
+		_image = GetComponentInChildren<Image>();
+		_tempColor = _image.color;
+		_tempColor.a = 1f;
+		while (_tempColor.a > 0f)
+		{
+			_tempColor.a -= Time.deltaTime / fadeTime;
+			_image.color = _tempColor;
+
+			if (_tempColor.a <= 0f) _tempColor.a = 0f;
+
+			yield return null;
+		}
+		_image.color = _tempColor;
 	}
 	// Start is called before the first frame update
 	void Start()
     {
-		_image = GetComponentInChildren<Image>();
 	}
 
     // Update is called once per frame
