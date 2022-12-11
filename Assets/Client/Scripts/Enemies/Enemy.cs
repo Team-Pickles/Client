@@ -25,7 +25,6 @@ public class Enemy : MonoBehaviour
     {
         if (collision.transform.name == "Bullet(Clone)" && _isDead == false)
         {
-            Debug.Log(collision.transform.name + "을 맞음");
             Destroy(collision.transform.gameObject);
             _hitPoint -= 1;
             if (_hitPoint <= 0)
@@ -39,7 +38,6 @@ public class Enemy : MonoBehaviour
     {
         if (collision.transform.name == "Bullet(Clone)" && _isDead == false)
         {
-            Debug.Log(collision.transform.name + "을 맞음");
             Destroy(collision.transform.gameObject);
             _hitPoint -= 1;
             if (_hitPoint <= 0)

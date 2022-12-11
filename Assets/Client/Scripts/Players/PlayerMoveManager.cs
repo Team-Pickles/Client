@@ -32,6 +32,9 @@ public class PlayerMoveManager : MonoBehaviour
 
     private Vector3 recentRopePosition;
     private int ropeCollisionCount = 0;
+    private float hangingDelay = 0.0f;
+    private const float hangingThreshold = 0.2f;
+    private bool canHanging = true;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         switch (collision.tag)
@@ -251,8 +254,20 @@ public class PlayerMoveManager : MonoBehaviour
         // 위 (로프)
         if (CanControl())
         {
+            if (canHanging == false)
+            {
+                if (hangingDelay < hangingThreshold)
+                {
+                    hangingDelay += Time.deltaTime;
+                }
+                else
+                {
+                    hangingDelay = 0.0f;
+                    canHanging = true;
+                }
+            }
             // 매달리기 시작
-            if (_onRope && Input.GetKey(KeyCode.UpArrow))
+            if (_onRope && Input.GetKey(KeyCode.UpArrow) && canHanging)
             {
                 _isHanging = true;
                 transform.position = new Vector2(recentRopePosition.x, transform.position.y);
@@ -263,6 +278,7 @@ public class PlayerMoveManager : MonoBehaviour
                 {
                     if (_leftPressed || _rightPressed)
                     {
+                        canHanging = false;
                         GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
                         _vPoint = 1.2f;
                         _isHanging = false;

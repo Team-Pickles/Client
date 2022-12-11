@@ -5,13 +5,17 @@ public class Skill
 {
     protected GameObject _player = GameObject.Find("Player");
     protected GameObject _firePoint = GameObject.Find("FirePoint");
+    ParticleSystem _vacuumParticle = GameObject.Find("VacuumParticle").GetComponent<ParticleSystem>();
     public virtual void OnChange() { } // change animation
-    public virtual void OnStart() { } // start frame
+    public virtual void OnStart()
+    {
+        _vacuumParticle.Play();
+
+    } // start frame
     public virtual void OnConsume() // attack
     {
         bool flip = _player.transform.localScale.x > 0 ? false : true;
         Vector2 rayOrigin = _firePoint.transform.position;
-
         float length = 8.0f;
 
         for (int i = -5; i <= 5; i++)
@@ -51,5 +55,8 @@ public class Skill
         }
     }
     public virtual IEnumerator OnItemUse() { yield break; }
-    public virtual void OnEnd() { }   // return animation
+    public virtual void OnEnd()
+    {
+        _vacuumParticle.Stop();
+    }   // return animation
 }

@@ -26,16 +26,6 @@ public class SpellManager : MonoBehaviour
         {
             switch (_keyPressed)
             {
-                case KeyPressed.DOWN:
-                {
-                    currentSkill.OnStart();
-                    break;
-                }
-                case KeyPressed.UP:
-                {
-                    currentSkill.OnEnd();
-                    break;
-                }
                 case KeyPressed.ING:
                 {
                     currentSkill.OnConsume();
@@ -73,6 +63,22 @@ public class SpellManager : MonoBehaviour
             {
                 StartCoroutine(currentSkill.OnItemUse());
             }
+
+
+            switch (_keyPressed)
+            {
+                case KeyPressed.DOWN:
+                {
+                    currentSkill.OnStart();
+                    break;
+                }
+                case KeyPressed.UP:
+                {
+                    currentSkill.OnEnd();
+                    break;
+                }
+            }
+
         }
     }
 }
