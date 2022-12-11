@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1737907424989383231}
   - component: {fileID: -3467823648233129955}
   - component: {fileID: 7361735608076706956}
+  - component: {fileID: 8298448728449597151}
   m_Layer: 10
   m_Name: Boss2Enemy
   m_TagString: enemy
@@ -149,6 +150,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trashPrefab: {fileID: 4750861222190012204, guid: e8a195e7184b8de4380239dc74f1f4d0, type: 3}
+--- !u!114 &8298448728449597151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4035609605642839450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e75b4189fc5911f4db2b7989e2a78da8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5572039763433919408
 GameObject:
   m_ObjectHideFlags: 0

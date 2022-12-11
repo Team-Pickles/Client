@@ -9,7 +9,7 @@ public class BossInfoUI : MonoBehaviour
     private int _bossFullHp, _bossCurrentHp;
     private Slider _slider;
     private GameObject _boss;
-    private BossMoveManager _bmm;
+    private BossHp _bossHp;
 
     public void BossIncoming()
     {
@@ -32,12 +32,12 @@ public class BossInfoUI : MonoBehaviour
     }
     public IEnumerator ShowHp()
     {
-        _bossFullHp = _bmm.Hp;
-        _bossCurrentHp = _bmm.Hp;
+        _bossFullHp = _bossHp.Hp;
+        _bossCurrentHp = _bossHp.Hp;
         double value = _bossCurrentHp / (double)_bossFullHp;
         while (_bossCurrentHp > 0)
         {
-            _bossCurrentHp = _bmm.Hp;
+            _bossCurrentHp = _bossHp.Hp;
             value = _bossCurrentHp / (double)_bossFullHp;
             _slider.value = (float)value;
             yield return null;
@@ -51,7 +51,7 @@ public class BossInfoUI : MonoBehaviour
         HpBar.SetActive(false);
         _slider = HpBar.GetComponentInChildren<Slider>();
         _boss = GameObject.Find("Boss");
-        _bmm = _boss.GetComponent<BossMoveManager>();
+        _bossHp = _boss.GetComponent<BossHp>();
     }
 
     // Update is called once per frame
