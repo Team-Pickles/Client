@@ -10,7 +10,7 @@ public class BottomCollideAction : MonoBehaviour
         switch (collision.transform.tag)
         {
             case "floor":
-            case "stool":
+            case "barricade":
             {
                 transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
                 break;
@@ -24,7 +24,7 @@ public class BottomCollideAction : MonoBehaviour
         switch (collision.transform.tag)
         {
             case "floor":
-            case "stool":
+            case "barricade":
             {
                 transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
                 break;
@@ -38,7 +38,7 @@ public class BottomCollideAction : MonoBehaviour
         switch (collision.transform.tag)
         {
             case "floor":
-            case "stool":
+            case "barricade":
             {
                 transform.parent.GetComponent<PlayerMoveManager>().OnGround = true;
                 break;
@@ -52,7 +52,7 @@ public class BottomCollideAction : MonoBehaviour
         switch (collision.transform.tag)
         {
             case "floor":
-            case "stool":
+            case "barricade":
             {
                 transform.parent.GetComponent<PlayerMoveManager>().OnGround = false;
                 break;
