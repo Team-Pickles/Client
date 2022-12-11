@@ -13,7 +13,8 @@ TagManager:
   - rope
   - block
   - Item
-  - stool
+  - GranadeItem
+  - barricade
   - spring
   - GrenadeItem
   layers:

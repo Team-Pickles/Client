@@ -8,7 +8,7 @@ public class BossMoveManager : MonoBehaviour
 {
     public GameObject trashPrefab;
 
-    private GameObject _grid;
+    private GameObject _grid, _bossEnd;
     private MapManager _mm;
     private int _hp = 5;
     private int _bounceCount = 2;
@@ -27,10 +27,15 @@ public class BossMoveManager : MonoBehaviour
         get { return _playerInSight; }
         set { _playerInSight = value; }
     }
+    public int Hp
+    {
+        get { return _hp; }
+    }
     // Start is called before the first frame update
     void Start()
     {
         _grid = GameObject.Find("Grid");
+        _bossEnd = GameObject.Find("EndLevelUI");
         _mm = _grid.GetComponent<MapManager>();
         _bossPosition = _mm.GetTopLeftBasePosition(transform.position);
     }
@@ -213,7 +218,10 @@ public class BossMoveManager : MonoBehaviour
                 {
                     StartCoroutine(Damaged());
                     if (_hp == 0)
+                    {
                         Destroy(gameObject);
+                        _bossEnd.GetComponent<EndLevelUI>().EndLevel();
+                    }
                     break;
                 }
         }
