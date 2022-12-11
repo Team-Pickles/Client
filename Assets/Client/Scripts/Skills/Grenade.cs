@@ -16,8 +16,8 @@ public class Grenade : Skill
         //_player = GameObject.Find("Player");
         //_firePoint = GameObject.Find("FirePoint");
         _sm = _player.GetComponentInChildren<SpellManager>();
-        _tilemapFragile = GameObject.Find("Tilemap_fragile");
-        _tilemapBlock = GameObject.Find("Tilemap_block");
+        _tilemapFragile = GameObject.Find("Fragile");
+        _tilemapBlock = GameObject.Find("Block");
         _pmm = _player.GetComponent<PlayerMoveManager>();
     }
     public override IEnumerator OnItemUse()

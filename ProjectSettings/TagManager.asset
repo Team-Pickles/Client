@@ -16,6 +16,7 @@ TagManager:
   - GranadeItem
   - barricade
   - spring
+  - GrenadeItem
   layers:
   - Default
   - TransparentFX

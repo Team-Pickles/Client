@@ -94,6 +94,7 @@ public class ClientHandle : MonoBehaviour
         if(GameManagerInServer.players.Count != 0) {
             Destroy(GameManagerInServer.players[_id].gameObject);
             GameManagerInServer.players.Remove(_id);
+            GameManagerInServer.playerCamera.Remove(_id);
         }
         string _members = _packet.ReadString();
         string[] _memberList = _members.Split(',');
@@ -133,15 +134,9 @@ public class ClientHandle : MonoBehaviour
     {
         int _projectileID = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
-        int _arrLen = _packet.ReadInt();
-        List<Vector3Int> _explodedPositions = new List<Vector3Int>();
-        for(int i = 0; i < _arrLen; ++i) {
-            Vector3 now = _packet.ReadVector3();
-            _explodedPositions.Add(new Vector3Int((int)now.x, (int)now.y, (int)now.z));
-        }
         if (GameManagerInServer.projectiles.TryGetValue(_projectileID, out ProjectileManager _projectile))
         {
-            _projectile.Explode(_position, _explodedPositions);
+            _projectile.Explode(_position);
         }
     }
 
@@ -310,5 +305,25 @@ public class ClientHandle : MonoBehaviour
     {
         bool _done = _packet.ReadBool();
         UIManagerInMultiPlayer.instance.SetPlayerInfo();
+    }
+
+     public static void AskToRestart(Packet _packet)
+    {
+        UIManagerInMultiPlayer.instance.AskToRestartByServer();
+    }
+
+    public static void RestartGame(Packet _packet)
+    {
+        int _mapId = _packet.ReadInt();
+        bool _isRestart = _packet.ReadBool();
+        if(_isRestart)
+        {
+            UIManagerInMultiPlayer.instance.RestartResult(true);
+            UIManagerInMultiPlayer.instance.StartGameProcess(_mapId);
+        }
+        else
+        {
+            UIManagerInMultiPlayer.instance.RestartResult(false);
+        }
     }
 }

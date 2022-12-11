@@ -41,8 +41,6 @@ public class PlayerMoveManagerInMulti : MonoBehaviour
         {
             Input.GetKey(KeyCode.RightArrow),
             Input.GetKey(KeyCode.LeftArrow),
-            Input.GetKey(KeyCode.X),
-            Input.GetKey(KeyCode.Z),
             Input.GetKey(KeyCode.UpArrow),
             Input.GetKey(KeyCode.DownArrow),
         };
@@ -55,7 +53,12 @@ public class PlayerMoveManagerInMulti : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            ClientSend.PlayerShoot(_player.transform.right);
+            ClientSend.PlayerShootBullet(_player.transform.right);
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            ClientSend.PlayerShootGrenade(_player.transform.right);
         }
 
         if (Input.GetKeyDown(KeyCode.A)) 
