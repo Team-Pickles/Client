@@ -15,6 +15,7 @@ public class BossMoveManager : MonoBehaviour
     private Vector3Int _bossPosition;
     private Vector3 _aimPosition;
     private BossState _bossState = BossState.IdleState;
+    private BossHp _bossHp;
     private bool _onGround = false, _first = true, _movement = true, _immortal = true, _playerInSight = false;
     
     public bool OnGround
@@ -27,10 +28,6 @@ public class BossMoveManager : MonoBehaviour
         get { return _playerInSight; }
         set { _playerInSight = value; }
     }
-    public int Hp
-    {
-        get { return _hp; }
-    }
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +35,8 @@ public class BossMoveManager : MonoBehaviour
         _bossEnd = GameObject.Find("EndLevelUI");
         _mm = _grid.GetComponent<MapManager>();
         _bossPosition = _mm.GetTopLeftBasePosition(transform.position);
+        _bossHp = GetComponent<BossHp>();
+        _bossHp.Hp = _hp;
     }
     public void ChangeState(BossState newState)
     {
@@ -230,6 +229,7 @@ public class BossMoveManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _bossHp.Hp = _hp;
         if(_first)
         {
             ChangeState(BossState.IdleState);
