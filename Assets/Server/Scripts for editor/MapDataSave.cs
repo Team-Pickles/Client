@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.UI;
 using System;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class MapDataSave : MonoBehaviour
 {
@@ -138,7 +139,10 @@ public class MapDataSave : MonoBehaviour
         StartCoroutine(MapShareProcess(_result =>
         {
             if (_result)
-            { Debug.Log("SAVE"); }
+            {
+                Debug.Log("SAVE");
+                BackToMain();
+            }
         }));
 
 
@@ -172,5 +176,10 @@ public class MapDataSave : MonoBehaviour
                 request.Dispose();
             }
         }
+    }
+
+    public void BackToMain()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
