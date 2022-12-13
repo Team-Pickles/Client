@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,15 +10,19 @@ public class FadeUI : MonoBehaviour
 	private Image _image;
 	public void FadeIn(float fadeTime)
     {
-        StartCoroutine(CoFadeIn(fadeTime));
-		StopCoroutine(CoFadeIn(fadeTime));
-    }
+		StartCoroutine(CoFadeIn(fadeTime, false, null));
+		StopCoroutine(CoFadeIn(fadeTime, false, null));
+	}
 	public void FadeOut(float fadeTime)
 	{
 		StartCoroutine(CoFadeOut(fadeTime));
 		StopCoroutine(CoFadeOut(fadeTime));
 	}
-	public IEnumerator CoFadeIn(float fadeTime)
+	public void FadeInOut(float fadeTime, Action callback)
+	{
+		StartCoroutine(CoFadeIn(fadeTime, true, callback));
+	}
+	public IEnumerator CoFadeIn(float fadeTime, bool mark, Action callback)
 	{
 		_image = GetComponentInChildren<Image>();
 		_tempColor = _image.color;
@@ -32,6 +37,12 @@ public class FadeUI : MonoBehaviour
 			yield return null;
 		}
 		_image.color = _tempColor;
+		if (mark)
+        {
+			callback();
+			StartCoroutine(CoFadeOut(fadeTime));
+		}
+			
 	}
 	public IEnumerator CoFadeOut(float fadeTime)
 	{
