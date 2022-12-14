@@ -104,6 +104,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnDoor, ClientHandle.SpawnDoor},
             { (int)ServerPackets.askToRestart, ClientHandle.AskToRestart},
             { (int)ServerPackets.restart, ClientHandle.RestartGame},
+            { (int)ServerPackets.fragileBreak, ClientHandle.FragileBreak},
         };
         Debug.Log("Initiallized packets.");
     }

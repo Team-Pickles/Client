@@ -420,6 +420,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             AskRestartUiForKey.SetActive(false);
         else
             AskRestartUiForServer.SetActive(false);
+        PauseUi.SetActive(false);
         ReadyToRestartUi.SetActive(true);
         ClientSend.ReadyToRestart(true);
     }

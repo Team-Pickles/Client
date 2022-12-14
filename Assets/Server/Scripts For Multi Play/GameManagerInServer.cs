@@ -26,6 +26,7 @@ public class GameManagerInServer : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject[] itemPrefabs;
     public GameObject[] doorPrefabs;
+    public Tilemap fragileMap;
     public List<GameObject> allObjects = new List<GameObject>();
     public int nowCamId;
     public bool isStoppedByEsc = false;

@@ -500,7 +500,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &82580534
 RectTransform:
@@ -604,7 +604,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &114750096
 RectTransform:
@@ -9879,7 +9879,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &1104869578
 RectTransform:
@@ -10264,7 +10264,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1148951800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13237,6 +13237,7 @@ MonoBehaviour:
   doorPrefabs:
   - {fileID: 368282167205530508, guid: 45e73221a81aba343bdedacd9c910068, type: 3}
   - {fileID: 368282167205530508, guid: 7d5dfe8ac2c72e14a9b3b044427ccca7, type: 3}
+  fragileMap: {fileID: 177604616}
   allObjects: []
   nowCamId: 0
   isStoppedByEsc: 0
