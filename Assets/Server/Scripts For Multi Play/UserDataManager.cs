@@ -25,8 +25,8 @@ public class UserDataManager : MonoBehaviour
             Debug.Log("Instance already exists,destroying object!");
             Destroy(this);
         }
-        apiUrl = "http://localhost:3001/";
-        // apiUrl = "http://35.77.214.110:3001/";
+        //apiUrl = "http://localhost:3001/";
+        apiUrl = "http://3.36.100.68:3001/";
 
         Reset();
         DontDestroyOnLoad(gameObject);
@@ -57,20 +57,24 @@ public class UserDataManager : MonoBehaviour
 
     public void SetSocket()
     {
-        string host = "127.0.0.1";
+        string host = "ec2-3-36-114-195.ap-northeast-2.compute.amazonaws.com";
         IPHostEntry ipHost = Dns.GetHostEntry(host);
         //주소가 여러개일 수 있어서 배열로 받음
         IPAddress ipAddr = ipHost.AddressList[0];
+        Debug.Log(ipAddr.ToString());
+
         //최종적인 주소
-        IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
+        IPEndPoint remoteendPoint = new IPEndPoint(ipHost.AddressList[0], 7777);
 
         try
         {
-            socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            socket = new Socket(remoteendPoint.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             socket.ReceiveTimeout = 10000;
+
             //연결 시도
-            IAsyncResult result = socket.BeginConnect(endPoint, null, null);
+            IAsyncResult result = socket.BeginConnect(remoteendPoint, null, null);
             bool success = result.AsyncWaitHandle.WaitOne(1000, true);
+            Debug.Log(result.AsyncState);
             if (success)
             {
                 Debug.Log($"Connected To {socket.RemoteEndPoint.ToString()}");

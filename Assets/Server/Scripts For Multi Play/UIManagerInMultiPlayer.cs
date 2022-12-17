@@ -51,6 +51,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     private string roomName;
     private int selectedMapId;
     private string defaultMapJson;
+    public bool roomJoinDone;
 
     private void Awake()
     {
@@ -387,8 +388,16 @@ public class UIManagerInMultiPlayer : MonoBehaviour
 
     public void ReadyToStartGame()
     {
-        //
+        StartCoroutine(Ready());
+    }
+
+    private IEnumerator Ready()
+    {
+        yield return new WaitUntil(() => roomJoinDone == true);
+        Debug.Log(roomJoinDone);
         int mapId = Convert.ToInt32(RoomInfoUiTexts[0].text);
+        //여기서 아직 연결 안됨.
+        Debug.Log("12313"+Client.instance.tcp.socket.GetStream());
         ClientSend.ReadyToStartGame(Client.instance.roomId);
         loadingScene.SetActive(true);
     }
@@ -546,7 +555,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
 
     private IEnumerator ConnectToServer(int port, string _roomId)
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0);
         Client.instance.port = port;
         Client.instance.roomId = _roomId;
         Client.instance.ConnectToServer();
