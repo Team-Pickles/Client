@@ -4,37 +4,67 @@ using UnityEngine;
 
 public class VendingEnemy : MonoBehaviour
 {
+    private int _hp = 3;
     private bool _ready = true;
-    private GameObject _player;
-    public GameObject canPrefab;
-
+    private GameObject _canPrefab;
+    private GameObject _firePoint;
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        switch (collision.transform.tag)
+        {
+            case "player":
+                {
+                    collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
+                    break;
+                }
+            case "bullet":
+                {
+                    _hp--;
+                    if (_hp == 0)
+                        Destroy(gameObject);
+                    break;
+                }
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        switch (collision.transform.tag)
+        {
+            case "player":
+                {
+                    collision.transform.GetComponent<PlayerMoveManager>().OnDamagedAction();
+                    break;
+                }
+        }
+    }
     public IEnumerator OnAttack()
     {
-        GameObject can = Object.Instantiate(canPrefab, new Vector3(transform.position.x + transform.localScale.x / 2.0f * 0.8f, transform.position.y - transform.localScale.y / 2.0f * 0.6f, 0), new Quaternion());
-        can.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(250.0f, 0.0f));
-        yield return new WaitForSeconds(3.0f);
+        GameObject can = Object.Instantiate(_canPrefab, _firePoint.transform.position, new Quaternion());
+        can.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(-300.0f, 0.0f));
+        yield return new WaitForSeconds(10.0f);
         Object.Destroy(can);
         yield return 0;
     }
-    public IEnumerator Waiting()
+    public IEnumerator Waiting(float seconds)
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(seconds);
         _ready = true;
     }
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
-        canPrefab = (GameObject)Resources.Load("Prefabs/EnemyItems/Can", typeof(GameObject));
+        _canPrefab = (GameObject)Resources.Load("Prefabs/EnemyItems/Can", typeof(GameObject));
+        _firePoint = GameObject.Find("VendingEnemyFirePoint");
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if(_ready)
         {
             _ready = false;
             StartCoroutine(OnAttack());
-            StartCoroutine(Waiting());
+            StartCoroutine(Waiting((float)(_hp)));
         }
     }
 }

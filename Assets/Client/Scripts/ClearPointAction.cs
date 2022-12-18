@@ -36,7 +36,7 @@ public class ClearPointAction : MonoBehaviour
     {
         if (_canClear && Input.GetKeyDown(KeyCode.UpArrow))
         {
-            _fadeUI.FadeInOut(1.0f,move);            
+            _fadeUI.FadeInOut(0.3f,move);            
             gm.SetResurrectionPoint(nextLevel.position);
         }
     }
