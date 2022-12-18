@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyAction : MonoBehaviour
 {
+    public AudioClip sound;
     [SerializeField] private bool isMove;
     private GameObject _player;
     private float _xSpeed = 5.0f;
@@ -12,6 +13,7 @@ public class EnemyAction : MonoBehaviour
     private Color _tintColor = new Color(1.0f, 0.2f, 0.2f, 1.0f);
     private ParticleSystem _ps;
     private Animator _animator;
+    private AudioSource _audio;
     public bool OnGround
     {
         get { return _onGround; }
@@ -27,12 +29,18 @@ public class EnemyAction : MonoBehaviour
         get { return _player; }
         set { _player = value; }
     }
+    private void PlaySound()
+    {
+        _audio.clip = sound;
+        _audio.Play();
+    }
 
     IEnumerator HitAction()
     {
         GetComponent<BoxCollider2D>().enabled = false;
         GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         float time = 0.0f;
+        PlaySound();
         while (time <= 0.5f)
         {
             GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, _tintColor, time*2.0f);
@@ -113,6 +121,7 @@ public class EnemyAction : MonoBehaviour
     {
         _ps = GetComponent<ParticleSystem>();
         _animator = GetComponent<Animator>();
+        _audio = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()

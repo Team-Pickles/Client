@@ -36175,6 +36175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f7ef37efef208141bb0049a63a022b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sound: {fileID: 0}
   isMove: 0
 --- !u!1 &5121378400263446992
 GameObject:
@@ -36335,6 +36336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f7ef37efef208141bb0049a63a022b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sound: {fileID: 0}
   isMove: 0
 --- !u!61 &5121378400487567280
 BoxCollider2D:
@@ -36495,6 +36497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f7ef37efef208141bb0049a63a022b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sound: {fileID: 0}
   isMove: 0
 --- !u!1001 &8879898480017693655
 PrefabInstance:
