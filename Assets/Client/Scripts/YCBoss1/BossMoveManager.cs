@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public enum BossState { IdleState = 0, MoveToPlayer = 1, Jumping = 2, GroundPound = 3, Attacking = 4}
 
 public class BossMoveManager : MonoBehaviour
@@ -17,7 +17,9 @@ public class BossMoveManager : MonoBehaviour
     private BossState _bossState = BossState.IdleState;
     private BossHp _bossHp;
     private bool _onGround = false, _first = true, _movement = true, _immortal = true, _playerInSight = false;
-    
+
+    public string nextLevel;
+
     public bool OnGround
     {
         get { return _onGround; }
@@ -203,7 +205,13 @@ public class BossMoveManager : MonoBehaviour
                 Destroy(gameObject);
         }
     }
-
+    private IEnumerator Clear()
+    {
+        _bossEnd.GetComponent<EndLevelUI>().EndLevel();
+        yield return new WaitForSeconds(3.0f);
+        SceneManager.LoadScene(nextLevel);
+        GameObject.Find("Player").transform.position = new Vector3(-5.0f, -2.0f, 0.0f);
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         switch (collision.transform.tag)
@@ -218,8 +226,8 @@ public class BossMoveManager : MonoBehaviour
                     StartCoroutine(Damaged());
                     if (_hp == 0)
                     {
-                        Destroy(gameObject);
-                        _bossEnd.GetComponent<EndLevelUI>().EndLevel();
+                        StartCoroutine(Clear());
+
                     }
                     break;
                 }
