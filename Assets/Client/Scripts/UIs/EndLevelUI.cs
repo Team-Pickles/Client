@@ -5,23 +5,32 @@ using UnityEngine;
 public class EndLevelUI : MonoBehaviour
 {
     public GameObject text;
-    private GameObject _fadeUI;
+    public AudioClip sound;
+    private FadeUI _fadeUI;
+    private AudioSource _audio;
     public void EndLevel()
     {
         StartCoroutine(ImageShow());
-        _fadeUI.GetComponent<FadeUI>().FadeIn(1.0f);
+    }
+    private void PlaySound()
+    {
+        _audio.clip = sound;
+        _audio.Play();
     }
     public IEnumerator ImageShow()
     {
+        PlaySound();
         text.SetActive(true);
         yield return new WaitForSeconds(2.0f);
+        _fadeUI.FadeIn(1.0f);
         text.SetActive(false);
         yield return null;
     }
     // Start is called before the first frame update
     void Start()
     {
-        _fadeUI = GameObject.Find("FadeUI");
+        _audio = GetComponent<AudioSource>();
+        _fadeUI = GameObject.Find("FadeUI").GetComponent<FadeUI>();
         text.SetActive(false);
     }
 
