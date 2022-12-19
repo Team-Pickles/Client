@@ -199,7 +199,8 @@ public class ClientHandle : MonoBehaviour
 
         if (GameManagerInServer.items.TryGetValue(_itemID, out ItemManager _item))
         {
-            _item.transform.position = _position;
+            if (_item != null)
+                _item.transform.position = _position;
         }
     }
 
