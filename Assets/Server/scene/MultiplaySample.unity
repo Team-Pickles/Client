@@ -708,6 +708,7 @@ MonoBehaviour:
   AskRestartUiForServer: {fileID: 82580530}
   ReadyToRestartUi: {fileID: 1104869574}
   memberNames: []
+  roomJoinDone: 0
 --- !u!1 &153618116
 GameObject:
   m_ObjectHideFlags: 0
@@ -12427,7 +12428,10 @@ MonoBehaviour:
   playerPrefab: {fileID: 5091156043021300394, guid: 9d4c7b654e282054b8cdf54c351ec3db, type: 3}
   itemSpawnerPrefab: {fileID: 0}
   projectilePrefab: {fileID: 3305180255072280105, guid: 8968040f9b5337c4780744d1424ed49e, type: 3}
-  enemyPrefab: {fileID: 99511372075380570, guid: 0f5d32327b92d254980db07f88cb4f28, type: 3}
+  enemyPrefabs:
+  - {fileID: 99511372075380570, guid: 0f5d32327b92d254980db07f88cb4f28, type: 3}
+  - {fileID: 892739299436098136, guid: 8796a02fb948a3d45965a25baf79ec20, type: 3}
+  - {fileID: 5121378400887899133, guid: d1e6fe4638e574e4787938d009b8ad42, type: 3}
   bulletPrefab: {fileID: 8324424231299544829, guid: d7f560be4ab14364291129603590fdd8, type: 3}
   itemPrefabs:
   - {fileID: 4750861222190012204, guid: 95d577e5d276f914bb90fd03d95f51e0, type: 3}
@@ -12438,9 +12442,11 @@ MonoBehaviour:
   - {fileID: 4740775085839822780, guid: 5b6f1d18e9b30894480325b4f0e5a4c1, type: 3}
   - {fileID: 4740775085839822780, guid: 6e7ccd3f26772294e8a486b7fd52d2d9, type: 3}
   - {fileID: 2099721584905147228, guid: d5b2c93ae97c0c1499cf92d36fbc61b1, type: 3}
+  - {fileID: 4740775085839822780, guid: bf14e8f5155bc2a4e93ded43d9f03da4, type: 3}
   doorPrefabs:
   - {fileID: 368282167205530508, guid: 45e73221a81aba343bdedacd9c910068, type: 3}
   - {fileID: 368282167205530508, guid: 7d5dfe8ac2c72e14a9b3b044427ccca7, type: 3}
+  indIcatorPrefabs: {fileID: 7373069642759359899, guid: b79edb106591fbc48a94572235ef1379, type: 3}
   allObjects: []
   nowCamId: 0
   isStoppedByEsc: 0
@@ -13097,7 +13103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57edead27affc2e439704831a46d559a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ip: 127.0.0.1
   port: 0
   myId: 0
   roomId: 
