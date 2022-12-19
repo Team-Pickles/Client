@@ -14,6 +14,7 @@ public class UserDataManager : MonoBehaviour
     public string refreshToken;
     public bool isLogined = false;
     public string apiUrl { get; private set; }
+    public bool isEditor = false;
 
     private void Awake() {
         if (instance == null)
@@ -58,6 +59,11 @@ public class UserDataManager : MonoBehaviour
     public void SetSocket()
     {
         string host = "ec2-3-36-114-195.ap-northeast-2.compute.amazonaws.com";
+
+#if UNITY_EDITOR
+        host = "127.0.0.1";
+        isEditor = true;
+#endif
         IPHostEntry ipHost = Dns.GetHostEntry(host);
         //주소가 여러개일 수 있어서 배열로 받음
         IPAddress ipAddr = ipHost.AddressList[0];

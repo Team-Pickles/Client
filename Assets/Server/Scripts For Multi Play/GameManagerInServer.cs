@@ -15,6 +15,7 @@ public class GameManagerInServer : MonoBehaviour
     public static Dictionary<int, ServerEnemy> enemies = new Dictionary<int, ServerEnemy>();
     public static Dictionary<int, DoorAction> doors = new Dictionary<int, DoorAction>();
     public static Dictionary<int, Camera> playerCamera = new Dictionary<int, Camera>();
+    public static Dictionary<int, ServerBoss> boss = new Dictionary<int, ServerBoss>();
     public Tilemap Tilemap; 
 
 
@@ -22,10 +23,11 @@ public class GameManagerInServer : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject itemSpawnerPrefab;
     public GameObject projectilePrefab;
-    public GameObject enemyPrefab;
+    public GameObject[] enemyPrefabs;
     public GameObject bulletPrefab;
     public GameObject[] itemPrefabs;
     public GameObject[] doorPrefabs;
+    public GameObject indIcatorPrefabs;
     public List<GameObject> allObjects = new List<GameObject>();
     public int nowCamId;
     public bool isStoppedByEsc = false;
@@ -126,7 +128,6 @@ public class GameManagerInServer : MonoBehaviour
 
     public void SpawnItem(int _itemId, Vector3 _position, int _itemType)
     {
-        Debug.Log(_itemType);
         GameObject _item = Instantiate(itemPrefabs[_itemType - (int)TileType.Item - 1], _position, Quaternion.identity);
         ItemManager _itemManager;
         _item.TryGetComponent<ItemManager>(out _itemManager);
@@ -138,11 +139,20 @@ public class GameManagerInServer : MonoBehaviour
         allObjects.Add(_item);
     }
 
-    public void SpawnEnemy(int _enemyId, Vector3 _position)
+    public void SpawnEnemy(int _enemyId, Vector3 _position,int type)
     {
-        GameObject _enemy = Instantiate(enemyPrefab, _position, Quaternion.identity);
+        GameObject _enemy = Instantiate(enemyPrefabs[type], _position, Quaternion.identity);
         _enemy.GetComponent<ServerEnemy>().Initialize(_enemyId);
         enemies.Add(_enemyId, _enemy.GetComponent<ServerEnemy>());
+        allObjects.Add(_enemy);
+    }
+
+    public void SpawnBoss(int _bossId, Vector3 _position, int type)
+    {
+        _position.z = 0;
+        GameObject _enemy = Instantiate(enemyPrefabs[type], _position, Quaternion.identity);
+        _enemy.GetComponent<ServerBoss>().Initialize(_bossId);
+        boss.Add(_bossId, _enemy.GetComponent<ServerBoss>());
         allObjects.Add(_enemy);
     }
 
@@ -154,5 +164,10 @@ public class GameManagerInServer : MonoBehaviour
         _door.GetComponent<DoorAction>().Initialize(_doorId, _isIndoor);
         doors.Add(_doorId, _door.GetComponent<DoorAction>());
         allObjects.Add(_door);
+    }
+
+    public void AttackIndeicator(Vector2 pos)
+    {
+        GameObject _indicator = Instantiate(indIcatorPrefabs, pos, Quaternion.identity);
     }
 }

@@ -11,7 +11,7 @@ public class PlayerMoveManagerInMulti : MonoBehaviour
 
     private void FixedUpdate()
     {
-        SendInputToServer();
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -44,12 +44,12 @@ public class PlayerMoveManagerInMulti : MonoBehaviour
             Input.GetKey(KeyCode.UpArrow),
             Input.GetKey(KeyCode.DownArrow),
         };
-
         ClientSend.PlayerMovement(_inputs, GetComponent<SpriteRenderer>().flipX);
     }
 
     public void Update()
     {
+        SendInputToServer();
 
         if (Input.GetKeyDown(KeyCode.S))
         {

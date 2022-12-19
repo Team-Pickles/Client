@@ -396,8 +396,6 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         yield return new WaitUntil(() => roomJoinDone == true);
         Debug.Log(roomJoinDone);
         int mapId = Convert.ToInt32(RoomInfoUiTexts[0].text);
-        //여기서 아직 연결 안됨.
-        Debug.Log("12313"+Client.instance.tcp.socket.GetStream());
         ClientSend.ReadyToStartGame(Client.instance.roomId);
         loadingScene.SetActive(true);
     }

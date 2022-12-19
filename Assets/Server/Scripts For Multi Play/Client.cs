@@ -31,6 +31,10 @@ public class Client : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+
+#if UNITY_EDITOR
+            host = "127.0.0.1";
+#endif
             ipHost = Dns.GetHostEntry(host);
             ipAddr = ipHost.AddressList[0];
         }
@@ -110,6 +114,11 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnDoor, ClientHandle.SpawnDoor},
             { (int)ServerPackets.askToRestart, ClientHandle.AskToRestart},
             { (int)ServerPackets.restart, ClientHandle.RestartGame},
+            { (int)ServerPackets.enemyDestroy, ClientHandle.EnemyDestroy},
+            { (int)ServerPackets.spawnBoss, ClientHandle.SpawnBoss},
+            { (int)ServerPackets.bossHit, ClientHandle.BossHit},
+            { (int)ServerPackets.bossClear, ClientHandle.BossClear},
+            { (int)ServerPackets.attackIndeicator, ClientHandle.AttackIndeicator},
         };
         Debug.Log("Initiallized packets.");
     }
