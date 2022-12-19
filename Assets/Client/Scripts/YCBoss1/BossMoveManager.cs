@@ -76,9 +76,6 @@ public class BossMoveManager : MonoBehaviour
 
             yield return new WaitForSeconds(0.7f);
 
-            color.r = 1.0f;
-            color.g = 1.0f;
-            color.b = 0.0f;
             color.a = 1.0f;
             GetComponent<SpriteRenderer>().color = color;
         }
@@ -202,7 +199,10 @@ public class BossMoveManager : MonoBehaviour
             Destroy(collision.gameObject);
             StartCoroutine(Damaged());
             if (_hp == 0)
+            {
                 Destroy(gameObject);
+                StartCoroutine(Clear());
+            }
         }
     }
     private IEnumerator Clear()
@@ -226,8 +226,8 @@ public class BossMoveManager : MonoBehaviour
                     StartCoroutine(Damaged());
                     if (_hp == 0)
                     {
+                        Destroy(gameObject);
                         StartCoroutine(Clear());
-
                     }
                     break;
                 }

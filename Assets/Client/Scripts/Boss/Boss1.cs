@@ -23,6 +23,7 @@ public class Boss1 : MonoBehaviour
             StartCoroutine(Damaged());
             if (hp == 0)
             {
+                Destroy(gameObject);
                 StartCoroutine(Clear());
             }
         }
