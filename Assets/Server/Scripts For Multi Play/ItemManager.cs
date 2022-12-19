@@ -34,4 +34,9 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+    public void DestroyItem()
+    {
+        Destroy(gameObject);
+    }
+
 }

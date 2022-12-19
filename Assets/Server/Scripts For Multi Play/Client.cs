@@ -120,6 +120,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.bossHit, ClientHandle.BossHit},
             { (int)ServerPackets.bossClear, ClientHandle.BossClear},
             { (int)ServerPackets.attackIndeicator, ClientHandle.AttackIndeicator},
+            { (int)ServerPackets.itemDestroy, ClientHandle.ItemDestroy},
         };
         Debug.Log("Initiallized packets.");
     }

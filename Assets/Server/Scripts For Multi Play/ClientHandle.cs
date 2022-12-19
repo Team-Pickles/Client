@@ -388,5 +388,14 @@ public class ClientHandle : MonoBehaviour
         {
             _enemy.DestroyEnemy();
         }
+    } 
+    public static void ItemDestroy(Packet _packet)
+    {
+        int _itemId = _packet.ReadInt();
+
+        if (GameManagerInServer.items.TryGetValue(_itemId, out ItemManager _item))
+        {
+            _item.DestroyItem();
+        }
     }
 }
