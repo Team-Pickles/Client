@@ -17,15 +17,17 @@ public class ServerEnemy : MonoBehaviour
     }
     private EnemyState state = EnemyState.Normal;
 
-    private void Start()
-    {
-        _ps = GetComponent<ParticleSystem>();
-        _animator = GetComponent<Animator>();
-    }
+    // private void Start()
+    // {
+    //     _ps = GetComponent<ParticleSystem>();
+    //     _animator = GetComponent<Animator>();
+    // }
 
     public void Initialize(int _id)
     {
         id = _id;
+        _ps = GetComponent<ParticleSystem>();
+        _animator = GetComponent<Animator>();
     }
 
     public void DestroyEnemy()

@@ -42,6 +42,8 @@ public class UIManagerInMultiPlayer : MonoBehaviour
     public GameObject AskRestartUiForKey;
     public GameObject AskRestartUiForServer;
     public GameObject ReadyToRestartUi;
+    public GameObject PauseUi;
+    public GameObject AskExitUi;
 
     public static Socket socket;
     public List<string> memberNames = new List<string>();
@@ -418,6 +420,7 @@ public class UIManagerInMultiPlayer : MonoBehaviour
             AskRestartUiForKey.SetActive(false);
         else
             AskRestartUiForServer.SetActive(false);
+        PauseUi.SetActive(false);
         ReadyToRestartUi.SetActive(true);
         ClientSend.ReadyToRestart(true);
     }
@@ -458,6 +461,12 @@ public class UIManagerInMultiPlayer : MonoBehaviour
         GameManagerInServer.instance.isStoppedByEsc = false;
         if(!_isSuccess)
             _notice.AlertBox("Can not restart");
+    }
+
+    public void QuitGame()
+    {
+        BackToMain();
+        Client.instance.RoomExit();
     }
 
     public void SetPlayerInfo()

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class InputController : MonoBehaviour
     [SerializeField]
     private Sprite EmptySprite;
     public NoticeUI _noticeUI;
+    public GameObject AskQuitUi;
 
     [SerializeField]
     private Tilemap tileMap;
@@ -52,6 +54,15 @@ public class InputController : MonoBehaviour
             SetTileType(0);
             return;
         }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(AskQuitUi.activeSelf)
+                AskQuitUi.SetActive(false);
+            else
+                AskQuitUi.SetActive(true);
+        }
+
         RaycastHit _hit;
         if (Input.GetMouseButton(0) && EventSystem.current.IsPointerOverGameObject() == false) 
         {
@@ -214,4 +225,8 @@ public class InputController : MonoBehaviour
 
     }
 
+    public void BackToMain()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }

@@ -26,6 +26,7 @@ public class GameManagerInServer : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject[] itemPrefabs;
     public GameObject[] doorPrefabs;
+    public Tilemap fragileMap;
     public List<GameObject> allObjects = new List<GameObject>();
     public int nowCamId;
     public bool isStoppedByEsc = false;
@@ -63,13 +64,21 @@ public class GameManagerInServer : MonoBehaviour
             {
                 if(isStoppedByEsc)
                 {
-                    isStoppedByEsc = false;
-                    UIManagerInMultiPlayer.instance.NoForRestart(true);
+                    if(UIManagerInMultiPlayer.instance.AskRestartUiForKey.activeSelf)
+                    {
+                        UIManagerInMultiPlayer.instance.NoForRestart(true);
+                    }
+                    else
+                    {
+                        isStoppedByEsc = false;
+                        UIManagerInMultiPlayer.instance.PauseUi.SetActive(false);
+                        UIManagerInMultiPlayer.instance.AskExitUi.SetActive(false);
+                    }
                 }
                 else
                 {
                     isStoppedByEsc = true;
-                    UIManagerInMultiPlayer.instance.AskToRestartByKey();
+                    UIManagerInMultiPlayer.instance.PauseUi.SetActive(true);
                 }
             }
         }
