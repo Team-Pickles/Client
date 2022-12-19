@@ -13,6 +13,8 @@ public class Boss1 : MonoBehaviour
 
     private Boss1State _state;
     private bool _immortal = false;
+    private BossHp _bossHp;
+    private EndLevelUI _endLevelUI;
     [HideInInspector] public int hp = 10;
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -27,6 +29,7 @@ public class Boss1 : MonoBehaviour
     }
     private IEnumerator Clear()
     {
+        _endLevelUI.EndLevel();
         yield return new WaitForSeconds(3.0f);
         SceneManager.LoadScene(nextLevel);
         GameObject.Find("Player").transform.position = new Vector3(-10.0f, 2.0f, 0.0f);
@@ -73,8 +76,16 @@ public class Boss1 : MonoBehaviour
     }
     private void Start()
     {
+        _bossHp = GetComponentInParent<BossHp>();
+        _bossHp.Hp = 10;
+        hp = _bossHp.Hp;
+        _endLevelUI = GameObject.Find("EndLevelUI").GetComponent<EndLevelUI>();
         trash = Resources.Load("Prefabs/Trash") as GameObject;
         enemy = Resources.Load("Prefabs/Boss1/Boss1Enemy") as GameObject;
         barrior = Resources.Load("Prefabs/Boss1/Boss1Barrior") as GameObject;
+    }
+    private void Update()
+    {
+        _bossHp.Hp = hp;
     }
 }

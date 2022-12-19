@@ -9,7 +9,7 @@ public class EnemyOnGround : MonoBehaviour
         switch (collision.transform.tag)
         {
             case "floor":
-            case "stool":
+            case "barricade":
             {
                 transform.parent.GetComponent<EnemyAction>().OnGround = true;
                 break;
@@ -21,7 +21,7 @@ public class EnemyOnGround : MonoBehaviour
         switch (collision.transform.tag)
         {
             case "floor":
-            case "stool":
+            case "barricade":
             {
                 transform.parent.GetComponent<EnemyAction>().OnGround = true;
                 break;
@@ -33,7 +33,7 @@ public class EnemyOnGround : MonoBehaviour
         switch (collision.transform.tag)
         {
             case "floor":
-            case "stool":
+            case "barricade":
             {
                 transform.parent.GetComponent<EnemyAction>().OnGround = false;
                 break;

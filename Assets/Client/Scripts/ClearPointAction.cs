@@ -8,7 +8,9 @@ public class ClearPointAction : MonoBehaviour
     public Transform nextLevel;
     public GameManager gm;
     private GameObject _player;
+    private FadeUI _fadeUI;
     private bool _canClear = false;
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "player")
@@ -26,6 +28,7 @@ public class ClearPointAction : MonoBehaviour
     void Start()
     {
         _player = GameObject.Find("Player");
+        _fadeUI = GameObject.Find("FadeUI").GetComponent<FadeUI>();
     }
 
     // Update is called once per frame
@@ -33,8 +36,13 @@ public class ClearPointAction : MonoBehaviour
     {
         if (_canClear && Input.GetKeyDown(KeyCode.UpArrow))
         {
-            _player.transform.position = nextLevel.position;
+            _fadeUI.FadeInOut(0.3f,move);            
             gm.SetResurrectionPoint(nextLevel.position);
         }
+    }
+
+    public void move()
+    {
+        _player.transform.position = nextLevel.position;
     }
 }

@@ -114,6 +114,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnDoor, ClientHandle.SpawnDoor},
             { (int)ServerPackets.askToRestart, ClientHandle.AskToRestart},
             { (int)ServerPackets.restart, ClientHandle.RestartGame},
+            { (int)ServerPackets.fragileBreak, ClientHandle.FragileBreak},
             { (int)ServerPackets.enemyDestroy, ClientHandle.EnemyDestroy},
             { (int)ServerPackets.spawnBoss, ClientHandle.SpawnBoss},
             { (int)ServerPackets.bossHit, ClientHandle.BossHit},

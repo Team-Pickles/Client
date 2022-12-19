@@ -40,6 +40,7 @@ public enum ServerPackets
     spawnBoss,
     askToRestart,
     restart,
+    fragileBreak,
     itemDestroy,
     enemyDestroy,
     bossHit,

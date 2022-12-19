@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class SpringAction : MonoBehaviour
 {
+    public AudioClip sound;
     private Color _tintColor = new Color(1.0f, 0.5f, 0.5f, 1.0f);
     private ParticleSystem _ps;
+    private AudioSource _audio;
+    private void PlaySound()
+    {
+        _audio.clip = sound;
+        _audio.Play();
+    }
     private IEnumerator ChangeColor()
     {
         float time = 0.0f;
@@ -27,12 +34,13 @@ public class SpringAction : MonoBehaviour
                 if (collision.TryGetComponent<PlayerMoveManager>(out pmm))
                 {
                     pmm.OnJumpSpringAction();
+                    PlaySound();
                     //_ps.Play();
                     StartCoroutine(ChangeColor());
                 }
                 break;
             }
-            case "stool":
+            case "barricade":
             {
                 Vector2 velocity = collision.transform.GetComponent<Rigidbody2D>().velocity;
                 collision.transform.GetComponent<Rigidbody2D>().velocity = new Vector2(velocity.x, 10.0f);
@@ -44,7 +52,7 @@ public class SpringAction : MonoBehaviour
     {
         switch (collision.tag)
         {
-            case "stool":
+            case "barricade":
             {
                 Vector2 velocity = collision.transform.GetComponent<Rigidbody2D>().velocity;
                 collision.transform.GetComponent<Rigidbody2D>().velocity = new Vector2(velocity.x, 10.0f);
@@ -55,6 +63,7 @@ public class SpringAction : MonoBehaviour
     void Start()
     {
         _ps = GetComponent<ParticleSystem>();
+        _audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame

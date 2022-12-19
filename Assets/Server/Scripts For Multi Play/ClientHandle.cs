@@ -368,6 +368,18 @@ public class ClientHandle : MonoBehaviour
         }
     }
 
+    public static void FragileBreak(Packet _packet)
+    {
+        Debug.Log("FragileBreak");
+        int _listLen = _packet.ReadInt();
+        for(int i = 0; i < _listLen; ++i)
+        {
+            Vector3 _pos = _packet.ReadVector3();
+            Vector3Int _intPos = new Vector3Int((int)_pos.x, (int)_pos.y, (int)_pos.z);
+            GameManagerInServer.instance.fragileMap.SetTile(_intPos, null);
+        }
+    }
+
     public static void EnemyDestroy(Packet _packet)
     {
         int _enemyId = _packet.ReadInt();

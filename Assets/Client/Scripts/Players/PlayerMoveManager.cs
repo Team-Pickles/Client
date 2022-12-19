@@ -24,14 +24,24 @@ public class PlayerMoveManager : MonoBehaviour
     private int _grenadeCount = 0;
     private int _glassBottleCount = 0;
     private GameObject _firePoint;
+    private AudioSource _audio;
 
     public GameObject bulletPrefab;
     public GameObject grenadePrefab;
     public GameObject glassbottlePrefab;
     public Animator animator;
+    public AudioClip jumpSound, damagedSound, shootSound, throwSound, pickupSound;
 
     private Vector3 recentRopePosition;
     private int ropeCollisionCount = 0;
+    private float hangingDelay = 0.0f;
+    private const float hangingThreshold = 0.2f;
+    private bool canHanging = true;
+    private void PlaySound(AudioClip sound)
+    {
+        _audio.clip = sound;
+        _audio.Play();
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         switch (collision.tag)
@@ -106,6 +116,7 @@ public class PlayerMoveManager : MonoBehaviour
     public void OnJumpAction()
     {
         GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
+        PlaySound(jumpSound);
         _vPoint = 1.2f;
     }
     public void SetPlayerStateFlags(PlayerStateFlags flag)
@@ -122,26 +133,31 @@ public class PlayerMoveManager : MonoBehaviour
         _bulletCount += amount;
         if (_bulletCount >= 100)
             _bulletCount = 99;
+        PlaySound(pickupSound);
     }
     public void DecreaseBullet()
     {
         _bulletCount--;
+        PlaySound(shootSound);
     }
     public void IncreaseGrenade(int amount)
     {
         _grenadeCount += amount;
         if (_grenadeCount >= 100)
             _grenadeCount = 99;
+        PlaySound(pickupSound);
     }
     public void DecreaseGrenade()
     {
         _grenadeCount--;
+        PlaySound(throwSound);
     }
     public void IncreaseGlassBottle(int amount)
     {
         _glassBottleCount += amount;
         if (_glassBottleCount >= 100)
             _glassBottleCount = 99;
+        PlaySound(pickupSound);
     }
     public void DecreaseGlassBottle()
     {
@@ -153,6 +169,7 @@ public class PlayerMoveManager : MonoBehaviour
         {
             if (_hp > 0)
                 _hp--;
+            PlaySound(damagedSound);
             SetPlayerStateFlags(PlayerStateFlags.Damaged);
             SetPlayerStateFlags(PlayerStateFlags.Stun);
             _hPoint = -0.7f * (_flip==false ? 1 : -1);
@@ -222,6 +239,7 @@ public class PlayerMoveManager : MonoBehaviour
     {
         _firePoint = GameObject.Find(transform.name+"/FirePoint");
         bulletPrefab = (GameObject)Resources.Load("Prefabs/Bullet", typeof(GameObject));
+        _audio = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -251,8 +269,20 @@ public class PlayerMoveManager : MonoBehaviour
         // 위 (로프)
         if (CanControl())
         {
+            if (canHanging == false)
+            {
+                if (hangingDelay < hangingThreshold)
+                {
+                    hangingDelay += Time.deltaTime;
+                }
+                else
+                {
+                    hangingDelay = 0.0f;
+                    canHanging = true;
+                }
+            }
             // 매달리기 시작
-            if (_onRope && Input.GetKey(KeyCode.UpArrow))
+            if (_onRope && Input.GetKey(KeyCode.UpArrow) && canHanging)
             {
                 _isHanging = true;
                 transform.position = new Vector2(recentRopePosition.x, transform.position.y);
@@ -263,8 +293,10 @@ public class PlayerMoveManager : MonoBehaviour
                 {
                     if (_leftPressed || _rightPressed)
                     {
+                        canHanging = false;
                         GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
                         _vPoint = 1.2f;
+                        PlaySound(jumpSound);
                         _isHanging = false;
                     }
                 }
