@@ -11,12 +11,15 @@ public class Client : MonoBehaviour
     //4Byte
     public static int dataBufferSize = 4096;
 
-    public string ip = "127.0.0.1";
+    string host = "ec2-3-36-114-195.ap-northeast-2.compute.amazonaws.com";
+    public IPAddress ipAddr;
+    public IPHostEntry ipHost;
     public int port;
     public int myId = 0;
     public string roomId;
     public TCP tcp;
     public UDP udp;
+
 
     private bool isConnect = false;
 
@@ -28,6 +31,12 @@ public class Client : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+
+#if UNITY_EDITOR
+            host = "127.0.0.1";
+#endif
+            ipHost = Dns.GetHostEntry(host);
+            ipAddr = ipHost.AddressList[0];
         }
         else if (instance != this)
         {
@@ -56,6 +65,7 @@ public class Client : MonoBehaviour
         
         tcp.Connect();
         isConnect = true;
+        UIManagerInMultiPlayer.instance.roomJoinDone = true;
     }
 
     private void Disconnect()
@@ -105,6 +115,12 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.askToRestart, ClientHandle.AskToRestart},
             { (int)ServerPackets.restart, ClientHandle.RestartGame},
             { (int)ServerPackets.fragileBreak, ClientHandle.FragileBreak},
+            { (int)ServerPackets.enemyDestroy, ClientHandle.EnemyDestroy},
+            { (int)ServerPackets.spawnBoss, ClientHandle.SpawnBoss},
+            { (int)ServerPackets.bossHit, ClientHandle.BossHit},
+            { (int)ServerPackets.bossClear, ClientHandle.BossClear},
+            { (int)ServerPackets.attackIndeicator, ClientHandle.AttackIndeicator},
+            { (int)ServerPackets.itemDestroy, ClientHandle.ItemDestroy},
         };
         Debug.Log("Initiallized packets.");
     }
@@ -115,19 +131,27 @@ public class Client : MonoBehaviour
         private NetworkStream stream;
         private byte[] receiveBuffer;
         private Packet receiveData;
+        IPEndPoint remoteendPoint;
 
         public void Connect()
         {
-            socket = new TcpClient
+            try
             {
-                ReceiveBufferSize = dataBufferSize,
-                SendBufferSize = dataBufferSize,
-            };
+                socket = new TcpClient
+                {
+                    ReceiveBufferSize = dataBufferSize,
+                    SendBufferSize = dataBufferSize,
+                };
 
-            receiveBuffer = new byte[dataBufferSize];
-            //BeginConnect�� �񵿱��, �ٸ� �����忡�� ���� ���� �� �Ϸ�Ǹ� �˸�
-            //���� ȣ�� �����带 �������� ����
-            socket.BeginConnect(instance.ip, instance.port, ConnenctionCallback, socket);
+                receiveBuffer = new byte[dataBufferSize];
+                //BeginConnect�� �񵿱��, �ٸ� �����忡�� ���� ���� �� �Ϸ�Ǹ� �˸�
+                //���� ȣ�� �����带 �������� ����
+                socket.BeginConnect(instance.ipAddr, instance.port, ConnenctionCallback, null);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
         private void ConnenctionCallback(IAsyncResult _result)
@@ -139,6 +163,9 @@ public class Client : MonoBehaviour
 
             //data �ۼ��� ������ NetworkStream ��ȯ
             stream = socket.GetStream();
+            Debug.Log("123123"+stream);
+            Debug.Log("1231233123123"+socket);
+
             receiveData = new Packet();
 
             //BeginRead �񵿱��, �ٸ� �����忡�� ���� ���� �� �Ϸ�Ǹ� �˸�
@@ -255,7 +282,7 @@ public class Client : MonoBehaviour
 
         public UDP()
         {
-            endPoint = new IPEndPoint(IPAddress.Parse(instance.ip), instance.port);
+            endPoint = new IPEndPoint(instance.ipAddr, instance.port);
         }
 
         public void Connect(int _localPort)

@@ -66,9 +66,14 @@ public class ClientHandle : MonoBehaviour
     {
         int _id = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
+        bool _bool = _packet.ReadBool();
 
         if (GameManagerInServer.players.ContainsKey(_id))
+        {
             GameManagerInServer.players[_id].transform.position = _position;
+            GameManagerInServer.players[_id].GetComponent<Animator>().SetBool("isWalking", _bool);
+        }
+
     }
 
     public static void PlayerRotation(Packet _packet)
@@ -170,7 +175,10 @@ public class ClientHandle : MonoBehaviour
         if (GameManagerInServer.bullets.TryGetValue(_bulletID, out BulletManager _bullet))
         {
             if(_bullet != null)
+            {
                 _bullet.Collide();
+                _bullet.GetComponent<Animator>().SetBool("isCollide", true);
+            }
         }
     }
 
@@ -191,7 +199,8 @@ public class ClientHandle : MonoBehaviour
 
         if (GameManagerInServer.items.TryGetValue(_itemID, out ItemManager _item))
         {
-            _item.transform.position = _position;
+            if (_item != null)
+                _item.transform.position = _position;
         }
     }
 
@@ -260,20 +269,53 @@ public class ClientHandle : MonoBehaviour
     public static void SpawnEnemy(Packet _packet)
     {
         int _enemyId = _packet.ReadInt();
+        int _type = _packet.ReadInt();
         Vector3 _enemyPos = _packet.ReadVector3();
-        GameManagerInServer.instance.SpawnEnemy(_enemyId, _enemyPos);
+        GameManagerInServer.instance.SpawnEnemy(_enemyId, _enemyPos, _type);
+    }
+    public static void SpawnBoss(Packet _packet)
+    {
+        int _enemyId = _packet.ReadInt();
+        int _type = _packet.ReadInt();
+        Vector3 _enemyPos = _packet.ReadVector3();
+        GameManagerInServer.instance.SpawnBoss(_enemyId, _enemyPos, _type);
+    }
+    
+    public static void BossHit(Packet _packet)
+    {
+        int _bossId = _packet.ReadInt();
+        if (GameManagerInServer.boss.TryGetValue(_bossId, out ServerBoss _boss))
+        {
+            _boss.BossHit();
+        }
+    }
+    public static void BossClear(Packet _packet)
+    {
+        int _bossId = _packet.ReadInt();
+        if (GameManagerInServer.boss.TryGetValue(_bossId, out ServerBoss _boss))
+        {
+            _boss.DestroyEnemy();
+        }
+    }  
+    
+    public static void AttackIndeicator(Packet _packet)
+    {
+        Vector2 _pos = _packet.ReadVector2();
+        GameManagerInServer.instance.AttackIndeicator(_pos);
     }
 
     public static void EnemyPosition(Packet _packet)
     {
         int _enemyId = _packet.ReadInt();
+        int _type = _packet.ReadInt();
         Vector3 _enemyPos = _packet.ReadVector3();
         bool isMove = _packet.ReadBool();
 
         if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
         {
             _enemy.transform.position = _enemyPos;
-            _enemy._animator.SetBool("isMoving", isMove);
+            if( _type == 0)
+                _enemy._animator.SetBool("isMoving", isMove);
         }
     }
 
@@ -336,6 +378,25 @@ public class ClientHandle : MonoBehaviour
             Vector3 _pos = _packet.ReadVector3();
             Vector3Int _intPos = new Vector3Int((int)_pos.x, (int)_pos.y, (int)_pos.z);
             GameManagerInServer.instance.fragileMap.SetTile(_intPos, null);
+        }
+    }
+
+    public static void EnemyDestroy(Packet _packet)
+    {
+        int _enemyId = _packet.ReadInt();
+
+        if (GameManagerInServer.enemies.TryGetValue(_enemyId, out ServerEnemy _enemy))
+        {
+            _enemy.DestroyEnemy();
+        }
+    } 
+    public static void ItemDestroy(Packet _packet)
+    {
+        int _itemId = _packet.ReadInt();
+
+        if (GameManagerInServer.items.TryGetValue(_itemId, out ItemManager _item))
+        {
+            _item.DestroyItem();
         }
     }
 }
